@@ -85,6 +85,20 @@ class ChatTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_reply('ambiguous <think>' + call + '</think>', [self.tool], 'stop')
 
+    def test_invalid_generation_is_not_a_retryable_server_failure(self):
+        class Backend:
+            context = 100
+            source = {'test': True}
+            def encode(self, messages, tools):
+                return [1]
+            def complete(self, *args):
+                return Completion('<tool_call>{"name":"unknown","arguments":{}}</tool_call>', 1, 12)
+        client = TestClient(create_app(Backend()))
+        response = client.post('/v1/chat/completions', json={'model': 'microgpt', 'max_tokens': 20,
+                              'messages': [{'role': 'user', 'content': 'Read a.py'}], 'tools': [self.tool]})
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json()['error']['type'], 'invalid_model_output')
+
 
 if __name__ == "__main__":
     unittest.main()

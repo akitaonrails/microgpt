@@ -3,6 +3,7 @@ import argparse
 from dataclasses import asdict
 from itertools import zip_longest
 import json
+import os
 from pathlib import Path
 import random
 import signal
@@ -113,6 +114,8 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     rng = random.Random(args.seed)
     step = 0
+    tokens_seen = saved.get('assistant_tokens_seen', 0) if args.resume else 0
+    best_loss = saved.get('best_val_loss', float('inf')) if args.resume else float('inf')
     origin = saved.get('origin', {'initialization': 'random'})
     if args.checkpoint:
         parent_stage = saved.get('settings', {}).get('stage', 'pretraining')
@@ -163,7 +166,8 @@ def main():
             for _ in range(args.accumulation):
                 buckets = replay if args.short_replay and rng.random() < args.short_replay else training
                 example = data['train'][rng.choice(rng.choice(buckets))]
-                loss, _ = loss_for(model, example, device)
+                loss, count = loss_for(model, example, device)
+                tokens_seen += count
                 total += loss.item() / args.accumulation
                 (loss / args.accumulation).backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
@@ -173,14 +177,24 @@ def main():
         if step % args.eval_every and step != args.steps and not budget_reached:
             continue
         metrics = {'step': step, 'train_loss': total, 'val_loss': evaluate(model, validation, device, args.attention),
+                   'assistant_tokens_seen': tokens_seen,
                    'seconds': round(time.monotonic() - started, 1), 'budget_reached': budget_reached,
                    'peak_memory_gb': torch.cuda.max_memory_allocated() / 1e9 if device.type == 'cuda' else 0}
+        improved = metrics['val_loss'] < best_loss
+        best_loss = min(best_loss, metrics['val_loss'])
         payload = {'model_config': asdict(config), 'model': model.state_dict(), 'optimizer': optimizer.state_dict(),
+                   'assistant_tokens_seen': tokens_seen, 'best_val_loss': best_loss,
                    'step': step, 'settings': settings, 'data': manifest, 'example_rng': rng.getstate(),
                    'torch_rng': torch.get_rng_state(), 'cuda_rng': torch.cuda.get_rng_state_all() if device.type == 'cuda' else [],
                    'origin': origin, 'protocol': VERSION}
         torch.save(payload, args.out / 'last.tmp')
         (args.out / 'last.tmp').replace(args.out / 'last.pt')
+        if improved:
+            # Link the immutable saved file; the next last.pt is an atomic replacement.
+            temporary = args.out / 'best.tmp'
+            temporary.unlink(missing_ok=True)
+            os.link(args.out / 'last.pt', temporary)
+            temporary.replace(args.out / 'best.pt')
         with (args.out / 'metrics.jsonl').open('a') as output:
             output.write(json.dumps(metrics) + '\n')
         print(json.dumps(metrics), flush=True)

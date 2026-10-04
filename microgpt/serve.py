@@ -74,7 +74,9 @@ def create_app(backend, model_name="microgpt", api_key=None, max_output=2048):
         try:
             message, reason = parse_reply(result.text, tools, result.finish_reason)
         except ValueError as exception:
-            return error(exception, 502)
+            # Retrying the same deterministic malformed generation cannot repair
+            # it. A 5xx makes clients retry automatically and stall agent runs.
+            return JSONResponse({'error': {'message': str(exception), 'type': 'invalid_model_output'}}, status_code=422)
         response = {"id": "chatcmpl-" + uuid.uuid4().hex, "object": "chat.completion",
                     "created": int(time.time()), "model": model_name,
                     "choices": [{"index": 0, "message": message, "finish_reason": reason}],

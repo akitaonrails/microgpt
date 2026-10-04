@@ -30,6 +30,21 @@ TASKS = [
 ]
 
 
+def grounding_tasks():
+    """Fresh instances of trained arithmetic templates; not broad coding skill."""
+    from microgpt.grounding import episode
+    tasks = []
+    for index in range(8):
+        fixture = episode(700000 + index, [])['fixture']
+        tests = ''
+        for value in (-7, 0, 3, 2.5):
+            expected = eval(fixture['expression'], {}, {'value': value})
+            tests += f"assert s.{fixture['name']}({value!r}) == {expected!r}\n"
+        tasks.append({'id': f'grounding-{index}', 'code': fixture['before'], 'tests': tests,
+                      'prompt': f"Fix {fixture['name']}(value) in solution.py. It must return {fixture['expression']}."})
+    return tasks
+
+
 def docker_command(work, grader, name):
     return ["docker", "run", "--rm", "--name", name, "--network", "none", "--read-only",
             "--cap-drop", "ALL", "--security-opt", "no-new-privileges", "--pids-limit", "64",
@@ -104,17 +119,19 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--label", required=True, help="Exact scratch checkpoint provenance for this run")
     parser.add_argument("--steps", type=int, default=8)
+    parser.add_argument('--suite', choices=['basic', 'grounding'], default='basic')
     args = parser.parse_args()
     if args.out.exists() or args.steps < 1:
         parser.error("Use a fresh output directory and positive steps")
     subprocess.run(["docker", "image", "inspect", IMAGE], check=True, stdout=subprocess.DEVNULL)
     root = Path(__file__).resolve().parents[1]
     args.out.mkdir(parents=True)
-    summary = {"label": args.label, "image": IMAGE, "steps": args.steps,
+    tasks = TASKS if args.suite == 'basic' else grounding_tasks()
+    summary = {"label": args.label, "image": IMAGE, "steps": args.steps, "suite": args.suite,
                "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-               "tasks_sha256": hashlib.sha256(json.dumps(TASKS, sort_keys=True).encode()).hexdigest(),
+               "tasks_sha256": hashlib.sha256(json.dumps(tasks, sort_keys=True).encode()).hexdigest(),
                "opencode": subprocess.check_output(["opencode", "--version"], text=True).strip(), "tasks": []}
-    for task in TASKS:
+    for task in tasks:
         with tempfile.TemporaryDirectory(prefix="microgpt-eval-") as directory:
             base = Path(directory)
             work = base / "work"
@@ -148,7 +165,9 @@ def main():
             final = grade(command)
             row = {"id": task["id"], "passed": final["passed"], "grade": final["output"],
                    "returncode": returncode, "seconds": round(time.monotonic() - started, 1),
-                   "tools": [{"name": c["tool"], "status": c["state"]["status"]} for c in calls],
+                   "errors": [e.get('error') for e in events if e.get('type') == 'error'],
+                   "tools": [{"name": c["tool"], "status": c["state"]["status"],
+                              "input": c["state"].get("input"), "error": c["state"].get("error", "")[:500]} for c in calls],
                    "tokens": [e["part"].get("tokens") for e in events if e.get("type") == "step_finish"]}
             summary["tasks"].append(row)
             destination = args.out / task["id"]
@@ -158,7 +177,7 @@ def main():
             (destination / "stderr.txt").write_text(stderr)
             (args.out / "results.json").write_text(json.dumps(summary, indent=2) + "\n")
             print(json.dumps(row), flush=True)
-    print(f"Passed {sum(row['passed'] for row in summary['tasks'])}/{len(TASKS)}", flush=True)
+    print(f"Passed {sum(row['passed'] for row in summary['tasks'])}/{len(tasks)}", flush=True)
 
 
 if __name__ == "__main__":

@@ -9,14 +9,14 @@ The project has two scales: a 0.9M byte-tokenizer lesson and a larger student mo
 with multilingual tokenization, a 32K context allocation limit, Flash Attention,
 KV caching and an OpenCode-compatible server. A short pilot checks the engineering;
 useful coding and conversation require substantial training and behavioral evaluation.
-The current pilot connects to OpenCode but scores **0/4 repairs** and makes no
-tool calls yet. See [measured evidence](docs/verification.md) before interpreting
+The first full run scored **0/4 general repairs**. A focused follow-up now passes
+**8/8 arithmetic repair instances through OpenCode**, a narrow trained task family. See [measured evidence](docs/verification.md) before interpreting
 a saved checkpoint.
 
 The larger training pipeline is now implemented: **947.5M pretraining tokens**,
 **62,366 complete SFT training episodes**, and a separate long-horizon stage.
 The current 12-hour-budget run is recorded in `runs/coding-v1/status.json`.
-Its final OpenCode results are pending. See the [training plan and runbook](docs/training-plan.md).
+Its final evaluations failed the capability targets; see [the corrective experiment](docs/next-run.md). See the [training plan and runbook](docs/training-plan.md).
 
 ## Offline first lesson
 
