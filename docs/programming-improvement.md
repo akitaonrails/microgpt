@@ -135,3 +135,10 @@ Validation reporting now includes losses by source. The fixed 40-example validat
 slice is a small diagnostic, not a full estimate over the 14K held-out conversations;
 long easy traces can dominate its token-weighted aggregate. Final model selection
 uses generated-code and real-tool behavior instead.
+
+The first full 6,000-step mixture consumed 4,105,548 assistant-token exposures and
+still scored **0/8** on the independent direct-code probes. Some functions had the
+right requested name but wrong behavior (for example, returning matching items
+instead of their count); other answers repeated text. This result is retained as a
+failed experiment, not a deployment candidate. The longer second run uses the
+corrected prompt/interface mixture and the same random-origin foundation.

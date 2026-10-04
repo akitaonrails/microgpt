@@ -19,7 +19,7 @@ class ToolGrammar:
             raise ValueError('Tool grammar currently supports bytes and o200k tokenizers')
         info = xgr.TokenizerInfo(vocab, vocab_type=xgr.VocabType.RAW,
                                  vocab_size=tokenizer.vocab_size, stop_token_ids=[tokenizer.eos])
-        self.compiler = xgr.GrammarCompiler(info, max_threads=2)
+        self.compiler = xgr.GrammarCompiler(info, max_threads=2, cache_enabled=False)
         self.vocab_size = tokenizer.vocab_size
 
     @lru_cache(maxsize=8)
