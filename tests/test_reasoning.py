@@ -3,12 +3,19 @@ import contextlib
 import io
 import unittest
 
-from microgpt.reasoning_data import record, trace_problem
+from microgpt.reasoning_data import record, trace_problem, trace_record
 from microgpt.tokenizer import Tokenizer
 from microgpt.trajectories import assistant_examples
 
 
 class ReasoningTests(unittest.TestCase):
+    def test_each_family_has_every_effort_instruction(self):
+        coverage = {family: set() for family in range(3)}
+        for index in range(180):
+            item = trace_record(index)
+            coverage[item['family']].add(item['messages'][0]['content'])
+        self.assertEqual([len(modes) for modes in coverage.values()], [4, 4, 4])
+
     def test_original_program_oracles_and_paired_groups(self):
         for family in range(4):
             for seed in range(40):

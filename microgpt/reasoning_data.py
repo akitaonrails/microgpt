@@ -76,6 +76,14 @@ def record(question, thought, answer, source, effort='medium'):
         {'role': 'user', 'content': question}, response]}
 
 
+def trace_record(index):
+    problem = trace_problem(200000 + index // 2)
+    # Direct/reasoned pairs share a group; effort is independent of family.
+    effort = 'none' if index % 2 == 0 else random.Random(200000 + index // 2).choice(('low', 'medium', 'high'))
+    return {**record(problem['question'], problem['reasoning'], problem['answer'], 'reasoning-trace', effort),
+            'verification': 'Original bounded Python templates; deterministic numeric oracle', 'family': problem['family']}
+
+
 def import_public(directory, source, tokenizer, max_length, limit, counts):
     manifest = json.loads((directory / 'manifest.json').read_text())
     seen = set()
@@ -141,12 +149,8 @@ def main():
     tokenizer = Tokenizer(encoding='o200k_base')
     def synthetic():
         for index in range(args.limit):
-            problem = trace_problem(200000 + index // 2)
-            # Paired direct/reasoned variants share a problem group and split.
-            effort = 'none' if index % 2 == 0 else ('low', 'medium', 'high')[(index // 2) % 3]
             counts['accepted'] += 1
-            yield {**record(problem['question'], problem['reasoning'], problem['answer'], args.source, effort),
-                   'verification': 'Original bounded Python templates; deterministic numeric oracle', 'family': problem['family']}
+            yield trace_record(index)
     def tools():
         if not args.input:
             raise ValueError('reasoning-tools requires --input practice files')

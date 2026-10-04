@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--sft-data', type=Path, default=Path('data/agent-sft-v4'))
     parser.add_argument('--checkpoint', type=Path, help='Continue our own checkpoint; omit for fresh random initialization')
     parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--curriculum', choices=['standard', 'recovery'], default='standard',
+                        help='Recovery tunes first-task decisions and reasoning modes from our existing checkpoint')
     args = parser.parse_args()
     if args.hours <= 0 or (args.out.exists() and not args.resume):
         parser.error('Use positive hours and a fresh output directory, or --resume')
@@ -34,10 +36,18 @@ def main():
         'note': 'Training budget, excluding data load, checkpoint writes and evaluations. Capability requires passing evaluations.'}
     state['data'] = str(args.data)
     state['sft_data'] = str(args.sft_data)
+    if args.resume and state.get('curriculum', 'standard') != args.curriculum:
+        parser.error('Resume the same curriculum')
+    state['curriculum'] = args.curriculum
     state['planned_stages'] = ['foundation: up to 1B tokens at 2K', 'instruction: complete episodes up to 8K',
                                'reasoning: checked traces, worked solutions and tool planning at 8K',
                                'long-horizon: complete episodes up to 32K with at least 8 tool calls',
                                'evaluate: basic repairs, 16-round task with handoff/recovery, long-context retrieval']
+    if args.curriculum == 'recovery':
+        if not state['initial_checkpoint']:
+            parser.error('Recovery requires --checkpoint from our scratch-trained lineage')
+        state['planned_stages'] = ['recovery: first-task decisions, tool grounding, reasoning modes with general replay',
+                                   'evaluate: grounding, basic repairs, horizon, reasoning and context']
     if state['hours'] != args.hours or (args.checkpoint and state['initial_checkpoint'] != str(args.checkpoint)):
         parser.error('Resume the same budget and initial checkpoint')
     state['status'] = 'running'
@@ -58,17 +68,20 @@ def main():
         temporary.replace(state_path)
     parent = Path(state['initial_checkpoint']) if state['initial_checkpoint'] else None
     try:
-        for name, fraction, steps, maximum in [('foundation', .65, 122071, 2048), ('instruction', .15, 16000, 8192), ('reasoning', .10, 12000, 8192), ('long-horizon', .10, 2000, 32768)]:
+        stages = [('foundation', .65, 122071, 2048), ('instruction', .15, 16000, 8192), ('reasoning', .10, 12000, 8192), ('long-horizon', .10, 2000, 32768)]
+        if args.curriculum == 'recovery':
+            stages = [('recovery', 1.0, 16000, 8192)]
+        for name, fraction, steps, maximum in stages:
             destination = args.out / name
             info = state['stages'].setdefault(name, {'status': 'pending', 'seconds_used': 0})
             if info['status'] == 'complete':
-                parent = destination / 'last.pt'
+                parent = destination / ('best.pt' if name == 'recovery' else 'last.pt')
                 continue
             remaining = args.hours * 3600 * fraction - info['seconds_used']
             checkpoint = destination / 'last.pt'
             if remaining <= 0 and checkpoint.exists():
                 info['status'] = 'complete'
-                parent = checkpoint
+                parent = destination / ('best.pt' if name == 'recovery' else 'last.pt')
                 save()
                 continue
             if remaining <= 0:
@@ -89,6 +102,8 @@ def main():
                            '--resume' if checkpoint.exists() else '--checkpoint', str(checkpoint if checkpoint.exists() else parent)]
                 if name == 'reasoning':
                     command += ['--sources', 'reasoning-code', 'reasoning-math', 'reasoning-trace', 'reasoning-tools', '--short-replay', '0.2']
+                if name == 'recovery':
+                    command += ['--sources', 'horizon-start', 'grounding-read', 'grounding-edit', 'reasoning-trace', '--short-replay', '0.2']
                 if name == 'long-horizon':
                     command += ['--min-tool-calls', '8', '--balanced-lengths', '--short-replay', '0.1']
             info.update(status='running', command=command)
@@ -107,7 +122,7 @@ def main():
             if code or not checkpoint.exists():
                 raise RuntimeError(f'{name} failed (exit {code}); see {name}.log')
             info['status'] = 'complete'
-            parent = checkpoint
+            parent = destination / ('best.pt' if name == 'recovery' else 'last.pt')
             save()
         state['status'] = 'evaluating'
         state['checkpoint'] = str(parent)
@@ -134,6 +149,10 @@ def main():
                         subprocess.run([sys.executable, f'scripts/{script}', '--url', 'http://127.0.0.1:8011/v1',
                                         '--out', str(args.out / folder), '--label', str(parent), '--steps', steps],
                                        stdout=evaluation_log, stderr=subprocess.STDOUT, check=True, timeout=1800)
+                with (args.out / 'eval-grounding.log').open('a') as evaluation_log:
+                    subprocess.run([sys.executable, 'scripts/eval_opencode.py', '--url', 'http://127.0.0.1:8011/v1',
+                                    '--out', str(args.out / 'eval-grounding'), '--label', str(parent), '--suite', 'grounding', '--steps', '12'],
+                                   stdout=evaluation_log, stderr=subprocess.STDOUT, check=True, timeout=1800)
                 with (args.out / 'eval-reasoning.log').open('a') as evaluation_log:
                     subprocess.run([sys.executable, 'scripts/eval_reasoning.py', '--url', 'http://127.0.0.1:8011/v1',
                                     '--out', str(args.out / 'eval-reasoning.json'), '--label', str(parent)],
@@ -146,6 +165,12 @@ def main():
                 child.terminate()
                 child.wait(timeout=30)
         state['status'] = 'evaluated'
+        basic = json.loads((args.out / 'eval-basic/results.json').read_text())
+        grounding = json.loads((args.out / 'eval-grounding/results.json').read_text())
+        horizon = json.loads((args.out / 'eval-horizon/results.json').read_text())
+        state['scores'] = {'basic': sum(t['passed'] for t in basic['tasks']), 'basic_total': len(basic['tasks']),
+                           'grounding': sum(t['passed'] for t in grounding['tasks']), 'grounding_total': len(grounding['tasks']),
+                           'horizon_passed': horizon['passed']}
         state['note'] = 'Read eval-basic/results.json and eval-horizon/results.json; evaluated does not mean passed.'
         save()
     except Exception as error:

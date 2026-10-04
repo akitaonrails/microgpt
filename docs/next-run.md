@@ -109,3 +109,37 @@ learning rate 5e-5, accumulation 2, a 30-minute ceiling, balanced source/length 
 and 20% general replay. Main sources are `horizon-session`, `horizon-handoff`,
 `grounding-read`, `grounding-edit`, and `reasoning-trace`. Earlier failed candidates
 are retained for comparison; the 8/8 short-task candidate is not overwritten.
+
+A further data audit found two confounds: original grounding examples used only
+none/low reasoning effort, while horizon tasks used all four modes; original
+program-trace effort labels were tied to the three exercise families. Neither
+correlation reflects the requested behavior. Grounding v2 and trace v2 cover all
+modes within each task family; regression tests check that coverage.
+
+`recovery-sft-v1` combines 16,000 first-task episodes with those corrected examples,
+full vocabulary-diverse sessions, and coding/conversation replay. It has 69,502
+training and 3,696 validation episodes. Shared groups keep first-task/full-session
+variants in the same split. Exact duplicate episodes are removed. First-task
+supervision gives starting decisions weight independent of the number of easy
+later turns in a long session.
+
+The bounded follow-up is running with:
+
+```sh
+.venv/bin/python scripts/train_stages.py --curriculum recovery \
+  --out runs/recovery-v1 --hours 1 --sft-data data/recovery-sft-v1 \
+  --checkpoint runs/horizon-v4/best.pt
+```
+
+It stops at 16,000 updates or one hour of training, preserves the best-loss snapshot,
+and automatically evaluates basic repairs, arithmetic grounding, 16-round recovery/
+handoff, reasoning and long-context retrieval. Results and live state are written
+under `runs/recovery-v1`. Evaluation failure is not treated as success or deployment.
+The intermediate horizon-v4 candidate scored 2/8 grounding and failed the first
+two horizon rounds; it is not the checkpoint served for use.
+
+The working narrow candidate is served locally at `http://127.0.0.1:8000/v1`, using
+`runs/grounding-v1/candidate.pt`; its process record is
+`runs/grounding-v1-service.json`. The recovery runner uses port 8011 for isolated
+final evaluation and stops that evaluation server afterward. No global OpenCode
+configuration or cloud machine was changed.

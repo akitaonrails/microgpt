@@ -39,7 +39,7 @@ def episode(seed, tools, read_only=False):
     wrong = expression.replace('+', '-') if '+' in expression else expression.replace('-', '+') if '-' in expression else expression.replace('*', '+')
     before = f'def {name}(value):\n    return {wrong}\n'
     after = f'def {name}(value):\n    return {expression}\n'
-    effort = 'low' if seed % 4 == 0 else 'none'
+    effort = ('none', 'low', 'medium', 'high')[seed % 4]
     messages = [{'role': 'system', 'content': reasoning_instruction(effort)},
                 {'role': 'system', 'content': 'You fix Python code. Read the requested file, edit it to satisfy the request, then call check. Copy file paths from the request. Use exact source text without displayed line numbers. Correct failures. Give a brief final answer.'},
                 {'role': 'user', 'content': (rng.choice([f'Read {path}.', f'Open {path} and tell me its function name.', f'Inspect the file {path}. Do not edit it.']) if read_only else

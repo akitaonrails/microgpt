@@ -86,16 +86,21 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--count', type=int, default=1600)
     parser.add_argument('--vocabulary-data', type=Path, help='Existing training JSONL for diverse copied identifiers and comments')
+    parser.add_argument('--initial-only', action='store_true', help='Supervise first-task decisions without diluting them in long histories')
     args = parser.parse_args()
     tools = json.loads(args.tools.read_text())
     words = vocabulary(args.vocabulary_data) if args.vocabulary_data else None
     with args.out.open('x') as stream:
         for index in range(args.count):
-            for item in sessions(500000 + index, tools, rounds=(2, 4, 8, 16, 32)[index % 5], words=words):
+            records = sessions(500000 + index, tools, rounds=2 if args.initial_only else (2, 4, 8, 16, 32)[index % 5], words=words)
+            if args.initial_only:
+                records = records[:1]
+                records[0]['source'] = 'horizon-start'
+            for item in records:
                 stream.write(json.dumps(item) + '\n')
     with args.out.open('rb') as stream:
         checksum = hashlib.file_digest(stream, 'sha256').hexdigest()
-    args.out.with_suffix('.source.json').write_text(json.dumps({'sessions': args.count, 'records': args.count * 2,
+    args.out.with_suffix('.source.json').write_text(json.dumps({'sessions': args.count, 'records': args.count * (1 if args.initial_only else 2),
         'seed_start': 500000, 'sha256': checksum, 'tools_sha256': hashlib.sha256(args.tools.read_bytes()).hexdigest(),
         'vocabulary_sha256': hashlib.sha256(json.dumps(words).encode()).hexdigest(), 'vocabulary_source': str(args.vocabulary_data),
         'note': 'Simulated demonstrations; whole episodes exceeding the token limit are excluded during preparation.'}, indent=2) + '\n')

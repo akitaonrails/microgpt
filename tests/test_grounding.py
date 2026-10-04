@@ -8,6 +8,14 @@ from microgpt.protocol import body
 
 
 class GroundingTests(unittest.TestCase):
+    def test_each_task_type_has_every_effort_instruction(self):
+        coverage = {True: set(), False: set()}
+        for seed in range(48):
+            read_only = seed % 3 == 0
+            item = episode(seed, TOOLS[:3], read_only=read_only)
+            coverage[read_only].add(item['messages'][0]['content'])
+        self.assertEqual([len(modes) for modes in coverage.values()], [4, 4])
+
     def test_edits_paths_and_recovery(self):
         recovered = False
         for seed in range(40):
