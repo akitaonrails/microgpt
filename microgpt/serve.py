@@ -56,7 +56,7 @@ def create_app(backend, model_name="microgpt", api_key=None, max_output=2048):
         try:
             messages, tools = normalize(request)
             if repeated_tool_cycle(messages):
-                return JSONResponse({'error': {'message': 'Stopped after three identical tool actions and observations without progress.',
+                return JSONResponse({'error': {'message': 'Stopped after three repeated tool cycles with unchanged observations.',
                                                'type': 'agent_loop_error'}}, status_code=422)
             ids = backend.encode(messages, tools)
             if len(ids) + count > backend.context:

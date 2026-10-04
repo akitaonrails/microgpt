@@ -25,12 +25,12 @@ def assistant_examples(record, tokenizer, max_length, pack=False):
             header = tokenizer.encode(f"{message['role']}:\n")
             target = tokenizer.encode(body(message)) + [tokenizer.eos]
             ids += header + target
-            labels += [-100] * len(header) + (target if message['role'] == 'assistant' else [-100] * len(target))
+            labels += [-100] * len(header) + (target if message['role'] == 'assistant' and message.get('supervise', True) else [-100] * len(target))
         if len(ids) > max_length:
             return []
         return [{"input_ids": ids, "labels": labels}]
     for index, message in enumerate(messages):
-        if message["role"] != "assistant":
+        if message["role"] != "assistant" or not message.get('supervise', True):
             continue
         if not index:
             raise ValueError("An assistant turn needs context")

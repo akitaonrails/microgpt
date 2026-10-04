@@ -1,5 +1,12 @@
 # Correcting the first full run
 
+**Current follow-up (2026-10-04):** the recovery run below has finished. Testing with
+explicit `--effort none` exposed a reasoning/protocol failure rather than complete
+loss of short-task ability. Wire-format SFT subsequently achieved one 16/16 session,
+but repeat seeds still failed late. See [the minimal-agent notebook](agentic-minimum.md)
+for the clean foundation-to-agent experiment and current evidence. The entries below
+preserve the earlier experimental sequence; they are not all required recipe steps.
+
 Baseline commit: `4d98c3a`. All four training stages finished, but the final model
 passed 0/4 basic repairs, failed the first two horizon rounds, retrieved 0/9 context
 needles, and answered 2/12 reasoning problems with thinking (1/12 directly).

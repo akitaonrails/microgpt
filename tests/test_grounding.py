@@ -45,11 +45,13 @@ class GroundingTests(unittest.TestCase):
     def test_handoff_preserves_cumulative_functions(self):
         from microgpt.horizon_data import sessions
         for seed in range(4):
-            first, second = sessions(seed, TOOLS[:3], rounds=8)
+            first, second = sessions(seed, TOOLS[:3], rounds=8, wire=True, recover_errors=True)
             self.assertEqual(first['group'], second['group'])
             self.assertEqual(len(first['fixture']['requirements']), 4)
             self.assertEqual(len(second['fixture']['requirements']), 8)
             self.assertIn('session handoff', second['messages'][2]['content'])
+            if seed % 2 == 0:
+                self.assertTrue(any(m.get('supervise') is False for item in (first, second) for m in item['messages']))
             for item in (first, second):
                 normalize(ChatRequest(model='test', messages=item['messages'], tools=item['tools']))
                 namespace = {}

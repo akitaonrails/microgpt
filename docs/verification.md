@@ -1,4 +1,18 @@
-# Scratch-only verification — 2026-10-03
+# Scratch-only verification — updated 2026-10-04
+
+## Latest measured state
+
+The original full curriculum is complete; the progress entries below are historical.
+The wire-format follow-up at `runs/horizon-wire-v1/candidate.pt` passed 16/16
+cumulative OpenCode rounds with seed 849723, including a failed-checker retry and
+fresh-session handoff (65 calls). Repeats passed 15/16 with seed 1337 and 21/32
+with seed 20261004. Its separate scores are 8/8 arithmetic repairs and 0/4 broader
+repairs. It is not yet a consistently reliable long-session model.
+
+The 23 current CPU tests pass, including masked erroneous actions, recovery fixture
+execution, incomplete-thinking rejection and repeated read/edit-cycle containment.
+The [minimal-agent notebook](agentic-minimum.md) explains the follow-up directly
+from our foundation and separates model skills from harness-provided state.
 
 The sole implementation target is our GPT initialized randomly. The earlier
 pretrained-model experiment has been removed, including its project checkpoints,

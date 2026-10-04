@@ -49,6 +49,27 @@ retrieval or reasoning benchmark.
 
 ## Longer runs
 
+For the narrow cumulative-function lesson, create a persistent workspace using the
+same interface as the evaluator:
+
+```sh
+.venv/bin/python scripts/agent_lab.py init --out runs/my-agent-lab
+opencode runs/my-agent-lab/work --pure --agent microgpt -m microgpt/microgpt
+```
+
+Send the prompt printed by initialization. In another terminal, run
+`.venv/bin/python scripts/agent_lab.py next --out runs/my-agent-lab` after each
+completed task. It independently checks every current requirement before advancing
+and prints the next prompt. `show` repeats the prompt; `check` only grades the code.
+Stay in the same OpenCode session, then try a fresh session halfway through.
+The harness owns `TASK_STATE.md` and the grader; the model can edit only `solution.py`.
+Round four deliberately fails one checker call. This lab checks cumulative code;
+use `eval_horizon.py` for automated conversation/completion scoring.
+
+This restricted lab profile is the measured teaching setup. The general example
+configuration exposes a broader workflow whose reliability is not established by
+the arithmetic exercise.
+
 The example agent now allows 64 steps, asks for a task plan and `TASK_STATE.md`
 handoff notes, and enables automatic compaction with an 8,192-token reserve.
 Old tool outputs are not automatically pruned. These options follow the
@@ -81,7 +102,7 @@ OpenCode, with private networking or a TLS proxy. It is not a public multi-user
 serving system. See [hardware](hardware.md) for storage and rental considerations.
 
 The example now enables reasoning with a 4,096-token output ceiling and
-`none`/`low`/`medium`/`high` variants (medium default). Use `--variant high --thinking`
+`none`/`low`/`medium`/`high` variants (`none` default for the measured agent baseline). Use `--variant high --thinking`
 with `opencode run` to request more worked reasoning and display it. These are
 learned instructions, not a guarantee of accuracy. The API returns thinking as
 `reasoning_content`; tool-looking text inside thinking cannot dispatch an action.
@@ -93,7 +114,12 @@ suite and still fails the broader four-task repair set. Later horizon candidates
 remain experimental; see [next-run.md](next-run.md).
 
 Malformed generated calls return non-retryable HTTP 422 (`invalid_model_output`).
-Three consecutive identical tool actions with unchanged observations return HTTP
-422 (`agent_loop_error`); a new user turn, changed result or different action resets
-that guard. This bounds repeated-read loops that OpenCode's soft step limit did not
+Three repetitions of the same one-to-three-action cycle with unchanged observations
+return HTTP 422 (`agent_loop_error`); a new user turn or changed observation breaks
+the match. This bounds repeated-read/edit loops that OpenCode's soft step limit did not
 stop in testing. It does not substitute for learned recovery.
+
+The [minimal-agent experiment notebook](agentic-minimum.md) records real cumulative
+sessions, repeat failures, and the distinction between model behavior and harness
+support. For comparable evaluations pass `--effort none` explicitly to both repair
+and horizon evaluators; thinking modes need their own behavioral validation.

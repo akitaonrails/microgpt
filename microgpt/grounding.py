@@ -13,6 +13,7 @@ import keyword
 
 from .practice import TOOLS
 from .protocol import reasoning_instruction
+from .opencode_format import system_prompt, read_output
 
 
 def vocabulary(path, limit=10000):
@@ -28,7 +29,7 @@ def vocabulary(path, limit=10000):
     return sorted(words)[:limit]
 
 
-def episode(seed, tools, read_only=False):
+def episode(seed, tools, read_only=False, wire=False, effort=None):
     rng = random.Random(seed)
     filename = rng.choice(['solution', 'main', 'helpers', 'convert', 'utils', 'numbers', 'transform']) + '.py'
     directory = rng.choice(['', 'src/', 'lib/', '/workspace/project/', '/tmp/project/work/', f'/tmp/project-{rng.randrange(10000)}/'])
@@ -39,11 +40,15 @@ def episode(seed, tools, read_only=False):
     wrong = expression.replace('+', '-') if '+' in expression else expression.replace('-', '+') if '-' in expression else expression.replace('*', '+')
     before = f'def {name}(value):\n    return {wrong}\n'
     after = f'def {name}(value):\n    return {expression}\n'
-    effort = ('none', 'low', 'medium', 'high')[seed % 4]
+    effort = effort or ('none', 'low', 'medium', 'high')[seed % 4]
+    root = f'/tmp/project-{seed}/work'
     messages = [{'role': 'system', 'content': reasoning_instruction(effort)},
                 {'role': 'system', 'content': 'You fix Python code. Read the requested file, edit it to satisfy the request, then call check. Copy file paths from the request. Use exact source text without displayed line numbers. Correct failures. Give a brief final answer.'},
                 {'role': 'user', 'content': (rng.choice([f'Read {path}.', f'Open {path} and tell me its function name.', f'Inspect the file {path}. Do not edit it.']) if read_only else
                     f'Fix {name}(value) in {path}. It must return {expression}. Use read, edit, and check tools.')}]
+    if wire:
+        messages[1]['content'] = system_prompt(root)
+        messages[2]['content'] = json.dumps(messages[2]['content'])
     def action(tool, arguments, result, thought):
         call_id = f'call_{seed}_{len(messages)}'
         message = {'role': 'assistant', 'content': '', 'tool_calls': [{'id': call_id, 'type': 'function',
@@ -52,14 +57,15 @@ def episode(seed, tools, read_only=False):
             message['reasoning_content'] = thought
         messages.extend([message, {'role': 'tool', 'tool_call_id': call_id, 'content': result}])
     numbered = '\n'.join(f'{i}: {line}' for i, line in enumerate(before.splitlines(), 1))
-    action('read', {'filePath': path}, f'<path>{path}</path>\n<type>file</type>\n<content>\n{numbered}\n</content>', 'I will read the requested file.')
+    output = read_output(path, before, root) if wire else f'<path>{path}</path>\n<type>file</type>\n<content>\n{numbered}\n</content>'
+    action('read', {'filePath': path}, output, 'I will read the requested file.')
     if not read_only:
         old, new = f'return {wrong}', f'return {expression}'
         assert before.count(old) == 1 and before.replace(old, new, 1) == after
         action('edit', {'filePath': path, 'oldString': old, 'newString': new}, 'Edit applied successfully.', 'I will correct the expression using the observed source.')
         if seed % 7 == 0:
             action('check', {}, 'TRANSIENT_ERROR: Test runner temporarily unavailable. Retry check.', 'I will run the tests.')
-        action('check', {}, 'PASS\n', 'I will verify the result.')
+        action('check', {}, 'PASS\nPASS\n' if wire else 'PASS\n', 'I will verify the result.')
     messages.append({'role': 'assistant', 'content': f'The file defines {name}(value).' if read_only else 'Updated the function. Tests passed.'})
     return {'group': f'grounding-{seed}', 'source': 'grounding-read' if read_only else 'grounding-edit', 'messages': messages,
             'tools': tools, 'construction': 'Original simulated tools; exact edit verified',
@@ -71,6 +77,8 @@ def main():
     parser.add_argument('--tools', type=Path, required=True, help='Installed OpenCode schemas from capture_opencode_tools.py')
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--count', type=int, default=8000)
+    parser.add_argument('--wire', action='store_true')
+    parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     args = parser.parse_args()
     if args.count < 1:
         parser.error('count must be positive')
@@ -78,13 +86,14 @@ def main():
     with args.out.open('x') as stream:
         for index in range(args.count):
             # Mix concise and real harness schemas so neither becomes mandatory.
-            tools = native if index % 2 else TOOLS[:3]
-            item = episode(400000 + index, tools, read_only=index % 3 == 0)
+            tools = native if args.wire or index % 2 else TOOLS[:3]
+            item = episode(400000 + index, tools, read_only=index % 3 == 0, wire=args.wire, effort=args.effort)
             stream.write(json.dumps(item) + '\n')
     with args.out.open('rb') as stream:
         checksum = hashlib.file_digest(stream, 'sha256').hexdigest()
     args.out.with_suffix('.source.json').write_text(json.dumps({'count': args.count, 'sha256': checksum,
         'tools_sha256': hashlib.sha256(args.tools.read_bytes()).hexdigest(), 'seed_start': 400000,
+        'wire': args.wire, 'effort': args.effort,
         'note': 'Simulated training exercises, not agent evaluation results.'}, indent=2) + '\n')
 
 

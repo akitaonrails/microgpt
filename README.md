@@ -11,11 +11,14 @@ KV caching and an OpenCode-compatible server. A short pilot checks the engineeri
 useful coding and conversation require substantial training and behavioral evaluation.
 The first full run scored **0/4 general repairs**. A focused follow-up now passes
 **8/8 arithmetic repair instances through OpenCode**, a narrow trained task family. See [measured evidence](docs/verification.md) before interpreting
-a saved checkpoint.
+a saved checkpoint. A later candidate completed a **16-round cumulative session**
+with error recovery and a fresh-session handoff, but repeat seeds still exposed
+failures. The [minimal-agent notebook](docs/agentic-minimum.md) tracks the complete
+workflow, its training recipe, and those limitations.
 
 The larger training pipeline is now implemented: **947.5M pretraining tokens**,
 **78,192 complete SFT training episodes**, and a separate long-horizon stage.
-The current 12-hour-budget run is recorded in `runs/coding-v1/status.json`.
+The completed 12-hour-budget run is recorded in `runs/coding-v1/status.json`.
 Its final evaluations failed the capability targets; see [the corrective experiment](docs/next-run.md). See the [training plan and runbook](docs/training-plan.md).
 
 ## Offline first lesson

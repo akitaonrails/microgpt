@@ -67,6 +67,8 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(message['content'], '42')
         unfinished, _ = parse_reply('<think>' + call, [self.tool], 'length')
         self.assertNotIn('tool_calls', unfinished)
+        with self.assertRaisesRegex(ValueError, 'unclosed thinking'):
+            parse_reply('<think>' + call, [self.tool], 'stop')
         message, reason = parse_reply('<think>Inspect first.</think>' + call, [self.tool], 'stop')
         self.assertEqual(reason, 'tool_calls')
         request = ChatRequest(model='microgpt', reasoning_effort='high', messages=[
@@ -115,6 +117,14 @@ class ChatTests(unittest.TestCase):
         self.assertFalse(repeated_tool_cycle(history[:-2]))
         self.assertFalse(repeated_tool_cycle(history + [{'role': 'user', 'content': 'Read it again.'}]))
         history[-1]['content'] = 'changed'
+        self.assertFalse(repeated_tool_cycle(history))
+        history = [{'role': 'user', 'content': 'Fix a.py'}]
+        for index in range(6):
+            name = 'read' if index % 2 == 0 else 'edit'
+            history.extend([{'role': 'assistant', 'tool_calls': [{'function': {'name': name, 'arguments': {}}}]},
+                            {'role': 'tool', 'content': 'same source' if name == 'read' else 'ambiguous edit'}])
+        self.assertTrue(repeated_tool_cycle(history))
+        history[-1]['content'] = 'Edit succeeded'
         self.assertFalse(repeated_tool_cycle(history))
 
 

@@ -28,6 +28,15 @@ def grader_text(items):
     return text + "print('PASS')\n"
 
 
+def state_text(items):
+    notes = '\n'.join(f"- {t['name']}(value) must return value * {t['factor']} + {t['offset']}." for t in items)
+    return '# Required behavior\n' + notes + '\nPreserve and test every requirement above.\n'
+
+
+def task_prompt(task):
+    return f"In solution.py add {task['name']}(value), returning value * {task['factor']} + {task['offset']}. Keep all earlier functions correct. Read TASK_STATE.md for the requirements, read the code, edit it, and call check. Retry transient tool failures."
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--url', default='http://127.0.0.1:8000/v1')
@@ -37,13 +46,14 @@ def main():
     parser.add_argument('--rounds', type=int, default=16)
     parser.add_argument('--seed', type=int, default=849723, help='Held-out task seed, never used by practice generator')
     parser.add_argument('--self-test', action='store_true', help='Verify isolated graders with broken and trusted reference code; no model score')
+    parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     args = parser.parse_args()
     if args.out.exists() or min(args.rounds, args.steps) < 1:
         parser.error('Fresh output and positive counts required')
     args.out.mkdir(parents=True)
     tasks = requirements(args.seed, args.rounds)
     summary = {'label': args.label, 'kind': 'harness-self-test' if args.self_test else 'model-evaluation',
-        'seed': args.seed, 'requested_rounds': args.rounds, 'rounds': [], 'image': IMAGE,
+        'seed': args.seed, 'requested_rounds': args.rounds, 'rounds': [], 'image': IMAGE, 'effort': args.effort,
         'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'tasks_sha256': hashlib.sha256(json.dumps(tasks, sort_keys=True).encode()).hexdigest(),
         'session_handoff': 'Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md',
@@ -68,18 +78,17 @@ def main():
                 raise RuntimeError(reference['output'])
             summary['reference_passed'] = True
         else:
-            command, environment = configure(work, grader, args.url, args.steps, state_file=True)
+            command, environment = configure(work, grader, args.url, args.steps, state_file=True, reasoning_effort=args.effort)
             session = None
             consecutive_failures = 0
             for index, task in enumerate(tasks):
                 grader.write_text(grader_text(tasks[:index + 1]))
-                notes = '\n'.join(f"- {t['name']}(value) must return value * {t['factor']} + {t['offset']}." for t in tasks[:index + 1])
-                (work / 'TASK_STATE.md').write_text('# Required behavior\n' + notes + '\nPreserve and test every requirement above.\n')
+                (work / 'TASK_STATE.md').write_text(state_text(tasks[:index + 1]))
                 if index == args.rounds // 2:
                     session = None
                 if index == 3:
                     grader.with_suffix('.fault').write_text('fail one check')
-                prompt = f"In solution.py add {task['name']}(value), returning value * {task['factor']} + {task['offset']}. Keep all earlier functions correct. Read TASK_STATE.md for the requirements, read the code, edit it, and call check. Retry transient tool failures."
+                prompt = task_prompt(task)
                 cli = ['opencode', 'run', '--pure', '--title', 'MicroGPT horizon evaluation', '--dir', str(work), '--agent', 'microgpt', '-m', 'microgpt/microgpt', '--format', 'json']
                 if session:
                     cli += ['--session', session]
@@ -98,13 +107,21 @@ def main():
                 if events:
                     session = next((e.get('sessionID') for e in events if e.get('sessionID')), session)
                 calls = [e['part'] for e in events if e.get('type') == 'tool_use']
+                usage = [e['part']['tokens'] for e in events if e.get('type') == 'step_finish' and 'tokens' in e.get('part', {})]
                 final = grade(command)
                 check_outputs = [str(c['state'].get('output', '')) for c in calls if c.get('tool') == 'check']
                 tested = any(output.startswith('PASS') for output in check_outputs)
+                finishes = [e['part'].get('reason') for e in events if e.get('type') == 'step_finish']
+                completed = bool(finishes and finishes[-1] == 'stop') and not any(e.get('type') == 'error' for e in events)
                 row = {'round': index + 1, 'correct': final['passed'], 'checked': tested,
-                    'passed': final['passed'] and tested, 'tool_calls': len(calls), 'session': session,
+                    'completed': completed, 'passed': final['passed'] and tested and completed,
+                    'tool_calls': len(calls), 'session': session,
                     'tools': [{'name': c['tool'], 'status': c['state']['status']} for c in calls],
                     'recovered_transient_error': any('TRANSIENT_ERROR' in s for s in check_outputs) and tested,
+                    'cached_tokens': sum(t.get('cache', {}).get('read', 0) for t in usage),
+                    'uncached_input_tokens': sum(t.get('input', 0) for t in usage),
+                    'output_tokens': sum(t.get('output', 0) for t in usage),
+                    'peak_prompt_tokens': max((t.get('input', 0) + t.get('cache', {}).get('read', 0) for t in usage), default=0),
                     'seconds': round(time.monotonic() - started, 1), 'grade': final['output']}
                 summary['rounds'].append(row)
                 folder = args.out / f'round-{index + 1:02d}'
@@ -121,7 +138,8 @@ def main():
             total_calls = sum(r['tool_calls'] for r in summary['rounds'])
             summary['total_tool_calls'] = total_calls
             summary['passed'] = (len(summary['rounds']) == args.rounds and all(r['passed'] for r in summary['rounds'])
-                                 and total_calls >= 32 and any(r['recovered_transient_error'] for r in summary['rounds']))
+                                 and total_calls >= 2 * args.rounds
+                                 and (args.rounds < 4 or any(r['recovered_transient_error'] for r in summary['rounds'])))
     (args.out / 'results.json').write_text(json.dumps(summary, indent=2) + '\n')
     print(json.dumps({k: v for k, v in summary.items() if k != 'rounds'}), flush=True)
 

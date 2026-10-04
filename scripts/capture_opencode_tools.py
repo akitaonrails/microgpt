@@ -52,7 +52,7 @@ def main():
     tools = {t['function']['name']: t for t in captured}
     if not all(name in tools for name in ('read', 'edit', 'check')):
         raise RuntimeError(f'Missing tools: {list(tools)}')
-    args.out.write_text(json.dumps([tools[n] for n in ('read', 'edit', 'check')], indent=2) + '\n')
+    args.out.write_text(json.dumps([tools[n] for n in sorted(tools)], indent=2) + '\n')
     print(json.dumps({'tools': list(tools), 'out': str(args.out)}))
 
 

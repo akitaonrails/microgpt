@@ -1,0 +1,22 @@
+"""OpenCode 1.18.34 fixture formatting shared by training and evaluation.
+
+The real harness still executes tools. These helpers only format original
+simulated demonstrations; no model answers or grader results are injected.
+"""
+from pathlib import PurePosixPath
+
+AGENT_PROMPT = 'You fix Python code. Read solution.py, edit it to satisfy the request, then call check to test. Preserve earlier requirements in TASK_STATE.md when present. Line numbers in read output are annotations, not file content. Correct failures. Give a brief final answer.'
+
+
+def system_prompt(root):
+    return (AGENT_PROMPT + '\nYou are powered by the model named microgpt. The exact model ID is microgpt/microgpt\n'
+            'Here is some useful information about the environment you are running in:\n<env>\n'
+            f'  Working directory: {root}\n  Workspace root folder: {root}\n'
+            "  Is directory a git repo: yes\n  Platform: linux\n  Today's date: Sun Oct 04 2026\n</env>")
+
+
+def read_output(path, content, root):
+    display = str(PurePosixPath(root) / path)
+    lines = content.splitlines()
+    numbered = '\n'.join(f'{i}: {line}' for i, line in enumerate(lines, 1))
+    return f'<path>{display}</path>\n<type>file</type>\n<content>\n{numbered}\n\n(End of file - total {len(lines)} lines)\n</content>'

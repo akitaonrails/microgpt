@@ -98,6 +98,8 @@ def parse_reply(text, tools, finish_reason):
     if text.lstrip().startswith('<think>'):
         thought, closed, text = text.lstrip()[len('<think>'):].partition('</think>')
         if not closed:
+            if finish_reason != 'length':
+                raise ValueError('Model ended inside an unclosed thinking section; no tool calls dispatched')
             return {'role': 'assistant', 'content': None, 'reasoning_content': thought.strip()}, finish_reason
         text = text.lstrip()
     if '<think' in text or '</think>' in text:
@@ -108,22 +110,23 @@ def parse_reply(text, tools, finish_reason):
     return message, reason
 
 
-def repeated_tool_cycle(messages, limit=3):
+def repeated_tool_cycle(messages, limit=3, max_period=3):
     """Detect identical consecutive actions AND observations without a new user turn.
 
-Three identical reads or unchanged failed checks are no progress. A changed tool
-result, a different action, or a new user message resets this narrow guard.
-"""
+    Also catches read/edit/read/edit cycles with unchanged observations. A changed
+    result or a new user turn breaks the repeated cycle.
+    """
     signatures = []
     end = len(messages)
-    while end >= 2 and len(signatures) < limit:
+    while end >= 2 and len(signatures) < limit * max_period:
         assistant, result = messages[end - 2:end]
         calls = assistant.get('tool_calls', [])
         if assistant.get('role') != 'assistant' or result.get('role') != 'tool' or len(calls) != 1:
             break
         signatures.append(json.dumps([calls[0]['function'], result.get('content')], sort_keys=True))
         end -= 2
-    return len(signatures) == limit and len(set(signatures)) == 1
+    return any(len(signatures) >= limit * period and signatures[:limit * period] == signatures[:period] * limit
+               for period in range(1, max_period + 1))
 
 
 def parse_actions(text, tools, finish_reason):

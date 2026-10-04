@@ -9,6 +9,20 @@ from microgpt.trajectories import assistant_examples
 
 
 class ReasoningTests(unittest.TestCase):
+    def test_mistakes_remain_context_but_are_not_loss_targets(self):
+        tokenizer = Tokenizer(encoding='o200k_base')
+        item = {'messages': [{'role': 'user', 'content': 'Try the task.'},
+                             {'role': 'assistant', 'content': 'WRONG_TARGET', 'supervise': False},
+                             {'role': 'user', 'content': 'That failed; correct it.'},
+                             {'role': 'assistant', 'content': 'Corrected.'}]}
+        for packed in (False, True):
+            examples = assistant_examples(item, tokenizer, 1024, pack=packed)
+            self.assertEqual(len(examples), 1)
+            example = examples[0]
+            self.assertIn('WRONG_TARGET', tokenizer.decode(example['input_ids']))
+            target = tokenizer.decode([x for x in example['labels'] if x != -100 and x != tokenizer.eos])
+            self.assertEqual(target, 'Corrected.')
+
     def test_each_family_has_every_effort_instruction(self):
         coverage = {family: set() for family in range(3)}
         for index in range(180):

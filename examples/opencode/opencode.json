@@ -21,7 +21,7 @@
           },
           "options": {
             "temperature": 0.2,
-            "reasoningEffort": "medium"
+            "reasoningEffort": "none"
           },
           "variants": {
             "none": {

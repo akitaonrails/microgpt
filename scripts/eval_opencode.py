@@ -12,6 +12,7 @@ import subprocess
 import tempfile
 import time
 import uuid
+from microgpt.opencode_format import AGENT_PROMPT
 
 IMAGE = "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016"
 TASKS = [
@@ -64,7 +65,7 @@ def grade(command):
         subprocess.run(["docker", "rm", "-f", command[command.index("--name") + 1]], capture_output=True)
 
 
-def configure(work, grader, url, steps, state_file=False):
+def configure(work, grader, url, steps, state_file=False, reasoning_effort=None):
     """Expose only the exercise files and a fixed, isolated checker to OpenCode."""
     root = Path(__file__).resolve().parents[1]
     name = 'microgpt-eval-' + uuid.uuid4().hex
@@ -93,6 +94,8 @@ export default tool({
     config = json.loads((root / 'examples/opencode/opencode.json').read_text())
     config['provider']['microgpt']['options']['baseURL'] = url
     config['provider']['microgpt']['models']['microgpt']['options']['temperature'] = 0
+    if reasoning_effort is not None:
+        config['provider']['microgpt']['models']['microgpt']['options']['reasoningEffort'] = reasoning_effort
     config['enabled_providers'] = ['microgpt']
     config['lsp'], config['formatter'] = False, False
     allowed_read = {'*': 'deny', 'solution.py': 'allow', str(work / 'solution.py'): 'allow'}
@@ -102,7 +105,7 @@ export default tool({
         'edit': {'*': 'deny', 'solution.py': 'allow', str(work / 'solution.py'): 'allow'}, 'check': 'allow'}
     agent = config['agent']['microgpt']
     agent['steps'], agent['permission'] = steps, config['permission']
-    agent['prompt'] = 'You fix Python code. Read solution.py, edit it to satisfy the request, then call check to test. Preserve earlier requirements in TASK_STATE.md when present. Line numbers in read output are annotations, not file content. Correct failures. Give a brief final answer.'
+    agent['prompt'] = AGENT_PROMPT
     (work / 'opencode.json').write_text(json.dumps(config))
     environment = {**os.environ, 'OPENCODE_CONFIG': str(work / 'opencode.json')}
     probe = subprocess.run(['opencode', 'debug', 'agent', 'microgpt', '--pure'], cwd=work, env=environment,
@@ -120,6 +123,7 @@ def main():
     parser.add_argument("--label", required=True, help="Exact scratch checkpoint provenance for this run")
     parser.add_argument("--steps", type=int, default=8)
     parser.add_argument('--suite', choices=['basic', 'grounding'], default='basic')
+    parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     args = parser.parse_args()
     if args.out.exists() or args.steps < 1:
         parser.error("Use a fresh output directory and positive steps")
@@ -127,7 +131,7 @@ def main():
     root = Path(__file__).resolve().parents[1]
     args.out.mkdir(parents=True)
     tasks = TASKS if args.suite == 'basic' else grounding_tasks()
-    summary = {"label": args.label, "image": IMAGE, "steps": args.steps, "suite": args.suite,
+    summary = {"label": args.label, "image": IMAGE, "steps": args.steps, "suite": args.suite, 'effort': args.effort,
                "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                "tasks_sha256": hashlib.sha256(json.dumps(tasks, sort_keys=True).encode()).hexdigest(),
                "opencode": subprocess.check_output(["opencode", "--version"], text=True).strip(), "tasks": []}
@@ -141,7 +145,7 @@ def main():
             grader = base / "grader.py"
             grader.write_text("import sys\nsys.path.insert(0, '/work')\nimport solution as s\n" + task["tests"] + "print('PASS')\n")
             grader.chmod(0o644)
-            command, environment = configure(work, grader, args.url, args.steps)
+            command, environment = configure(work, grader, args.url, args.steps, reasoning_effort=args.effort)
             baseline = grade(command)
             if baseline["passed"]:
                 raise RuntimeError(f"Broken fixture already passes: {task['id']}")
