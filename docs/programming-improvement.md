@@ -142,3 +142,19 @@ right requested name but wrong behavior (for example, returning matching items
 instead of their count); other answers repeated text. This result is retained as a
 failed experiment, not a deployment candidate. The longer second run uses the
 corrected prompt/interface mixture and the same random-origin foundation.
+
+### Constrained-decoding integration gotcha
+
+The initial grammar cache key sorted the full tool schema, including argument
+properties. XGrammar's strict JSON mode follows schema property order. That forced
+`newString` before `oldString`, while our training calls emit `oldString` first.
+The 5,500-step tool probe consequently swapped the old/new text. Preserving schema
+order allowed actual edits with the same frozen weights; behavioral correctness
+still failed (0/2 cumulative tasks). A regression test checks the native edit order.
+The artifact named `candidate-6k.pt` actually records step **5500**; the saved checkpoint
+and evaluator health metadata are authoritative, not that filename.
+
+JSON whitespace between fields is also bounded to one character in the current
+grammar, preventing whitespace-only continuations from consuming the entire output
+budget. Whitespace inside code strings is unaffected. The grammar compiler's own
+unbounded cache is disabled; the wrapper retains at most eight schema compilations.

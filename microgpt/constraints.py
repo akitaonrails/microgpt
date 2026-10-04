@@ -34,11 +34,11 @@ class ToolGrammar:
                 'required': ['name', 'arguments'], 'additionalProperties': False} for tool in tools]
             format = {'type': 'triggered_tags', 'triggers': ['<tool_call>'], 'tags': [
                 {'type': 'tag', 'begin': '<tool_call>', 'end': '</tool_call>',
-                 'content': {'type': 'json_schema', 'json_schema': {'anyOf': schemas}}}]}
+                 'content': {'type': 'json_schema', 'json_schema': {'anyOf': schemas}, 'max_whitespace_cnt': 1}}]}
         return self.compiler.compile_structural_tag({'type': 'structural_tag', 'format': format})
 
     def matcher(self, tools):
-        compiled = self.compile(json.dumps(tools, sort_keys=True))
+        compiled = self.compile(json.dumps(tools))
         return self.xgr.GrammarMatcher(compiled)
 
     def mask(self, logits, matcher, bitmask):

@@ -92,6 +92,15 @@ class ProgrammingTests(unittest.TestCase):
             self.assertFalse(grammar.matcher(tools).accept_string(invalid))
         self.assertFalse(grammar.matcher([]).accept_string(valid))
         self.assertTrue(grammar.matcher([]).accept_string('Here is Python code.'))
+        # Schema property order affects constrained decoding. Sorting its keys
+        # would force newString before oldString and invert our learned edit order.
+        edit = {'type': 'function', 'function': {'name': 'edit', 'parameters': {
+            'type': 'object', 'properties': {key: {'type': 'string'} for key in ['filePath', 'oldString', 'newString']},
+            'required': ['filePath', 'oldString', 'newString'], 'additionalProperties': False}}}
+        edit_text = '<tool_call>{"name":"edit","arguments":{"filePath":"a.py","oldString":"old","newString":"new"}}</tool_call>'
+        self.assertTrue(grammar.matcher([edit]).accept_string(edit_text))
+        self.assertFalse(grammar.matcher([edit]).accept_string(edit_text.replace('{\"name\":', '{\"name\":' + ' ' * 20)))
+
         message, reason = parse_reply('<think>' + valid + '</think>Done.', tools, 'stop')
         self.assertNotIn('tool_calls', message)
         # Valid syntax does not authorize execution of a length-truncated response.
