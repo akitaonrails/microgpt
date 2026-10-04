@@ -176,3 +176,58 @@ A later snapshot froze at **14,000**, despite the last polled training metric be
 13,500, and scored **0/8**. Always use the evaluator's captured server/checkpoint
 metadata for the tested step. This fluctuation is a failed stability check; neither
 checkpoint is promoted. The fixed tests remain unchanged.
+
+
+### Final 24,000-step result and bounded continuation
+
+The corrected mixture consumed **16,491,493 assistant-token exposures** in 1,638.8
+training seconds. Final validation loss was 0.3153, but generated behavior failed:
+
+| Development evaluation | Passed |
+| --- | ---: |
+| Direct programming requests | 0/8 |
+| Mixed programming session, cumulative requirements | 0/8 |
+| Current task independently correct in that session | 0/8 |
+| Broader programming repairs | 0/4 |
+| Previously trained arithmetic session | 16/16 |
+
+This preserves the narrow exercise skill without fixing general programming or the
+reported task-switch failure. These are development probes, not a contamination-free
+benchmark. Grammar constraints improve structural validity; they cannot establish
+that a function implements the request. The existing service was not replaced.
+
+The frozen checkpoint is `runs/programming-v2/checkpoint-24000.pt`, SHA256
+`b164a2a5ade8550c1536a9b3b939245f6d7ed586fc8e3cbe2263c3bb1928b6c9`.
+Full evaluations and provenance are copied into `docs/programming-evidence.json`.
+The 31 unit tests pass; model behavior is assessed separately above.
+
+The corpus contains 96,768,432 assistant target tokens, so 16.5M sampled exposures
+are limited coverage. Weighted sampling also repeats some sources disproportionately;
+this is not a count of distinct tokens learned. More training may help, but is not
+a demonstrated solution to the capacity or foundation limitations.
+
+`scripts/continue_programming.py` resumes the same random-origin checkpoint,
+optimizer and RNG, retaining all ten source weights. It evaluates at steps 48K,
+80K, 120K and 160K, within a four-hour wall-clock budget checked before training
+stages. An evaluation already underway may finish beyond that budget. It stops
+after three checkpoints without a better direct-code score, or once all gates pass.
+Direct probes always run; any direct success enables the mixed-session probe;
+8/8 direct additionally enables broader repairs and a 32-round arithmetic session.
+All four suites must pass to mark a candidate successful. Even that only establishes
+the tested scope, not reliable responses to arbitrary prompts. No automatic promotion
+occurs.
+
+The continuation was launched with:
+
+```sh
+.venv/bin/python scripts/continue_programming.py \
+  --out runs/programming-continuation --hours 4
+```
+
+It successfully resumed beyond step 26,000. Read current status from
+`runs/programming-continuation/status.json`, training output from its `training.log`,
+and evaluations from its `eval-STEP` directories. The status records the controller
+PID; SIGTERM requests a graceful stop. Use a fresh output directory for a subsequent
+invocation and milestones above the saved step. This runner continues while the
+interactive coding session is idle; its status file, not this launch-time note,
+is authoritative about whether it is still running.
