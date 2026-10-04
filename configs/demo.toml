@@ -1,0 +1,15 @@
+[model]
+context = 128
+layers = 4
+heads = 4
+width = 128
+
+[train]
+steps = 600
+batch_size = 16
+accumulation = 1
+learning_rate = 0.001
+warmup = 20
+eval_every = 100
+eval_batches = 8
+seed = 42

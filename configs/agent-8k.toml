@@ -1,0 +1,18 @@
+# ~91M parameters with an 8K vocabulary. Train on real code/trajectories first.
+# Context capacity is not a measured long-context capability.
+[model]
+context = 8192
+layers = 12
+heads = 12
+width = 768
+
+[train]
+steps = 10000
+batch_size = 1
+accumulation = 4
+learning_rate = 0.0003
+warmup = 200
+eval_every = 100
+eval_batches = 4
+gradient_checkpointing = true
+seed = 42

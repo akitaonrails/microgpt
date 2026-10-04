@@ -1,0 +1,16 @@
+# One H100 80 GB. No distributed launcher required.
+[model]
+context = 1024
+layers = 12
+heads = 12
+width = 768
+
+[train]
+steps = 10000
+batch_size = 8
+accumulation = 8
+learning_rate = 0.0003
+warmup = 200
+eval_every = 100
+eval_batches = 10
+seed = 42

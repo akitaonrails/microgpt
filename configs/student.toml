@@ -1,0 +1,18 @@
+# Random initialization. ~91M with o200k_base, ~27M with a 32K vocabulary.
+# 32K is an allocation limit; use --sequence-length 2048 for the initial stage.
+[model]
+context = 32768
+layers = 8
+heads = 6
+width = 384
+
+[train]
+steps = 10000
+batch_size = 1
+accumulation = 4
+learning_rate = 0.0003
+warmup = 100
+eval_every = 100
+eval_batches = 4
+gradient_checkpointing = true
+seed = 42

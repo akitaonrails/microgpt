@@ -1,0 +1,18 @@
+# Same 90,969,600-parameter scratch architecture; spend compute on more data.
+[model]
+context = 32768
+layers = 8
+heads = 6
+width = 384
+
+[train]
+steps = 122071 # ~1 billion token exposures at 8192 tokens/update
+batch_size = 1
+accumulation = 4
+learning_rate = 0.0003
+warmup = 500
+eval_every = 500
+eval_batches = 16
+gradient_checkpointing = false
+loss_chunk = 0 # Fits 2K windows on the 5090; long-context stages use chunking.
+seed = 42

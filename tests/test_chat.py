@@ -1,0 +1,90 @@
+"""Wire contract checks; these scripted replies are not model capability tests."""
+import json
+import unittest
+
+try:
+    from fastapi.testclient import TestClient
+    from microgpt.chat import ChatRequest, normalize, parse_reply
+    from microgpt.inference import Completion
+    from microgpt.serve import create_app
+    SERVER_AVAILABLE = True
+except ImportError:
+    SERVER_AVAILABLE = False
+
+
+@unittest.skipUnless(SERVER_AVAILABLE, "Install .[serve] for API checks")
+class ChatTests(unittest.TestCase):
+    def setUp(self):
+        self.tool = {"type": "function", "function": {"name": "read", "parameters": {
+            "type": "object", "properties": {"path": {"type": "string"}}, "required": ["path"]}}}
+
+    def test_tool_round_trip_and_invalid_calls(self):
+        message, reason = parse_reply('<tool_call>{"name":"read","arguments":{"path":"a.py"}}</tool_call>', [self.tool], "stop")
+        self.assertEqual(reason, "tool_calls")
+        call = message["tool_calls"][0]
+        request = ChatRequest(model="microgpt", messages=[{"role": "user", "content": "Read a.py"}, message,
+                              {"role": "tool", "tool_call_id": call["id"], "content": "print(1)"}])
+        messages, _ = normalize(request)
+        self.assertEqual(messages[1]["tool_calls"][0]["function"]["arguments"], {"path": "a.py"})
+        for text in ['<tool_call>{"name":"delete","arguments":{}}</tool_call>',
+                     '<tool_call>{"name":"read","arguments":{"path":12}}</tool_call>']:
+            with self.assertRaises(ValueError):
+                parse_reply(text, [self.tool], "stop")
+        incomplete, reason = parse_reply('<tool_call>{"name":"read"', [self.tool], "length")
+        self.assertNotIn("tool_calls", incomplete)
+        self.assertEqual(reason, "length")
+        with self.assertRaises(ValueError):
+            normalize(ChatRequest(model="microgpt", messages=[{"role": "tool", "tool_call_id": "wrong", "content": "x"}]))
+
+    def test_http_stream_auth_usage_and_context(self):
+        class Backend:
+            context = 100
+            source = {"test": True}
+            def encode(self, messages, tools):
+                return [1, 2, 3]
+            def complete(self, ids, count, temperature, stop, seed):
+                return Completion("hello", len(ids), 1, 2)
+        client = TestClient(create_app(Backend(), api_key="test", max_output=200))
+        self.assertEqual(client.get("/v1/models").status_code, 401)
+        headers = {"Authorization": "Bearer test"}
+        payload = {"model": "microgpt", "messages": [{"role": "user", "content": "hi"}], "max_tokens": 10}
+        response = client.post("/v1/chat/completions", json=payload, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["usage"]["prompt_tokens_details"]["cached_tokens"], 2)
+        response = client.post("/v1/chat/completions", json={**payload, "stream": True, "stream_options": {"include_usage": True}}, headers=headers)
+        events = [line[6:] for line in response.text.splitlines() if line.startswith("data: ")]
+        self.assertEqual(events[-1], "[DONE]")
+        self.assertEqual(json.loads(events[-2])["usage"]["total_tokens"], 4)
+        self.assertEqual(client.post("/v1/chat/completions", json={**payload, "max_tokens": 100}, headers=headers).status_code, 400)
+        self.assertEqual(client.post("/v1/chat/completions", json={**payload, "model": "wrong"}, headers=headers).status_code, 404)
+
+    def test_thinking_is_separate_from_actions_and_survives_streaming(self):
+        from microgpt.chat import sse_events
+        from microgpt.protocol import body
+        call = '<tool_call>{"name":"read","arguments":{"path":"a.py"}}</tool_call>'
+        message, reason = parse_reply('<think>Consider ' + call + '</think>42', [self.tool], 'stop')
+        self.assertNotIn('tool_calls', message)
+        self.assertEqual(message['content'], '42')
+        unfinished, _ = parse_reply('<think>' + call, [self.tool], 'length')
+        self.assertNotIn('tool_calls', unfinished)
+        message, reason = parse_reply('<think>Inspect first.</think>' + call, [self.tool], 'stop')
+        self.assertEqual(reason, 'tool_calls')
+        request = ChatRequest(model='microgpt', reasoning_effort='high', messages=[
+            {'role': 'user', 'content': 'Read a.py'}, message,
+            {'role': 'tool', 'tool_call_id': message['tool_calls'][0]['id'], 'content': '42'}])
+        messages, _ = normalize(request)
+        self.assertIn('edge cases', messages[0]['content'])
+        self.assertEqual(body(messages[2]), body(message))
+        reparsed, _ = parse_reply(body(messages[2]), [self.tool], 'stop')
+        self.assertEqual(reparsed['reasoning_content'], 'Inspect first.')
+        self.assertEqual(reparsed['tool_calls'][0]['function']['arguments'], message['tool_calls'][0]['function']['arguments'])
+        response = {'id': 'test', 'created': 0, 'model': 'microgpt', 'choices': [{'message': message, 'finish_reason': reason}]}
+        events = list(sse_events(response))
+        self.assertIn('reasoning_content', events[1])
+        self.assertIn('tool_calls', events[2])
+        with self.assertRaises(ValueError):
+            parse_reply('ambiguous <think>' + call + '</think>', [self.tool], 'stop')
+
+
+if __name__ == "__main__":
+    unittest.main()

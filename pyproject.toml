@@ -1,0 +1,19 @@
+[project]
+name = "microgpt-lab"
+version = "0.1.0"
+description = "A small, readable language-model training lab"
+requires-python = ">=3.11"
+dependencies = ["torch>=2.7,<3", "numpy>=1.26,<3"]
+
+[project.optional-dependencies]
+data = ["datasets>=3,<5", "tokenizers>=0.21,<1", "huggingface-hub>=0.30,<2"]
+tokenizer = ["tiktoken>=0.12,<0.13"]
+serve = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "jsonschema>=4.23,<5", "httpx>=0.28,<1"]
+tune = ["jsonschema>=4.23,<5", "pydantic>=2.10,<3"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["microgpt*"]

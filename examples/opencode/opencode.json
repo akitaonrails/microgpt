@@ -1,0 +1,58 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "microgpt/microgpt",
+  "small_model": "microgpt/microgpt",
+  "provider": {
+    "microgpt": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "MicroGPT local",
+      "options": {
+        "baseURL": "http://127.0.0.1:8000/v1",
+        "apiKey": "{env:MICROGPT_API_KEY}"
+      },
+      "models": {
+        "microgpt": {
+          "name": "MicroGPT small agent model",
+          "tool_call": true,
+          "reasoning": true,
+          "limit": {
+            "context": 32768,
+            "output": 4096
+          },
+          "options": {
+            "temperature": 0.2,
+            "reasoningEffort": "medium"
+          },
+          "variants": {
+            "none": {
+              "reasoningEffort": "none"
+            },
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
+          }
+        }
+      }
+    }
+  },
+  "agent": {
+    "microgpt": {
+      "description": "Small local coding agent with a bounded turn budget",
+      "mode": "primary",
+      "model": "microgpt/microgpt",
+      "steps": 64,
+      "prompt": "You are a coding assistant. Read relevant files, make a focused change, run the relevant tests, and report the result. Use only the supplied tools. After a tool error, correct the arguments or choose a different action. Stop when the task is complete. Line numbers in read output are annotations, not source text. Do not include them in edit arguments or file contents. For longer tasks, keep a short plan with todowrite when available. Preserve requirements, completed changes, remaining work, and the last test result in TASK_STATE.md before a session handoff. After a handoff, read that file and inspect the current source before editing. Do not repeat a failing action unchanged."
+    }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 8192
+  }
+}
