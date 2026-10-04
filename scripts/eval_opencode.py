@@ -65,7 +65,7 @@ def grade(command):
         subprocess.run(["docker", "rm", "-f", command[command.index("--name") + 1]], capture_output=True)
 
 
-def configure(work, grader, url, steps, state_file=False, reasoning_effort=None):
+def configure(work, grader, url, steps, state_file=False, reasoning_effort=None, agent_prompt=AGENT_PROMPT):
     """Expose only the exercise files and a fixed, isolated checker to OpenCode."""
     root = Path(__file__).resolve().parents[1]
     name = 'microgpt-eval-' + uuid.uuid4().hex
@@ -105,7 +105,7 @@ export default tool({
         'edit': {'*': 'deny', 'solution.py': 'allow', str(work / 'solution.py'): 'allow'}, 'check': 'allow'}
     agent = config['agent']['microgpt']
     agent['steps'], agent['permission'] = steps, config['permission']
-    agent['prompt'] = AGENT_PROMPT
+    agent['prompt'] = agent_prompt
     (work / 'opencode.json').write_text(json.dumps(config))
     environment = {**os.environ, 'OPENCODE_CONFIG': str(work / 'opencode.json')}
     probe = subprocess.run(['opencode', 'debug', 'agent', 'microgpt', '--pure'], cwd=work, env=environment,

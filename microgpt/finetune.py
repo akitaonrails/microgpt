@@ -3,6 +3,7 @@ import argparse
 from dataclasses import asdict
 from itertools import zip_longest
 import json
+import math
 import os
 from pathlib import Path
 import random
@@ -54,6 +55,15 @@ def evaluate(model, examples, device, attention):
     return total / tokens
 
 
+def bucket_weights(buckets, weights):
+    """Keep a source's requested probability constant across its length bins."""
+    from collections import Counter
+    counts = Counter(key.split('@')[0] for key in buckets)
+    if set(counts) != set(weights):
+        raise ValueError(f'Source weights must cover retained sources exactly: {sorted(counts)}')
+    return [weights[key.split('@')[0]] / counts[key.split('@')[0]] for key in buckets]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', type=Path, required=True)
@@ -71,6 +81,8 @@ def main():
     parser.add_argument('--attention', choices=['flash', 'sdpa'], default='flash')
     parser.add_argument('--max-length', type=int, default=32768, help='Curriculum stage: exclude whole episodes exceeding this length')
     parser.add_argument('--min-tool-calls', type=int, default=0, help='Select complete longer-horizon episodes for a dedicated stage')
+    parser.add_argument('--source-weight', action='append', default=[], metavar='SOURCE:WEIGHT',
+                        help='Explicit source sampling weights; repeats allowed for different sources')
     parser.add_argument('--balanced-sources', action='store_true', help='Sample a source uniformly, then an episode within it')
     parser.add_argument('--balanced-lengths', action='store_true', help='Balance source/8K/16K/32K bins so long histories receive regular updates')
     parser.add_argument('--short-replay', type=float, default=0, help='Fraction of updates sampled from the general <=8K curriculum to reduce forgetting')
@@ -85,6 +97,13 @@ def main():
         parser.error('Flash Attention requires CUDA')
     if args.out.exists() and not args.resume:
         parser.error('Use a fresh output directory or resume')
+    source_weights = {}
+    for item in args.source_weight:
+        name, value = item.rsplit(':', 1)
+        weight = float(value)
+        if name in source_weights or not math.isfinite(weight) or weight <= 0:
+            parser.error('Source weights must be unique, finite and positive')
+        source_weights[name] = weight
     manifest, data = load_data(args.data)
     path = args.resume or args.checkpoint
     saved = torch.load(path, map_location='cpu', weights_only=True)
@@ -99,9 +118,10 @@ def main():
                 'eval_examples': args.eval_examples, 'attention': args.attention, 'device': args.device,
                 'max_length': args.max_length, 'min_tool_calls': args.min_tool_calls,
                 'balanced_sources': args.balanced_sources, 'balanced_lengths': args.balanced_lengths,
-                'short_replay': args.short_replay, 'sources': sorted(args.sources) if args.sources else None}
+                'short_replay': args.short_replay, 'sources': sorted(args.sources) if args.sources else None,
+                'source_weights': source_weights}
     previous_settings = dict(saved['settings'])
-    for key, default in [('max_length', 32768), ('min_tool_calls', 0), ('balanced_sources', False), ('balanced_lengths', False), ('short_replay', 0), ('sources', None)]:
+    for key, default in [('max_length', 32768), ('min_tool_calls', 0), ('balanced_sources', False), ('balanced_lengths', False), ('short_replay', 0), ('sources', None), ('source_weights', {})]:
         previous_settings.setdefault(key, default)
     if args.resume and previous_settings != settings:
         raise ValueError('Resume requires identical SFT data/settings')
@@ -144,7 +164,8 @@ def main():
     buckets = [val_buckets[source] for source in sorted(val_buckets)]
     validation_indices = [i for row in zip_longest(*buckets) for i in row if i is not None][:args.eval_examples]
     validation = [data['val'][i] for i in validation_indices]
-    training = list(train_buckets.values()) if args.balanced_sources or args.balanced_lengths else [[i for bucket in train_buckets.values() for i in bucket]]
+    training = list(train_buckets.values()) if source_weights or args.balanced_sources or args.balanced_lengths else [[i for bucket in train_buckets.values() for i in bucket]]
+    sampling_weights = bucket_weights(train_buckets, source_weights) if source_weights else None
     replay = list(data['train'].buckets(min(8192, args.max_length)).values())
     if args.short_replay and not replay:
         raise ValueError('Short replay requires retained <=8K episodes')
@@ -165,7 +186,8 @@ def main():
         with precision(device), attention_context(args.attention):
             for _ in range(args.accumulation):
                 buckets = replay if args.short_replay and rng.random() < args.short_replay else training
-                example = data['train'][rng.choice(rng.choice(buckets))]
+                bucket = rng.choices(training, weights=sampling_weights, k=1)[0] if buckets is training and sampling_weights else rng.choice(buckets)
+                example = data['train'][rng.choice(bucket)]
                 loss, count = loss_for(model, example, device)
                 tokens_seen += count
                 total += loss.item() / args.accumulation

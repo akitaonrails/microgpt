@@ -1,5 +1,9 @@
 # MicroGPT Lab — train our own model from scratch
 
+**Programming correction in progress:** the arithmetic checkpoint failed a user task switch.
+See the [broader coding-data experiment](docs/programming-improvement.md) for the new curriculum and behavioral gates.
+
+
 An independently written PyTorch GPT inspired by
 [Karpathy's microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95).
 Every model weight starts random. Pretraining, assistant/tool training and serving

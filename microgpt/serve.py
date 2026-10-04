@@ -67,7 +67,8 @@ def create_app(backend, model_name="microgpt", api_key=None, max_output=2048):
         if not lock.acquire(blocking=False):
             return error("Model busy; retry after the current request", 429)
         try:
-            result = backend.complete(ids, count, request.temperature, stop, request.seed)
+            kwargs = {'tools': tools} if getattr(backend, 'tool_grammar', None) else {}
+            result = backend.complete(ids, count, request.temperature, stop, request.seed, **kwargs)
         except ValueError as exception:
             return error(exception)
         except torch.cuda.OutOfMemoryError:
@@ -103,6 +104,7 @@ def main():
     parser.add_argument("--no-prefix-cache", action="store_true")
     parser.add_argument('--canonical-tool-ids', action='store_true', default=None,
                         help='Normalize opaque caller IDs; otherwise inherit the checkpoint dataset setting')
+    parser.add_argument("--constrain-tools", action="store_true", help="Require the optional grammar extra; constrain tool syntax during sampling")
     parser.add_argument("--attention", choices=["sdpa", "flash"], default="sdpa")
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--host", default="127.0.0.1")
@@ -116,7 +118,7 @@ def main():
     device = ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device
     torch.set_num_threads(4)
     backend = NativeBackend(args.checkpoint, device, args.attention,
-                            not args.no_prefix_cache, args.prefill_chunk, args.canonical_tool_ids)
+                            not args.no_prefix_cache, args.prefill_chunk, args.canonical_tool_ids, args.constrain_tools)
     print(backend.source, flush=True)
     import uvicorn
     uvicorn.run(create_app(backend, args.model_name, key, args.max_output), host=args.host, port=args.port)

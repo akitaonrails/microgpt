@@ -37,7 +37,7 @@ def sample_token(logits, temperature, generator):
 
 class NativeBackend:
     """Serve our checkpoint using the same protocol as assistant-only SFT."""
-    def __init__(self, checkpoint, device="cpu", attention="sdpa", prefix_cache=True, prefill_chunk=1024, canonical_tool_ids=None):
+    def __init__(self, checkpoint, device="cpu", attention="sdpa", prefix_cache=True, prefill_chunk=1024, canonical_tool_ids=None, constrain_tools=False):
         self.device = torch.device(device)
         if attention == "flash" and self.device.type != "cuda":
             raise ValueError("Flash Attention requires CUDA")
@@ -57,6 +57,10 @@ class NativeBackend:
             raise ValueError("Checkpoint tokenizer fingerprint differs")
         if saved.get("protocol") not in (None, VERSION):
             raise ValueError("Checkpoint uses an unsupported conversation protocol")
+        self.tool_grammar = None
+        if constrain_tools:
+            from .constraints import ToolGrammar
+            self.tool_grammar = ToolGrammar(self.tokenizer)
         self.context = self.model.config.context
         self.prefix_cache = prefix_cache
         if prefill_chunk < 1:
@@ -68,13 +72,13 @@ class NativeBackend:
                        "parameters": sum(p.numel() for p in self.model.parameters()),
                        "stage": saved.get("settings", {}).get("stage", "pretrain"), "step": saved["step"],
                        "origin": saved.get("origin", {"initialization": "random"}),
-                       "canonical_tool_ids": self.canonical_tool_ids}
+                       "canonical_tool_ids": self.canonical_tool_ids, "constrained_tools": constrain_tools}
 
     def encode(self, messages, tools):
         return prompt_ids(self.tokenizer, messages, tools, canonical_tool_ids=self.canonical_tool_ids)
 
     @torch.inference_mode()
-    def complete(self, ids, max_tokens, temperature, stop, seed=None):
+    def complete(self, ids, max_tokens, temperature, stop, seed=None, tools=None):
         if len(ids) + max_tokens > self.context:
             raise ValueError(f"Prompt ({len(ids)}) + output ({max_tokens}) exceeds context {self.context}")
         generator = torch.Generator(device=self.device).manual_seed(seed) if seed is not None else None
@@ -89,6 +93,8 @@ class NativeBackend:
         else:
             self.cache = [{} for _ in self.model.blocks]
         self.cached_ids = ids[:common]
+        matcher = self.tool_grammar.matcher(tools or []) if self.tool_grammar else None
+        bitmask = self.tool_grammar.xgr.allocate_token_bitmask(1, self.tokenizer.vocab_size) if matcher else None
         generated = []
         reason = "length"
         try:
@@ -98,7 +104,11 @@ class NativeBackend:
                     logits, _ = self.model(torch.tensor([chunk], device=self.device), cache=self.cache, last_only=True)
                     self.cached_ids.extend(chunk)
                 for index in range(max_tokens):
+                    if matcher:
+                        self.tool_grammar.mask(logits[:, -1], matcher, bitmask)
                     token = sample_token(logits[:, -1], temperature, generator)
+                    if matcher and not matcher.accept_token(token.item()):
+                        raise ValueError('Grammar rejected a generated token')
                     generated.append(token.item())
                     if token.item() == self.tokenizer.eos or any(s in self.tokenizer.decode(generated) for s in stop):
                         reason = "stop"

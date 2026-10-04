@@ -8,7 +8,9 @@ try:
     from microgpt.inference import Completion
     from microgpt.serve import create_app
     SERVER_AVAILABLE = True
-except ImportError:
+except ImportError as error:
+    if not error.name or error.name.split('.')[0] not in {'fastapi', 'httpx', 'jsonschema', 'pydantic', 'uvicorn'}:
+        raise
     SERVER_AVAILABLE = False
 
 

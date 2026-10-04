@@ -17,8 +17,8 @@ def task_prompt(task, path='solution.py', state_path='TASK_STATE.md'):
     return f"In {path} add {task['name']}(value), returning value * {task['factor']} + {task['offset']}. Keep all earlier functions correct. Read {state_path} for the requirements, read the code, edit it, and call check. Retry transient tool failures."
 
 
-def system_prompt(root):
-    return (AGENT_PROMPT + '\nYou are powered by the model named microgpt. The exact model ID is microgpt/microgpt\n'
+def system_prompt(root, agent_prompt=AGENT_PROMPT):
+    return (agent_prompt + '\nYou are powered by the model named microgpt. The exact model ID is microgpt/microgpt\n'
             'Here is some useful information about the environment you are running in:\n<env>\n'
             f'  Working directory: {root}\n  Workspace root folder: {root}\n'
             "  Is directory a git repo: yes\n  Platform: linux\n  Today's date: Sun Oct 04 2026\n</env>")

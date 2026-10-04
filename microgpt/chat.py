@@ -1,6 +1,5 @@
 """The narrow Chat Completions contract used by our OpenCode integration."""
 import json
-import re
 import uuid
 from typing import Any, Literal
 
@@ -102,9 +101,10 @@ def parse_reply(text, tools, finish_reason):
                 raise ValueError('Model ended inside an unclosed thinking section; no tool calls dispatched')
             return {'role': 'assistant', 'content': None, 'reasoning_content': thought.strip()}, finish_reason
         text = text.lstrip()
-    if '<think' in text or '</think>' in text:
-        raise ValueError('Malformed thinking section; no tool calls dispatched')
     message, reason = parse_actions(text, tools, finish_reason)
+    content = message.get('content') or ''
+    if finish_reason != 'length' and ('<think' in content or '</think>' in content):
+        raise ValueError('Malformed thinking section; no tool calls dispatched')
     if thought is not None:
         message['reasoning_content'] = thought.strip()
     return message, reason
@@ -135,15 +135,24 @@ def repeated_tool_cycle(messages, limit=3, max_period=3):
 
 
 def parse_actions(text, tools, finish_reason):
-    """Never execute output. Only return complete, offered, schema-valid calls."""
-    matches = list(re.finditer(r"<tool_call>\s*(.*?)\s*</tool_call>", text, re.DOTALL))
-    if not matches:
+    """Parse JSON before its closing tag: tag spellings may occur inside code strings."""
+    if finish_reason == "length":
         return {"role": "assistant", "content": text}, finish_reason
     functions = {tool["function"]["name"]: tool["function"] for tool in tools}
-    calls = []
-    for match in matches:
+    calls, content = [], []
+    cursor = 0
+    decoder = json.JSONDecoder()
+    while (start := text.find("<tool_call>", cursor)) != -1:
+        content.append(text[cursor:start])
+        payload_start = start + len("<tool_call>")
+        while payload_start < len(text) and text[payload_start].isspace():
+            payload_start += 1
         try:
-            payload = json.loads(match.group(1))
+            payload, end = decoder.raw_decode(text, payload_start)
+            while end < len(text) and text[end].isspace():
+                end += 1
+            if not text.startswith("</tool_call>", end):
+                raise ValueError("Missing closing tool-call tag")
             name, arguments = payload["name"], payload["arguments"]
             if name not in functions or not isinstance(arguments, dict):
                 raise ValueError("Unknown tool or invalid argument object")
@@ -152,11 +161,14 @@ def parse_actions(text, tools, finish_reason):
             raise ValueError(f"Model emitted an invalid tool call: {error}") from error
         calls.append({"id": "call_" + uuid.uuid4().hex, "type": "function",
                       "function": {"name": name, "arguments": json.dumps(arguments, ensure_ascii=False)}})
-    content = re.sub(r"<tool_call>.*?</tool_call>", "", text, flags=re.DOTALL).strip()
-    # A truncated call must never be dispatched, including after an earlier complete call.
-    if "<tool_call>" in content or "</tool_call>" in content or finish_reason == "length":
-        return {"role": "assistant", "content": text}, finish_reason
-    return {"role": "assistant", "content": content or None, "tool_calls": calls}, "tool_calls"
+        cursor = end + len("</tool_call>")
+    content.append(text[cursor:])
+    remaining = "".join(content).strip()
+    if "</tool_call>" in remaining:
+        raise ValueError("Unmatched closing tool-call tag")
+    if calls:
+        return {"role": "assistant", "content": remaining or None, "tool_calls": calls}, "tool_calls"
+    return {"role": "assistant", "content": text}, finish_reason
 
 
 def sse_events(response, include_usage=False):

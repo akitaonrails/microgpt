@@ -23,6 +23,30 @@ def rows(path):
 
 
 def convert(row, kind):
+    if kind == "opencodeinstruct":
+        try:
+            score = float(row["average_test_score"])
+        except (TypeError, ValueError):
+            return None, "missing_score"
+        if score != 1.0:
+            return None, "upstream_tests_failed"
+        prompt, answer = row["input"], row["output"]
+        return {"messages": [{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}],
+                "tools": [], "source": kind, "group": hashlib.sha256(prompt.encode()).hexdigest(),
+                "license": "CC-BY-4.0", "upstream_id": row["id"], "upstream_test_score": score,
+                "verification": "Upstream score only; downloaded code/tests never executed here."}, None
+    if kind == "code-feedback":
+        messages = row["messages"]
+        if not messages or messages[-1]["role"] != "assistant" or any(
+                m["role"] not in ("user", "assistant") or not isinstance(m["content"], str) for m in messages):
+            return None, "unsupported_conversation"
+        return {"messages": messages, "tools": [], "source": kind, "license": "Apache-2.0",
+                "group": hashlib.sha256(messages[0]["content"].encode()).hexdigest(), "upstream_id": row["id"]}, None
+    if kind == "opencoder-educational":
+        prompt = row["instruction"]
+        return {"messages": [{"role": "user", "content": prompt}, {"role": "assistant", "content": row["output"]}],
+                "tools": [], "source": kind, "license": "MIT", "upstream_id": row["seq_id"],
+                "group": hashlib.sha256(prompt.encode()).hexdigest()}, None
     if kind in ("cosmopedia", "fineweb"):
         text = row["text"]
         if not 100 <= len(text) <= 100000:
@@ -71,7 +95,7 @@ def convert(row, kind):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True, help="Directory produced by download_corpus")
-    parser.add_argument("--kind", choices=["codeparrot", "commitpack", "conversation", "multilingual", "smoltalk", "opencoder", "cosmopedia", "fineweb"], required=True)
+    parser.add_argument("--kind", choices=["opencodeinstruct", "code-feedback", "opencoder-educational", "codeparrot", "commitpack", "conversation", "multilingual", "smoltalk", "opencoder", "cosmopedia", "fineweb"], required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=500)
     parser.add_argument("--scan-limit", type=int, default=300000)

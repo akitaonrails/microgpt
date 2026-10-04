@@ -10,6 +10,9 @@ import shutil
 from huggingface_hub import HfApi, hf_hub_download
 
 SOURCES = {
+    "opencodeinstruct": ("nvidia/OpenCodeInstruct", "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d", ["data/train-*.parquet"]),
+    "code-feedback": ("m-a-p/Code-Feedback", "f411b16a97c910ac9acf8b0d0948e340aa77cc34", ["Code-Feedback.jsonl"]),
+    "opencoder-educational": ("OpenCoder-LLM/opc-sft-stage2", "7d28f40d579edd7c24402d17d0c7639f991e6f8d", ["educational_instruct/train-*.parquet"]),
     "reasoning-code": ("open-r1/Mixture-of-Thoughts", "e55fa28006c0d0ec60fb3547520f775dd42d02cd", ["code/train-*.parquet"]),
     "reasoning-math": ("open-r1/Mixture-of-Thoughts", "e55fa28006c0d0ec60fb3547520f775dd42d02cd", ["math/train-*.parquet"]),
     "cosmopedia": ("HuggingFaceTB/smollm-corpus", "3ba9d605774198c5868892d7a8deda78031a781f", ["cosmopedia-v2/train-*.parquet"]),

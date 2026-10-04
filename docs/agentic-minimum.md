@@ -1,5 +1,9 @@
 # The minimum agentic model: experiment notebook
 
+**Programming correction in progress:** the arithmetic checkpoint failed a user task switch.
+See the [broader coding-data experiment](programming-improvement.md) for the new curriculum and behavioral gates.
+
+
 The target is a small, scratch-trained model that can keep a real OpenCode session
 going on simple tasks. This is not a claim of broad software-engineering skill.
 We retain the 90,969,600-parameter model and o200k tokenizer. Its tied vocabulary
