@@ -7,11 +7,13 @@ from pathlib import Path
 
 from .tokenizer import Tokenizer
 from .chat import ChatRequest, normalize
-from .protocol import digest, prompt_ids, body, tokenizer_identity, VERSION
+from .protocol import digest, prompt_ids, body, canonical_messages, tokenizer_identity, VERSION
 
 
-def assistant_examples(record, tokenizer, max_length, pack=False):
+def assistant_examples(record, tokenizer, max_length, pack=False, canonical_tool_ids=False):
     messages, tools = normalize(ChatRequest(model="training", messages=record["messages"], tools=record.get("tools", [])))
+    if canonical_tool_ids:
+        messages = canonical_messages(messages)
     if messages[-1]["role"] != "assistant" or messages[-1].get("tool_calls"):
         raise ValueError("A trajectory must end with a final assistant answer")
     examples = []
@@ -50,6 +52,7 @@ def main():
     parser.add_argument("--max-length", type=int, default=4096)
     parser.add_argument("--limit", type=int, default=2000, help="Maximum input records across all sources")
     parser.add_argument("--pack-episodes", action="store_true", help="Supervise all assistant turns in one causal pass; no repeated prefixes")
+    parser.add_argument('--canonical-tool-ids', action='store_true', help='Use stable local call numbers instead of opaque caller IDs')
     args = parser.parse_args()
     if args.max_length < 2 or args.limit < 1:
         parser.error("Limits must be positive, with max-length >= 2")
@@ -83,7 +86,7 @@ def main():
                 group = str(record.get("group") or record.get("id") or identity)
                 split = "val" if int(hashlib.sha256(group.encode()).hexdigest()[:8], 16) % 20 == 0 else "train"
                 try:
-                    examples = assistant_examples(record, tokenizer, args.max_length, pack=args.pack_episodes)
+                    examples = assistant_examples(record, tokenizer, args.max_length, pack=args.pack_episodes, canonical_tool_ids=args.canonical_tool_ids)
                 except (ValueError, KeyError, TypeError) as error:
                     raise ValueError(f"Invalid record {record.get('id', identity)}: {error}") from error
                 if not examples:
@@ -103,6 +106,7 @@ def main():
     if not all(x['examples'] for x in totals.values()):
         raise ValueError("Need retained examples in both splits; increase input diversity/length budget")
     manifest = {"protocol": VERSION, "max_length": args.max_length, "packed_episodes": args.pack_episodes,
+                "canonical_tool_ids": args.canonical_tool_ids,
                 "tokenizer_fingerprint": tokenizer_identity(tokenizer), "sources": sources,
                 "counts": dict(counts), "splits": {}}
     for split in totals:

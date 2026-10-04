@@ -13,6 +13,7 @@ import tempfile
 import time
 
 from eval_opencode import IMAGE, configure, docker_command, grade
+from microgpt.opencode_format import state_text, task_prompt
 
 
 def requirements(seed, rounds):
@@ -26,15 +27,6 @@ def grader_text(items):
         for value in [-13, 0, 1, 2.5, 97]:
             text += f"assert s.{item['name']}({value}) == {value * item['factor'] + item['offset']!r}\n"
     return text + "print('PASS')\n"
-
-
-def state_text(items):
-    notes = '\n'.join(f"- {t['name']}(value) must return value * {t['factor']} + {t['offset']}." for t in items)
-    return '# Required behavior\n' + notes + '\nPreserve and test every requirement above.\n'
-
-
-def task_prompt(task):
-    return f"In solution.py add {task['name']}(value), returning value * {task['factor']} + {task['offset']}. Keep all earlier functions correct. Read TASK_STATE.md for the requirements, read the code, edit it, and call check. Retry transient tool failures."
 
 
 def main():

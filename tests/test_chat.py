@@ -36,6 +36,36 @@ class ChatTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             normalize(ChatRequest(model="microgpt", messages=[{"role": "tool", "tool_call_id": "wrong", "content": "x"}]))
 
+    def test_canonical_ids_preserve_associations_and_training_parity(self):
+        import copy
+        from microgpt.protocol import canonical_messages, prompt_ids
+        from microgpt.tokenizer import Tokenizer
+        from microgpt.trajectories import assistant_examples
+        tokenizer = Tokenizer(encoding='o200k_base')
+        messages = [{'role': 'user', 'content': 'Read both files.'},
+                    {'role': 'assistant', 'tool_calls': [
+                        {'id': name, 'type': 'function', 'function': {'name': 'read', 'arguments': {'path': path}}}
+                        for name, path in [('opaque-a', 'a.py'), ('opaque-b', 'b.py')]]},
+                    {'role': 'tool', 'tool_call_id': 'opaque-b', 'content': 'B'},
+                    {'role': 'tool', 'tool_call_id': 'opaque-a', 'content': 'A'},
+                    {'role': 'assistant', 'content': 'Read both.'}]
+        canonical = canonical_messages(messages)
+        self.assertEqual([m['tool_call_id'] for m in canonical if m['role'] == 'tool'], ['call_2', 'call_1'])
+        self.assertEqual(messages[1]['tool_calls'][0]['id'], 'opaque-a')
+        changed = copy.deepcopy(messages)
+        for call in changed[1]['tool_calls']:
+            call['id'] += '-different-uuid'
+        for message in changed[2:4]:
+            message['tool_call_id'] += '-different-uuid'
+        for packed in (False, True):
+            first = assistant_examples({'messages': messages, 'tools': [self.tool]}, tokenizer, 4096,
+                                       pack=packed, canonical_tool_ids=True)
+            second = assistant_examples({'messages': changed, 'tools': [self.tool]}, tokenizer, 4096,
+                                        pack=packed, canonical_tool_ids=True)
+            self.assertEqual(first, second)
+            prefix = prompt_ids(tokenizer, messages[:-1], [self.tool], canonical_tool_ids=True)
+            self.assertEqual(first[-1]['input_ids'][:len(prefix)], prefix)
+
     def test_http_stream_auth_usage_and_context(self):
         class Backend:
             context = 100
@@ -109,9 +139,11 @@ class ChatTests(unittest.TestCase):
                 'function': {'name': 'read', 'arguments': {'filePath': 'a.py'}}}]},
                 {'role': 'tool', 'tool_call_id': str(index), 'content': 'unchanged'}])
         self.assertTrue(repeated_tool_cycle(history))
+        reminder = {'role': 'assistant', 'content': 'CRITICAL - MAXIMUM STEPS REACHED\nRespond with text only.'}
+        self.assertTrue(repeated_tool_cycle(history + [reminder]))
         # The HTTP boundary must stop the loop before touching the backend.
         response = TestClient(create_app(object())).post('/v1/chat/completions', json={
-            'model': 'microgpt', 'max_tokens': 20, 'messages': history})
+            'model': 'microgpt', 'max_tokens': 20, 'messages': history + [reminder]})
         self.assertEqual(response.status_code, 422)
         self.assertEqual(response.json()['error']['type'], 'agent_loop_error')
         self.assertFalse(repeated_tool_cycle(history[:-2]))

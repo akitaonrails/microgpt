@@ -37,12 +37,14 @@ def sample_token(logits, temperature, generator):
 
 class NativeBackend:
     """Serve our checkpoint using the same protocol as assistant-only SFT."""
-    def __init__(self, checkpoint, device="cpu", attention="sdpa", prefix_cache=True, prefill_chunk=1024):
+    def __init__(self, checkpoint, device="cpu", attention="sdpa", prefix_cache=True, prefill_chunk=1024, canonical_tool_ids=None):
         self.device = torch.device(device)
         if attention == "flash" and self.device.type != "cuda":
             raise ValueError("Flash Attention requires CUDA")
         self.attention = attention
         saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+        self.canonical_tool_ids = (saved.get('data', {}).get('canonical_tool_ids', False)
+                                   if canonical_tool_ids is None else canonical_tool_ids)
         self.model = GPT(ModelConfig(**saved["model_config"]))
         self.model.load_state_dict(saved["model"])
         self.model.to(self.device).eval()
@@ -64,10 +66,11 @@ class NativeBackend:
         self.source = {"checkpoint": str(checkpoint), "context": self.context, "attention": attention,
                        "parameters": sum(p.numel() for p in self.model.parameters()),
                        "stage": saved.get("settings", {}).get("stage", "pretrain"), "step": saved["step"],
-                       "origin": saved.get("origin", {"initialization": "random"})}
+                       "origin": saved.get("origin", {"initialization": "random"}),
+                       "canonical_tool_ids": self.canonical_tool_ids}
 
     def encode(self, messages, tools):
-        return prompt_ids(self.tokenizer, messages, tools)
+        return prompt_ids(self.tokenizer, messages, tools, canonical_tool_ids=self.canonical_tool_ids)
 
     @torch.inference_mode()
     def complete(self, ids, max_tokens, temperature, stop, seed=None):

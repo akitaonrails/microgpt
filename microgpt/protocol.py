@@ -45,7 +45,29 @@ def body(message):
     return text.lstrip('\n')
 
 
-def prompt_ids(tokenizer, messages, tools):
+def canonical_messages(messages):
+    """Keep call/result associations without exposing irrelevant caller UUIDs.
+
+    Work on copies: the HTTP caller still owns its original tool-call IDs.
+    """
+    mapping, result = {}, []
+    for original in messages:
+        message = dict(original)
+        if message.get('tool_calls'):
+            calls = []
+            for call in message['tool_calls']:
+                mapping[call['id']] = f'call_{len(mapping) + 1}'
+                calls.append({**call, 'id': mapping[call['id']]})
+            message['tool_calls'] = calls
+        if message['role'] == 'tool':
+            message['tool_call_id'] = mapping[message['tool_call_id']]
+        result.append(message)
+    return result
+
+
+def prompt_ids(tokenizer, messages, tools, canonical_tool_ids=False):
+    if canonical_tool_ids:
+        messages = canonical_messages(messages)
     ids = tokenizer.encode('MicroGPT conversation.\n')
     if tools:
         ids += tokenizer.encode('Tools: ' + json.dumps(tools, ensure_ascii=False, sort_keys=True) + '\n')

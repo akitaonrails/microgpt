@@ -116,7 +116,8 @@ remain experimental; see [next-run.md](next-run.md).
 Malformed generated calls return non-retryable HTTP 422 (`invalid_model_output`).
 Three repetitions of the same one-to-three-action cycle with unchanged observations
 return HTTP 422 (`agent_loop_error`); a new user turn or changed observation breaks
-the match. This bounds repeated-read/edit loops that OpenCode's soft step limit did not
+the match. Plain assistant reminders about OpenCode's step budget do not reset the
+guard. This bounds repeated-read/edit loops that OpenCode's soft step limit did not
 stop in testing. It does not substitute for learned recovery.
 
 The [minimal-agent experiment notebook](agentic-minimum.md) records real cumulative

@@ -8,6 +8,15 @@ from pathlib import PurePosixPath
 AGENT_PROMPT = 'You fix Python code. Read solution.py, edit it to satisfy the request, then call check to test. Preserve earlier requirements in TASK_STATE.md when present. Line numbers in read output are annotations, not file content. Correct failures. Give a brief final answer.'
 
 
+def state_text(items):
+    notes = '\n'.join(f"- {t['name']}(value) must return value * {t['factor']} + {t['offset']}." for t in items)
+    return '# Required behavior\n' + notes + '\nPreserve and test every requirement above.\n'
+
+
+def task_prompt(task, path='solution.py', state_path='TASK_STATE.md'):
+    return f"In {path} add {task['name']}(value), returning value * {task['factor']} + {task['offset']}. Keep all earlier functions correct. Read {state_path} for the requirements, read the code, edit it, and call check. Retry transient tool failures."
+
+
 def system_prompt(root):
     return (AGENT_PROMPT + '\nYou are powered by the model named microgpt. The exact model ID is microgpt/microgpt\n'
             'Here is some useful information about the environment you are running in:\n<env>\n'

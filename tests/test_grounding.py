@@ -45,15 +45,25 @@ class GroundingTests(unittest.TestCase):
     def test_handoff_preserves_cumulative_functions(self):
         from microgpt.horizon_data import sessions
         for seed in range(4):
-            first, second = sessions(seed, TOOLS[:3], rounds=8, wire=True, recover_errors=True)
+            first, second = sessions(seed, TOOLS[:3], rounds=8, wire=True, recover_errors=True, action_plans=True, line_anchors=True, related_names=True)
             self.assertEqual(first['group'], second['group'])
             self.assertEqual(len(first['fixture']['requirements']), 4)
             self.assertEqual(len(second['fixture']['requirements']), 8)
-            self.assertIn('session handoff', second['messages'][2]['content'])
+            if seed // 2 % 2 == 0:
+                self.assertEqual(len({r['name'].rsplit('_', 1)[0] for r in second['fixture']['requirements']}), 1)
+            self.assertNotIn('session handoff', second['messages'][2]['content'])
+            self.assertIn('TASK_STATE.md for the requirements', second['messages'][2]['content'])
             if seed % 2 == 0:
                 self.assertTrue(any(m.get('supervise') is False for item in (first, second) for m in item['messages']))
             for item in (first, second):
                 normalize(ChatRequest(model='test', messages=item['messages'], tools=item['tools']))
+                for message in item['messages']:
+                    calls = message.get('tool_calls', [])
+                    if calls and calls[0]['function']['name'] == 'edit' and message.get('supervise', True):
+                        self.assertTrue(message['content'].startswith('Add '))
+                        parsed, reason = parse_reply(body(message), item['tools'], 'stop')
+                        self.assertEqual(reason, 'tool_calls')
+                        self.assertEqual(parsed['content'], message['content'])
                 namespace = {}
                 exec(item['fixture']['source'], namespace)
                 for requirement in item['fixture']['requirements']:

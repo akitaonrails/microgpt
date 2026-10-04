@@ -101,6 +101,8 @@ def main():
     parser.add_argument("--max-output", type=int, default=4096)
     parser.add_argument("--prefill-chunk", type=int, default=1024)
     parser.add_argument("--no-prefix-cache", action="store_true")
+    parser.add_argument('--canonical-tool-ids', action='store_true', default=None,
+                        help='Normalize opaque caller IDs; otherwise inherit the checkpoint dataset setting')
     parser.add_argument("--attention", choices=["sdpa", "flash"], default="sdpa")
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--host", default="127.0.0.1")
@@ -114,7 +116,7 @@ def main():
     device = ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device
     torch.set_num_threads(4)
     backend = NativeBackend(args.checkpoint, device, args.attention,
-                            not args.no_prefix_cache, args.prefill_chunk)
+                            not args.no_prefix_cache, args.prefill_chunk, args.canonical_tool_ids)
     print(backend.source, flush=True)
     import uvicorn
     uvicorn.run(create_app(backend, args.model_name, key, args.max_output), host=args.host, port=args.port)

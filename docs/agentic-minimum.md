@@ -29,6 +29,18 @@ No downloaded or model-generated code executes directly on the host.
 
 ## Which component does what?
 
+```mermaid
+flowchart LR
+  D[Code and conversation data] --> P[Pretrain randomly initialized GPT]
+  P --> S[Assistant and tool-trajectory training]
+  T[Original tool demonstrations] --> S
+  S --> W[Our checkpoint]
+  W --> A[Local API and KV cache]
+  A <--> O[OpenCode]
+  O <--> F[Editable source and persistent task state]
+  O <--> C[Isolated correctness checker]
+```
+
 | Component | Minimum responsibility |
 |---|---|
 | Model | Choose an action, copy its arguments, produce the requested simple code, respond to observations |
@@ -96,6 +108,13 @@ actions before further inference. This also catches alternating read/edit loops.
 A changed observation or new user message breaks the match. This contains observed
 loops; it does not teach recovery or detect every cycle.
 
+A later run exposed a bypass: OpenCode appends a plain assistant message announcing
+its step limit after the tool result. That hid the final action/result pair from
+the first guard. A scripted client self-test reproduced this independently of the
+model. The guard now skips plain assistant messages while scanning for repeated
+actions, while a real user turn still resets it. Scripted guard tests are not model
+capability results.
+
 ### A 5xx can make a bad generation much more expensive
 
 Malformed tool output originally returned HTTP 502, encouraging the client to retry
@@ -114,6 +133,9 @@ remaining failures: seed 1337 passed 15/16; seed 20261004 passed 21/32, stopping
 after two consecutive failures. It retained 8/8 short arithmetic repairs but
 passed 0/4 broader repairs. These are development evaluations; improvements informed
 by their failures need additional fresh seeds before a final capability claim.
+The successful run reported 397,216 cached input tokens across 81 model responses,
+13,821 uncached input tokens, and a largest prompt of 10,534 tokens. Those are
+observed cache-use figures, not a measured wall-clock speedup or a 32K retrieval score.
 Broader four-task repairs, reasoning tests and long-context
 retrieval remain separate capability measurements, not prerequisites silently
 redefined to make the narrow demonstration pass.
@@ -180,6 +202,8 @@ Record its step, parent, tokenizer fingerprint and SHA-256. Serve with a matchin
 4,096-token output budget, then run the actual client:
 
 ```sh
+cp --reflink=auto runs/agent-minimal-v1/best.pt runs/agent-minimal-v1/candidate.pt
+sha256sum runs/agent-minimal-v1/candidate.pt
 .venv/bin/python -m microgpt.serve --checkpoint runs/agent-minimal-v1/candidate.pt \
   --device cuda --attention flash --port 8000 --max-output 4096
 # In another terminal; select fresh result directories and repeat with new seeds.
@@ -193,3 +217,41 @@ The horizon report includes cached-token counts and the largest observed prompt.
 A 16-round success does not establish effective use of all 32K positions. Automatic
 compaction, model-written handoff notes, unfamiliar tool sets, deep reasoning, and
 general coding remain separate capabilities needing separate training and tests.
+
+The direct recipe's early checkpoints did not yet reproduce the successful longer
+lineage: step 750 failed after several rounds, step 1500 duplicated an identifier,
+and the best-loss snapshot near step 3000 made malformed edit anchors. The recorded
+failures are useful evidence against selecting checkpoints by loss alone.
+
+An additional controlled variant adds a short visible plan immediately before each
+correct edit: identify the new function and required expression, then preserve the
+old code while building tool arguments. `horizon_data --action-plans` produces these
+targets; the supplied requirements and tool results remain unchanged. This tests
+whether explicit intermediate intent improves copying. It is not evidence of deep
+reasoning, and its benefit must be established by complete generated rollouts.
+
+That visible-plan variant failed both initial evaluation rounds even after 2,500
+updates: it stated a plan and stopped without editing. It is retained as an
+optional experiment, not enabled in the baseline. Likewise, replacing opaque
+runtime tool IDs with training-shaped IDs did not fix the step-5000 failure.
+
+The direct 6,000-step run completed the first eight rounds but failed after the
+fresh-session boundary. Inspection exposed another input mismatch: synthetic
+handoffs announced “Continue after a session handoff,” while actual fresh sessions
+received an ordinary request plus the state file. Wire-format generation now uses
+the same request/state-file formatter as the lesson harness, with independently
+generated task instances. It no longer relies on that extra handoff announcement.
+
+`agent-lines-v2` combines this correction with smaller edit targets: use a unique
+final source line as the append anchor, falling back to the final function when
+the line is ambiguous. Existing code need not be copied back in full. Recovery
+examples still include duplicated-function failures. This changes the taught edit
+strategy; the server does not repair model arguments or insert code for it.
+
+The early smaller-edit candidate still failed at handoff by using the correct new
+expression with an earlier function's identifier. The data audit found that most
+training functions had distinct word prefixes; the evaluation's sibling functions
+all share a prefix and differ in their numeric suffix. The `--related-names`
+curriculum adds same-prefix siblings in half of sessions, balanced independently
+of the error-recovery pattern. Prefixes still come from the existing vocabulary;
+evaluation identifiers, values and solutions are not inserted into training.

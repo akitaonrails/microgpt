@@ -119,6 +119,11 @@ def repeated_tool_cycle(messages, limit=3, max_period=3):
     signatures = []
     end = len(messages)
     while end >= 2 and len(signatures) < limit * max_period:
+        # OpenCode appends a plain assistant step-limit reminder after tool
+        # results. It must not hide the preceding loop from this guard.
+        if messages[end - 1].get('role') == 'assistant' and not messages[end - 1].get('tool_calls'):
+            end -= 1
+            continue
         assistant, result = messages[end - 2:end]
         calls = assistant.get('tool_calls', [])
         if assistant.get('role') != 'assistant' or result.get('role') != 'tool' or len(calls) != 1:

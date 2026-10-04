@@ -11,10 +11,11 @@ import random
 
 from .protocol import reasoning_instruction
 from .grounding import vocabulary
-from .opencode_format import system_prompt, read_output
+from .opencode_format import system_prompt, read_output, state_text, task_prompt
 
 
-def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover_errors=False):
+def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None,
+             recover_errors=False, action_plans=False, line_anchors=False, related_names=False):
     rng = random.Random(seed)
     path = rng.choice(['solution.py', 'helpers.py', 'src/convert.py'])
     state_path = 'TASK_STATE.md'
@@ -31,11 +32,15 @@ def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover
     requirements = []
     checkpoints = []
     call_count = 0
-    def action(name, arguments, output, thought, supervise=True):
+    prefixes = words or ['compute', 'transform', 'adjust', 'convert', 'scale', 'measure', 'shift', 'process', 'calculate', 'apply']
+    # Same-prefix siblings force copying the numeric suffix, not just recognizing
+    # a different vocabulary word. Balance independently of error-recovery parity.
+    shared_prefix = rng.choice(prefixes) if related_names and seed // 2 % 2 == 0 else None
+    def action(name, arguments, output, thought, supervise=True, content=''):
         nonlocal call_count
         call_count += 1
         cid = f'call_{seed}_{call_count}'
-        message = {'role': 'assistant', 'content': '', 'tool_calls': [{'id': cid, 'type': 'function',
+        message = {'role': 'assistant', 'content': content, 'tool_calls': [{'id': cid, 'type': 'function',
                     'function': {'name': name, 'arguments': arguments}}]}
         if effort != 'none':
             message['reasoning_content'] = thought
@@ -55,7 +60,7 @@ def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover
         if index == rounds // 2:
             checkpoints.append(record('session'))
             messages = list(system)
-        prefix = rng.choice(words or ['compute', 'transform', 'adjust', 'convert', 'scale', 'measure', 'shift', 'process', 'calculate', 'apply'])
+        prefix = shared_prefix or rng.choice(prefixes)
         name = f'{prefix}_{rng.randrange(10000, 99999)}'
         while any(r['name'] == name for r in requirements):
             name = f'{prefix}_{rng.randrange(10000, 99999)}'
@@ -63,7 +68,10 @@ def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover
         requirements.append({'name': name, 'factor': factor, 'offset': offset})
         notes = '# Requirements\n' + '\n'.join(f"- {r['name']}(value) must return value * {r['factor']} + {r['offset']}." for r in requirements)
         prompt = f'In {path} add {name}(value), returning value * {factor} + {offset}. Preserve all earlier functions. Read {state_path}, read the code, edit it, and call check. Retry transient errors.'
-        if index == rounds // 2:
+        if wire:
+            notes = state_text(requirements)
+            prompt = task_prompt(requirements[-1], path, state_path)
+        elif index == rounds // 2:
             prompt = 'Continue after a session handoff. ' + prompt
         messages.append({'role': 'user', 'content': json.dumps(prompt) if wire else prompt})
         read(state_path, notes)
@@ -71,12 +79,16 @@ def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover
         if seed % 5 == 0 and index == 0:
             # Recovery prefix: one redundant read must be followed by useful work.
             read(path, text)
-        # Append by replacing the last observed function, keeping all earlier text.
+        # Prefer a unique final line when requested: less code must be copied back.
         old = text[text.rfind('def '):] if 'def ' in text else text
+        recovering = recover_errors and index > 0 and index % 3 == 1 and seed % 2 == 0
+        last_line = text.splitlines(keepends=True)[-1]
+        if line_anchors and not recovering and text.count(last_line) == 1:
+            old = last_line
         addition = f'def {name}(value):\n    return value * {factor} + {offset}\n'
         new = old.rstrip() + '\n\n' + addition
         assert text.count(old) == 1
-        if recover_errors and index > 0 and index % 3 == 1 and seed % 2 == 0:
+        if recovering:
             # An off-policy mistaken edit is context, never a supervised target.
             duplicate = old.rstrip() + '\n\n' + old
             text = text.replace(old, duplicate, 1)
@@ -96,7 +108,9 @@ def sessions(seed, tools, rounds=8, words=None, wire=False, effort=None, recover
         text = text.replace(old, new, 1)
         for r in requirements:
             assert f"def {r['name']}(value):\n    return value * {r['factor']} + {r['offset']}\n" in text
-        action('edit', {'filePath': path, 'oldString': old, 'newString': new}, 'Edit applied successfully.', 'I will append the requested function and preserve the existing code.')
+        plan = f'Add {name}(value) returning value * {factor} + {offset}. Preserve the existing functions.' if action_plans else ''
+        action('edit', {'filePath': path, 'oldString': old, 'newString': new}, 'Edit applied successfully.',
+               'I will append the requested function and preserve the existing code.', content=plan)
         if index == 2 and seed % 2 == 0:
             action('check', {}, 'TRANSIENT_ERROR: Test runner temporarily unavailable. Retry check.', 'I will test all current requirements.')
         action('check', {}, 'PASS\nPASS\n' if wire else 'PASS\n', 'I will verify all current requirements.')
@@ -115,12 +129,18 @@ def main():
     parser.add_argument('--wire', action='store_true', help='Match installed OpenCode environment and observation formatting')
     parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     parser.add_argument('--recover-errors', action='store_true', help='Train recovery from mistaken edits without supervising those mistakes')
+    parser.add_argument('--action-plans', action='store_true', help='State the requested change before constructing its edit arguments')
+    parser.add_argument('--line-anchors', action='store_true', help='Append using a unique final line instead of copying the whole preceding function')
+    parser.add_argument('--related-names', action='store_true', help='Include sibling identifiers differing only in their numeric suffix')
     args = parser.parse_args()
     tools = json.loads(args.tools.read_text())
     words = vocabulary(args.vocabulary_data) if args.vocabulary_data else None
     with args.out.open('x') as stream:
         for index in range(args.count):
-            records = sessions(500000 + index, tools, rounds=2 if args.initial_only else (2, 4, 8, 16, 32)[index % 5], words=words, wire=args.wire, effort=args.effort, recover_errors=args.recover_errors)
+            records = sessions(
+                500000 + index, tools, rounds=2 if args.initial_only else (2, 4, 8, 16, 32)[index % 5],
+                words=words, wire=args.wire, effort=args.effort, recover_errors=args.recover_errors,
+                action_plans=args.action_plans, line_anchors=args.line_anchors, related_names=args.related_names)
             if args.initial_only:
                 records = records[:1]
                 records[0]['source'] = 'horizon-start'
@@ -133,6 +153,9 @@ def main():
         'vocabulary_sha256': hashlib.sha256(json.dumps(words).encode()).hexdigest(), 'vocabulary_source': str(args.vocabulary_data),
         'wire': args.wire, 'effort': args.effort,
         'recover_errors': args.recover_errors,
+        'action_plans': args.action_plans,
+        'line_anchors': args.line_anchors,
+        'related_names': args.related_names,
         'note': 'Simulated demonstrations; whole episodes exceeding the token limit are excluded during preparation.'}, indent=2) + '\n')
 
 
