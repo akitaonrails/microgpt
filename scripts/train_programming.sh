@@ -3,9 +3,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 agent_checkpoint="${1:-runs/coding-v1/foundation/last.pt}"
-agent_output="${2:-runs/programming-v1}"
-agent_steps="${3:-6000}"
-.venv/bin/python -m microgpt.finetune --data data/programming-sft-v1 \
+agent_output="${2:-runs/programming-v2}"
+agent_steps="${3:-24000}"
+agent_data="${4:-data/programming-sft-v2}"
+.venv/bin/python -m microgpt.finetune --data "$agent_data" \
   --checkpoint "$agent_checkpoint" --out "$agent_output" --steps "$agent_steps" \
   --accumulation 2 --lr 0.0001 --eval-every 500 --eval-examples 40 \
   --device cuda --attention flash --max-length 32768 --balanced-lengths \

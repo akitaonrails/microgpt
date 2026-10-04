@@ -1,5 +1,6 @@
 """Turn verified NAS shards into bounded, provenance-preserving training JSONL."""
 import argparse
+import ast
 from collections import Counter
 import gzip
 import hashlib
@@ -43,10 +44,17 @@ def convert(row, kind):
         return {"messages": messages, "tools": [], "source": kind, "license": "Apache-2.0",
                 "group": hashlib.sha256(messages[0]["content"].encode()).hexdigest(), "upstream_id": row["id"]}, None
     if kind == "opencoder-educational":
-        prompt = row["instruction"]
+        original = row["instruction"]
+        prompt = original
+        # Make the requested interface explicit without executing source code.
+        try:
+            function = next(n for n in ast.parse(row['code']).body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == row['entry_point'])
+            prompt += f" Use the function signature {function.name}({ast.unparse(function.args)})."
+        except (SyntaxError, StopIteration, KeyError, RecursionError):
+            pass
         return {"messages": [{"role": "user", "content": prompt}, {"role": "assistant", "content": row["output"]}],
                 "tools": [], "source": kind, "license": "MIT", "upstream_id": row["seq_id"],
-                "group": hashlib.sha256(prompt.encode()).hexdigest()}, None
+                "group": hashlib.sha256(original.encode()).hexdigest()}, None
     if kind in ("cosmopedia", "fineweb"):
         text = row["text"]
         if not 100 <= len(text) <= 100000:

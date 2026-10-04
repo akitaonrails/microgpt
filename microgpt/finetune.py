@@ -43,16 +43,21 @@ def loss_for(model, example, device):
 
 
 @torch.no_grad()
-def evaluate(model, examples, device, attention):
+def evaluate(model, examples, device, attention, by_source=False):
     model.eval()
     total = tokens = 0
+    sources = {}
     with precision(device), attention_context(attention):
         for example in examples:
             loss, count = loss_for(model, example, device)
             total += loss.item() * count
             tokens += count
+            source = example.get('source', 'unknown')
+            subtotal, subcount = sources.get(source, (0, 0))
+            sources[source] = (subtotal + loss.item() * count, subcount + count)
     model.train()
-    return total / tokens
+    overall = total / tokens
+    return (overall, {key: value / count for key, (value, count) in sources.items()}) if by_source else overall
 
 
 def bucket_weights(buckets, weights):
@@ -198,7 +203,8 @@ def main():
         budget_reached = bool(stopping) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)
         if step % args.eval_every and step != args.steps and not budget_reached:
             continue
-        metrics = {'step': step, 'train_loss': total, 'val_loss': evaluate(model, validation, device, args.attention),
+        val_loss, val_sources = evaluate(model, validation, device, args.attention, by_source=True)
+        metrics = {'step': step, 'train_loss': total, 'val_loss': val_loss, 'val_loss_by_source': val_sources,
                    'assistant_tokens_seen': tokens_seen,
                    'seconds': round(time.monotonic() - started, 1), 'budget_reached': budget_reached,
                    'peak_memory_gb': torch.cuda.max_memory_allocated() / 1e9 if device.type == 'cuda' else 0}

@@ -1,4 +1,4 @@
-"""Held-out programming requests, direct and cumulative real-OpenCode modes.
+"""Independent programming probes, direct and cumulative real-OpenCode modes.
 
 Independent from training generators. Model code executes only in the restricted
 Docker grader. These small tests measure behavior, not arbitrary-prompt competence.
@@ -44,7 +44,9 @@ def main():
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     tasks = TASKS[:args.limit]
-    summary = {'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
+    health = httpx.get(args.url.removesuffix('/v1') + '/health', timeout=10)
+    health.raise_for_status()
+    summary = {'server': health.json(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
     with tempfile.TemporaryDirectory(prefix='microgpt-programming-') as folder:
         base = Path(folder); work = base / 'work'; work.mkdir(mode=0o755)
         subprocess.run(['git', 'init', '-q', str(work)], check=True)

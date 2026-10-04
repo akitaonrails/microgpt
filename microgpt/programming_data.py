@@ -123,6 +123,12 @@ def main():
                     continue
                 if record.get('tools') or any(m.get('tool_calls') for m in record['messages']):
                     continue
+                # Direct answers and tool examples must share system-prompt variants:
+                # otherwise the model can learn 'this system prompt means edit'.
+                variant = int(hashlib.sha256(str(record['group']).encode()).hexdigest()[:8], 16) % 3
+                if variant:
+                    system = GENERAL_PROMPT if variant == 1 else 'You are a coding assistant. Follow the requested interface and answer directly when no tools are needed.'
+                    record['messages'].insert(0, {'role': 'system', 'content': system})
                 record['messages'].insert(0, {'role': 'system', 'content': reasoning_instruction('none')})
                 emit(record)
                 count += 1

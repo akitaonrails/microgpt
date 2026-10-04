@@ -66,6 +66,15 @@ class ProgrammingTests(unittest.TestCase):
         self.assertIsNone(error)
         self.assertIn('never executed', record['verification'])
 
+    def test_public_signature_keeps_original_split_group(self):
+        import hashlib
+        row = {'instruction': 'Return the input doubled.', 'code': 'def double(value):\n    return value * 2\n',
+               'output': 'def double(value):\n    return value * 2\n', 'entry_point': 'double', 'seq_id': 1}
+        record, error = convert(row, 'opencoder-educational')
+        self.assertIsNone(error)
+        self.assertIn('double(value)', record['messages'][0]['content'])
+        self.assertEqual(record['group'], hashlib.sha256(row['instruction'].encode()).hexdigest())
+
     @unittest.skipUnless(importlib.util.find_spec('xgrammar'), 'Install the grammar extra')
     def test_grammar_rejects_malformed_unknown_and_missing_arguments(self):
         from microgpt.constraints import ToolGrammar

@@ -76,9 +76,9 @@ and [raw-token vocabulary interface](https://xgrammar.mlc.ai/docs/latest/api/pyt
 ```sh
 uv pip install -e '.[data,tokenizer,tune,serve,grammar]'
 bash scripts/prepare_programming_data.sh
-bash scripts/train_programming.sh
+bash scripts/train_programming.sh runs/coding-v1/foundation/last.pt runs/programming-v2 24000
 # Optional comparison: same mixture, different random-origin parent.
-bash scripts/train_programming.sh runs/agent-direct-v1/candidate-mid.pt runs/programming-continued-v1 6000
+bash scripts/train_programming.sh runs/agent-direct-v1/candidate-mid.pt runs/programming-continued-v2 24000
 ```
 
 The prepared mixture contains **282,520 training / 14,883 validation episodes**, with
@@ -103,7 +103,7 @@ silently treating them as an absent optional dependency.
 After training, serve a separate candidate port and grade both modes:
 
 ```sh
-.venv/bin/python -m microgpt.serve --checkpoint runs/programming-v1/last.pt \
+.venv/bin/python -m microgpt.serve --checkpoint runs/programming-v2/last.pt \
   --device cuda --attention flash --constrain-tools --port 8017
 .venv/bin/python scripts/eval_programming.py --url http://127.0.0.1:8017/v1 \
   --mode direct --out runs/programming-direct-eval
@@ -113,3 +113,25 @@ After training, serve a separate candidate port and grade both modes:
 
 Keep the failed examples and report per-task results. Training completion, schema
 validity and low loss must not be described as arbitrary programming competence.
+
+
+### Prompt/interface correction
+
+The 1,000-step and intermediate first-mixture snapshots still scored 0/8 direct.
+One diagnostic produced a plausible greeting under a short system prompt, but used
+the wrong function name. With the longer agent prompt it often emitted tool markup
+without tools. This motivates a controlled second mixture: public direct answers
+also receive the same general system prompt (or a short coding prompt, or neither),
+and educational requests explicitly name the function signature parsed from their
+reference code. No source code executes during signature extraction. Source group
+IDs stay based on the original instruction to keep related variants together.
+
+The final preparation script writes `programming-sft-v2`; first-mixture artifacts
+remain separately under `programming-sft-v1`. A fresh foundation-to-SFT run allows
+24,000 updates before evaluation rather than importing any pretrained weights.
+
+
+Validation reporting now includes losses by source. The fixed 40-example validation
+slice is a small diagnostic, not a full estimate over the 14K held-out conversations;
+long easy traces can dominate its token-weighted aggregate. Final model selection
+uses generated-code and real-tool behavior instead.

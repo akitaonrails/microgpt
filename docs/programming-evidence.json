@@ -1,0 +1,300 @@
+{
+  "implementation_commit": "8528b8392a58a55146675242d28e9e28795d1ffd",
+  "date": "2026-10-04",
+  "cpu_tests": 30,
+  "dataset_manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 32768,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/programming-v1.jsonl",
+        "sha256": "7e673a0e716973b8159f0ff3f5b2406a655ecaeefe1e7947916ad7c4c3a9acb8"
+      },
+      {
+        "file": "data/educational-tools-v1.jsonl",
+        "sha256": "c70c7d1d6ee73773f1e9264872188d3c7314ab379d0bfb63013bb1efeae57c2c"
+      },
+      {
+        "file": "data/horizon-related-v1.jsonl",
+        "sha256": "013f7756daaf9c071456217fabe62b1a7de8da78526626a09557e9ba2b755ca0"
+      }
+    ],
+    "counts": {
+      "scanned": 298777,
+      "train_episodes": 282520,
+      "val_episodes": 14883,
+      "duplicates": 1174,
+      "overlength_or_empty": 200
+    },
+    "splits": {
+      "train": {
+        "examples": 282520,
+        "assistant_tokens": 96768432,
+        "groups": 256155,
+        "examples_by_source": {
+          "programming-direct": 1915,
+          "programming-tools": 5738,
+          "opencodeinstruct": 94782,
+          "opencoder-educational": 94003,
+          "code-feedback": 59196,
+          "magicoder": 19022,
+          "conversation-replay": 473,
+          "educational-tools": 3779,
+          "horizon-session": 1899,
+          "horizon-handoff": 1713
+        },
+        "sha256": "c074b4acf86512c4e739215babde7c1accc238a9e898909e904572b75789318c"
+      },
+      "val": {
+        "examples": 14883,
+        "assistant_tokens": 5056166,
+        "groups": 13430,
+        "examples_by_source": {
+          "programming-tools": 262,
+          "programming-direct": 85,
+          "opencodeinstruct": 5102,
+          "opencoder-educational": 4939,
+          "code-feedback": 3092,
+          "magicoder": 978,
+          "conversation-replay": 27,
+          "educational-tools": 210,
+          "horizon-session": 101,
+          "horizon-handoff": 87
+        },
+        "sha256": "cdcefac3fed181634942fe8b13edea8da646210eb9198ffc86e4cb672375bcf1"
+      }
+    }
+  },
+  "reference_checks": {
+    "selected": 4000,
+    "passed": 3989,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "input_sha256": "59cc262e240140ca265655a8d14d2a0f28139164a8e532294308692408095759",
+    "dataset": "OpenCoder-LLM/opc-sft-stage2",
+    "revision": "7d28f40d579edd7c24402d17d0c7639f991e6f8d",
+    "output_sha256": "c70c7d1d6ee73773f1e9264872188d3c7314ab379d0bfb63013bb1efeae57c2c"
+  },
+  "baseline_evaluations": [
+    {
+      "artifact": "runs/programming-baseline-direct/results.json",
+      "sha256": "2e3e0a9ee02322f29c9d26fce6cddb51d8f05c248fe4c85e1a64b4a22a0bde65",
+      "result": {
+        "mode": "direct",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.clamp(-4, 0, 8) == 0\n           ^^^^^^^\nAttributeError: module 'solution' has no attribute 'clamp'\n"
+          },
+          {
+            "id": "initials",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.initials('  ada   lovelace ') == 'AL'\n           ^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'initials'\n"
+          },
+          {
+            "id": "squares",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call>{\"name\": \"edit\", \"arguments\": {\"filePath\": \" even integers\", \"oldString\": \"return the squares of just the even integers, preserving their order. This function returns the square root of the even integers.\n                                                                                         ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "join",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.join_names(['a', 'b']) == 'a, b'\n           ^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'join_names'\n"
+          },
+          {
+            "id": "lookup",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.lookup({'x': None}, 'x', 4) is None\n           ^^^^^^^^\nAttributeError: module 'solution' has no attribute 'lookup'\n"
+          },
+          {
+            "id": "strip_lower",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "alue *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *  \"newString\": \"return value *\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "count",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "{\"error\":{\"message\":\"Model emitted an invalid tool call: Unknown tool or invalid argument object\",\"type\":\"invalid_model_output\"}}"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_matches([[1], [2], [1]], [1]) == 2\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'count_matches'\n"
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/programming-grammar-direct/results.json",
+      "sha256": "48e2e8177b42456490731f030457272d4cc98283360517d37d86d201d54ef728",
+      "result": {
+        "mode": "direct",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpersname\": \"read\", \"arguments\": {\"filePath\": \"python.py\"}}</tool_call)\n                                                                         ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpersname\": \"read\", \"arguments\": {\"filePath\": \"src/convert.py\"}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool\n                                                                              ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "initials",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpersname\": \"read\", \"arguments\": {\"filePath\": \"src/convert.py\"}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool\n                                                                              ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "squares",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpers function. All checks passed.\n    ^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "join",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpersname\": \"read\", \"arguments\": {\"filePath\": \"src/convert.py\"}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool_call)}}</tool\n                                                                              ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+          },
+          {
+            "id": "lookup",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpers function. All checks passed.\n    ^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "strip_lower",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpers function. All checks passed.\n    ^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "count",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    <tool_call/helpers function. All checks passed.\n    ^\nSyntaxError: invalid syntax\n"
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/programming-grammar-agent/results.json",
+      "sha256": "249800d4f98219337e4f8689dc13d61a1e023e426105d54c3cbbcbda99df83e5",
+      "result": {
+        "mode": "agent",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "155a91d14130534afe02d1daf18ff5bc445d021ea369a05754e134340e1b9796",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [
+              "timeout"
+            ],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          },
+          {
+            "id": "initials",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          }
+        ]
+      }
+    }
+  ]
+}

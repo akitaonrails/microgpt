@@ -24,9 +24,9 @@ ensure data/opencodeinstruct-v1.source.json "$coding_python" -m microgpt.curate 
 ensure data/code-feedback-v1.source.json "$coding_python" -m microgpt.curate \
   --input "$coding_raw/code-feedback" --kind code-feedback \
   --out data/code-feedback-v1.jsonl --limit 68000 --scan-limit 100000
-ensure data/opencoder-educational-v1.source.json "$coding_python" -m microgpt.curate \
+ensure data/opencoder-educational-v2.source.json "$coding_python" -m microgpt.curate \
   --input "$coding_raw/opencoder-educational" --kind opencoder-educational \
-  --out data/opencoder-educational-v1.jsonl --limit 120000 --scan-limit 200000
+  --out data/opencoder-educational-v2.jsonl --limit 120000 --scan-limit 200000
 ensure data/educational-tools-v1.source.json "$coding_python" scripts/prepare_programming_tools.py \
   --input "$coding_raw/opencoder-educational/educational_instruct/train-00000-of-00001.parquet" \
   --tools data/opencode-tools-v2.json --out data/educational-tools-v1.jsonl --count 4000
@@ -47,12 +47,12 @@ with open('data/programming-chat-replay-v1.jsonl', 'x') as target:
                 break
 PY
 fi
-ensure data/programming-v1.source.json "$coding_python" -m microgpt.programming_data \
-  --tools data/opencode-tools-v2.json --out data/programming-v1.jsonl \
-  --public data/opencodeinstruct-v1.jsonl data/opencoder-educational-v1.jsonl \
+ensure data/programming-v2.source.json "$coding_python" -m microgpt.programming_data \
+  --tools data/opencode-tools-v2.json --out data/programming-v2.jsonl \
+  --public data/opencodeinstruct-v1.jsonl data/opencoder-educational-v2.jsonl \
   data/code-feedback-v1.jsonl data/magicoder-large.jsonl data/programming-chat-replay-v1.jsonl \
   --count 8000 --per-source 100000 --max-chars 12000
-ensure data/programming-sft-v1/manifest.json "$coding_python" -m microgpt.trajectories \
-  --input data/programming-v1.jsonl data/educational-tools-v1.jsonl data/horizon-related-v1.jsonl \
-  --out data/programming-sft-v1 --tokenizer data/large-v1 --max-length 32768 \
+ensure data/programming-sft-v2/manifest.json "$coding_python" -m microgpt.trajectories \
+  --input data/programming-v2.jsonl data/educational-tools-v1.jsonl data/horizon-related-v1.jsonl \
+  --out data/programming-sft-v2 --tokenizer data/large-v1 --max-length 32768 \
   --limit 400000 --pack-episodes --canonical-tool-ids
