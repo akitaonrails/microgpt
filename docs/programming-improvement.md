@@ -158,3 +158,21 @@ JSON whitespace between fields is also bounded to one character in the current
 grammar, preventing whitespace-only continuations from consuming the entire output
 budget. Whitespace inside code strings is unaffected. The grammar compiler's own
 unbounded cache is disabled; the wrapper retains at most eight schema compilations.
+
+
+### Capacity accounting
+
+The unchanged student has 90,969,600 parameters, of which 76,807,296 are the tied
+200K-vocabulary embedding/output matrix and 14,162,304 are transformer/norm weights.
+Thus its headline size overstates the transformer capacity compared with a model
+using a smaller vocabulary. This experiment holds architecture and foundation fixed
+to measure data/decoding changes. If broader programming remains weak after adequate
+exposure, further pretraining or a larger transformer must be measured separately;
+adding more repeated exercise templates is not evidence of generalization.
+
+
+The second mixture's 9,500-step checkpoint scored **1/8** direct (equality counting).
+A later snapshot froze at **14,000**, despite the last polled training metric being
+13,500, and scored **0/8**. Always use the evaluator's captured server/checkpoint
+metadata for the tested step. This fluctuation is a failed stability check; neither
+checkpoint is promoted. The fixed tests remain unchanged.

@@ -743,5 +743,319 @@
         "sha256": "78838d0542db04ce5e58a7e1275f52666732ccaaf7016d263fadf90972b53427"
       }
     }
-  }
+  },
+  "corrected_evaluations": [
+    {
+      "artifact": "runs/programming-v2-early-direct/results.json",
+      "result": {
+        "server": {
+          "status": "ok",
+          "model": "microgpt",
+          "context": 32768,
+          "source": {
+            "checkpoint": "runs/programming-v2/candidate-early.pt",
+            "context": 32768,
+            "attention": "flash",
+            "parameters": 90969600,
+            "stage": "sft",
+            "step": 3500,
+            "origin": {
+              "initialization": "random",
+              "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "parent_step": 122071,
+              "parent_stage": "pretraining",
+              "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "pretraining_step": 122071
+            },
+            "canonical_tool_ids": true,
+            "constrained_tools": true
+          }
+        },
+        "mode": "direct",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Here is the code to solve this problem: \n                ^^^^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "initials",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 2\n    return 'name' if the string is empty, otherwise an empty string.\"\n                                                                    ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+          },
+          {
+            "id": "squares",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.square_evens(v) == [4, 0, 16]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+          },
+          {
+            "id": "join",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.join_names(['a', 'b']) == 'a, b'\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 2, in join_names\n    return ' '.join(map(str, comma.split()[1].split()[0]))\n                             ^^^^^\nNameError: name 'comma' is not defined\n"
+          },
+          {
+            "id": "lookup",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.lookup({'x': None}, 'x', 4) is None\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 2, in lookup\n    if key in dict:\n       ^^^^^^^^^^^\nTypeError: argument of type 'type' is not iterable\n"
+          },
+          {
+            "id": "strip_lower",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.normalize_label('  Ab C  ') == 'ab c'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+          },
+          {
+            "id": "count",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_matches([[1], [2], [1]], [1]) == 2\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/programming-v2-mid-direct/results.json",
+      "result": {
+        "server": {
+          "status": "ok",
+          "model": "microgpt",
+          "context": 32768,
+          "source": {
+            "checkpoint": "runs/programming-v2/candidate-mid.pt",
+            "context": 32768,
+            "attention": "flash",
+            "parameters": 90969600,
+            "stage": "sft",
+            "step": 9500,
+            "origin": {
+              "initialization": "random",
+              "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "parent_step": 122071,
+              "parent_stage": "pretraining",
+              "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "pretraining_step": 122071
+            },
+            "canonical_tool_ids": true,
+            "constrained_tools": true
+          }
+        },
+        "mode": "direct",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 9, in <module>\n    assert b.getvalue() == 'Hello, Zo\u00eb!\\n'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.clamp(-4, 0, 8) == 0\n           ^^^^^^^\nAttributeError: module 'solution' has no attribute 'clamp'\n"
+          },
+          {
+            "id": "initials",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.initials('  ada   lovelace ') == 'AL'\n           ^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'initials'\n"
+          },
+          {
+            "id": "squares",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.square_evens(v) == [4, 0, 16]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+          },
+          {
+            "id": "join",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 6, in <module>\n    print(filter_names(input_names))\n          ^^^^^^^^^^^^\nNameError: name 'filter_names' is not defined\n"
+          },
+          {
+            "id": "lookup",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To implement lookup, key, default, or key, we can use the following approach:\n       ^^^^^^^^^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "strip_lower",
+            "passed": false,
+            "code_correct": false,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement normalize_label to remove whitespace at both ends, and return only the Python code in a /^\\. The normalized text will be converted to lowercase and lowercase, and the function will return the Python code in a /^\\.\n        ^\nSyntaxError: invalid syntax\n"
+          },
+          {
+            "id": "count",
+            "passed": true,
+            "code_correct": true,
+            "completed": true,
+            "checked": false,
+            "errors": [],
+            "grade": "PASS\n"
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/programming-v2-toolprobe/results.json",
+      "result": {
+        "server": {
+          "status": "ok",
+          "model": "microgpt",
+          "context": 32768,
+          "source": {
+            "checkpoint": "runs/programming-v2/candidate-6k.pt",
+            "context": 32768,
+            "attention": "flash",
+            "parameters": 90969600,
+            "stage": "sft",
+            "step": 5500,
+            "origin": {
+              "initialization": "random",
+              "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "parent_step": 122071,
+              "parent_stage": "pretraining",
+              "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "pretraining_step": 122071
+            },
+            "canonical_tool_ids": true,
+            "constrained_tools": true
+          }
+        },
+        "mode": "agent",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "193af64b64d6bca42e4b2b30de0238f29f1a96d7b835f441bb80f0ece06450e8",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 7, in <module>\n    result = s.greet('Zo\u00eb')\n             ^^^^^^^\nAttributeError: module 'solution' has no attribute 'greet'\n"
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/programming-v2-orderfix-toolprobe/results.json",
+      "result": {
+        "server": {
+          "status": "ok",
+          "model": "microgpt",
+          "context": 32768,
+          "source": {
+            "checkpoint": "runs/programming-v2/candidate-6k.pt",
+            "context": 32768,
+            "attention": "flash",
+            "parameters": 90969600,
+            "stage": "sft",
+            "step": 5500,
+            "origin": {
+              "initialization": "random",
+              "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "parent_step": 122071,
+              "parent_stage": "pretraining",
+              "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+              "pretraining_step": 122071
+            },
+            "canonical_tool_ids": true,
+            "constrained_tools": true
+          }
+        },
+        "mode": "agent",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "tasks_sha256": "193af64b64d6bca42e4b2b30de0238f29f1a96d7b835f441bb80f0ece06450e8",
+        "tasks": [
+          {
+            "id": "greeting",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 8, in <module>\n    assert result is None\n           ^^^^^^^^^^^^^^\nAssertionError\n"
+          },
+          {
+            "id": "clamp",
+            "passed": false,
+            "code_correct": false,
+            "completed": false,
+            "checked": false,
+            "errors": [],
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 8, in <module>\n    assert result is None\n           ^^^^^^^^^^^^^^\nAssertionError\n"
+          }
+        ]
+      }
+    }
+  ]
 }
