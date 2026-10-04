@@ -10,9 +10,10 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+import uuid
 
 import httpx
-from eval_opencode import configure, grade, IMAGE
+from eval_opencode import configure, grade, docker_command, IMAGE
 from microgpt.programming_data import GENERAL_PROMPT
 
 TASKS = [
@@ -46,7 +47,7 @@ def main():
     tasks = TASKS[:args.limit]
     health = httpx.get(args.url.removesuffix('/v1') + '/health', timeout=10)
     health.raise_for_status()
-    summary = {'server': health.json(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
+    summary = {'server': health.json(), 'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
     with tempfile.TemporaryDirectory(prefix='microgpt-programming-') as folder:
         base = Path(folder); work = base / 'work'; work.mkdir(mode=0o755)
         subprocess.run(['git', 'init', '-q', str(work)], check=True)
@@ -94,7 +95,12 @@ def main():
                 checked = any(e.get('type') == 'tool_use' and e['part'].get('tool') == 'check' and
                     str(e['part']['state'].get('output', '')).startswith('PASS') for e in events)
             result = grade(command)
-            row = {'id': name, 'passed': result['passed'] and completed and (checked or args.mode == 'direct'),
+            current = result
+            if args.mode == 'agent':
+                current_grader = base / 'current.py'
+                current_grader.write_text("import sys\nsys.path.insert(0, '/work')\nimport solution as s\n" + tests + "print('PASS')\n")
+                current = grade(docker_command(work, current_grader, 'microgpt-current-' + uuid.uuid4().hex))
+            row = {'id': name, 'current_task_correct': current['passed'], 'passed': result['passed'] and completed and (checked or args.mode == 'direct'),
                    'code_correct': result['passed'], 'completed': completed, 'checked': checked, 'errors': errors, 'grade': result['output']}
             summary['tasks'].append(row)
             (args.out / (name + '.txt')).write_text(raw)
