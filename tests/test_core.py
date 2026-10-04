@@ -26,6 +26,25 @@ class CoreTests(unittest.TestCase):
         text = "def ação(x):\n    return '日本 🐍'"
         self.assertEqual(tokenizer.decode(tokenizer.encode(text) + [tokenizer.eos]), text)
 
+    def test_portable_o200k_loads_without_registry_or_network(self):
+        from unittest.mock import patch
+        tokenizer = Tokenizer(encoding='o200k_base')
+        with tempfile.TemporaryDirectory() as directory:
+            tokenizer.save(directory, portable=True)
+            with patch('tiktoken.get_encoding', side_effect=AssertionError('Must load the bundled encoding')):
+                loaded = Tokenizer.load(directory)
+            self.assertEqual(loaded.encoding._mergeable_ranks, tokenizer.encoding._mergeable_ranks)
+            self.assertEqual(loaded.encoding._special_tokens, tokenizer.encoding._special_tokens)
+            self.assertEqual(loaded.encoding._pat_str, tokenizer.encoding._pat_str)
+            self.assertEqual((loaded.eos, loaded.vocab_size), (tokenizer.eos, tokenizer.vocab_size))
+            text = "def ação(x):\n    return '日本 🐍 مرحبا <|endoftext|>'"
+            self.assertEqual(loaded.encode(text), tokenizer.encode(text))
+            self.assertEqual(loaded.decode(loaded.encode(text)), text)
+            ranks = Path(directory) / 'encoding.tiktoken'
+            ranks.write_bytes(ranks.read_bytes() + b'corrupt')
+            with self.assertRaisesRegex(ValueError, 'checksum'):
+                Tokenizer.load(directory)
+
     def test_causality(self):
         torch.manual_seed(1)
         model = GPT(ModelConfig(layers=2, heads=2, width=32)).eval()

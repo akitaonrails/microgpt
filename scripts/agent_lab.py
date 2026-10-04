@@ -21,7 +21,7 @@ def prepare_round(base, state):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['init', 'show', 'check', 'next'])
+    parser.add_argument('action', choices=['init', 'show', 'run', 'check', 'next'])
     parser.add_argument('--out', type=Path, default=Path('runs/agent-lab'))
     parser.add_argument('--url', default='http://127.0.0.1:8000/v1')
     parser.add_argument('--seed', type=int, default=314159)
@@ -41,6 +41,10 @@ def main():
         configure(work, base / 'grader.py', args.url, 12, state_file=True, reasoning_effort='none')
     else:
         state = json.loads((base / 'state.json').read_text())
+    if args.action == 'run':
+        subprocess.run(['opencode', str(work), '--pure', '--agent', 'microgpt', '-m', 'microgpt/microgpt',
+                        '--prompt', task_prompt(state['tasks'][state['round'] - 1])], check=True)
+        return
     if args.action in ('check', 'next'):
         result = grade(docker_command(work, base / 'grader.py', 'microgpt-lab-' + uuid.uuid4().hex))
         print(result['output'], end='')

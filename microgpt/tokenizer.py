@@ -1,5 +1,7 @@
-"""Bytes for the first lesson; a locally trained BPE for longer experiments."""
+"""Bytes for the first lesson; local BPE or o200k for longer experiments."""
 from pathlib import Path
+import base64
+import hashlib
 import json
 
 
@@ -45,9 +47,18 @@ class Tokenizer:
             return self.backend.decode(ids)
         return bytes(i for i in ids if i < 256).decode("utf-8", errors="replace")
 
-    def save(self, directory):
+    def save(self, directory, portable=False):
         if self.encoding:
-            (Path(directory) / "encoding.json").write_text(json.dumps({"encoding": self.encoding.name}) + "\n")
+            descriptor = {"encoding": self.encoding.name}
+            if portable:
+                # Snapshot the pinned tiktoken encoding so deployment needs no
+                # network fetch or pre-existing global tokenizer cache.
+                ranks = b''.join(base64.b64encode(token) + b' ' + str(rank).encode() + b'\n'
+                                 for token, rank in sorted(self.encoding._mergeable_ranks.items(), key=lambda pair: pair[1]))
+                (Path(directory) / 'encoding.tiktoken').write_bytes(ranks)
+                descriptor.update(pat_str=self.encoding._pat_str, special_tokens=self.encoding._special_tokens,
+                                  ranks_sha256=hashlib.sha256(ranks).hexdigest())
+            (Path(directory) / "encoding.json").write_text(json.dumps(descriptor) + "\n")
         if self.backend:
             self.backend.save(str(Path(directory) / "tokenizer.json"))
 
@@ -55,7 +66,20 @@ class Tokenizer:
     def load(cls, directory):
         descriptor = Path(directory) / "encoding.json"
         if descriptor.exists():
-            return cls(encoding=json.loads(descriptor.read_text())["encoding"])
+            config = json.loads(descriptor.read_text())
+            if 'ranks_sha256' in config:
+                import tiktoken
+                raw = (Path(directory) / 'encoding.tiktoken').read_bytes()
+                if hashlib.sha256(raw).hexdigest() != config['ranks_sha256']:
+                    raise ValueError('Portable tokenizer checksum mismatch')
+                ranks = {base64.b64decode(token): int(rank) for token, rank in (line.split() for line in raw.splitlines())}
+                tokenizer = cls()
+                tokenizer.encoding = tiktoken.Encoding(name=config['encoding'], pat_str=config['pat_str'],
+                    mergeable_ranks=ranks, special_tokens=config['special_tokens'])
+                tokenizer.eos = tokenizer.encoding.eot_token
+                tokenizer.vocab_size = tokenizer.encoding.n_vocab
+                return tokenizer
+            return cls(encoding=config["encoding"])
         path = Path(directory) / "tokenizer.json"
         return cls(path if path.exists() else None)
 

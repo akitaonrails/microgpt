@@ -42,6 +42,9 @@
     }
   },
   "agent": {
+    "title": {
+      "disable": true
+    },
     "microgpt": {
       "description": "Small local coding agent with a bounded turn budget",
       "mode": "primary",

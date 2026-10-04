@@ -43,7 +43,8 @@ class NativeBackend:
             raise ValueError("Flash Attention requires CUDA")
         self.attention = attention
         saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
-        self.canonical_tool_ids = (saved.get('data', {}).get('canonical_tool_ids', False)
+        self.canonical_tool_ids = (saved.get('inference_settings', {}).get('canonical_tool_ids',
+                                    saved.get('data', {}).get('canonical_tool_ids', False))
                                    if canonical_tool_ids is None else canonical_tool_ids)
         self.model = GPT(ModelConfig(**saved["model_config"]))
         self.model.load_state_dict(saved["model"])
