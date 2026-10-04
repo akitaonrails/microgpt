@@ -13,7 +13,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from jsonschema.exceptions import SchemaError
 import torch
 
-from .chat import ChatRequest, normalize, parse_reply, sse_events
+from .chat import ChatRequest, normalize, parse_reply, sse_events, repeated_tool_cycle
 from .inference import NativeBackend
 
 
@@ -55,6 +55,9 @@ def create_app(backend, model_name="microgpt", api_key=None, max_output=2048):
             return error("Stop sequences must be nonempty strings")
         try:
             messages, tools = normalize(request)
+            if repeated_tool_cycle(messages):
+                return JSONResponse({'error': {'message': 'Stopped after three identical tool actions and observations without progress.',
+                                               'type': 'agent_loop_error'}}, status_code=422)
             ids = backend.encode(messages, tools)
             if len(ids) + count > backend.context:
                 return error(f"Prompt ({len(ids)}) + output ({count}) exceeds context {backend.context}; compact history or reduce output")

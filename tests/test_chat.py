@@ -99,6 +99,24 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertEqual(response.json()['error']['type'], 'invalid_model_output')
 
+    def test_unchanged_tool_loop_stops_but_changed_results_and_user_turns_reset(self):
+        from microgpt.chat import repeated_tool_cycle
+        history = [{'role': 'user', 'content': 'Read a.py'}]
+        for index in range(3):
+            history.extend([{'role': 'assistant', 'tool_calls': [{'id': str(index), 'type': 'function',
+                'function': {'name': 'read', 'arguments': {'filePath': 'a.py'}}}]},
+                {'role': 'tool', 'tool_call_id': str(index), 'content': 'unchanged'}])
+        self.assertTrue(repeated_tool_cycle(history))
+        # The HTTP boundary must stop the loop before touching the backend.
+        response = TestClient(create_app(object())).post('/v1/chat/completions', json={
+            'model': 'microgpt', 'max_tokens': 20, 'messages': history})
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json()['error']['type'], 'agent_loop_error')
+        self.assertFalse(repeated_tool_cycle(history[:-2]))
+        self.assertFalse(repeated_tool_cycle(history + [{'role': 'user', 'content': 'Read it again.'}]))
+        history[-1]['content'] = 'changed'
+        self.assertFalse(repeated_tool_cycle(history))
+
 
 if __name__ == "__main__":
     unittest.main()

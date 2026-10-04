@@ -180,3 +180,14 @@ restarted at foundation step 65,421 (535,928,832 tokens in this stage), preservi
 its checkpoint, optimizer and remaining 12-hour budget. It now uses v4 and includes
 the reasoning stage and final equal-budget reasoning evaluation. Full-run reasoning
 and agent results are pending.
+
+## Corrective tool training
+
+See [next-run.md](next-run.md) for reproduction and limitations. On the same eight
+held-out arithmetic repair instances, the original instruction checkpoint passed
+0/8 and the frozen `runs/grounding-v1/candidate.pt` passed 8/8 through real OpenCode
+with Docker grading. These are familiar template families with new seeds, not a
+general coding benchmark. The four broader repairs still score 0/4. That candidate's
+program-tracing scores are 2/12 direct and 0/12 thinking at both output budgets.
+The subsequent horizon candidate retains 7/8 arithmetic repairs but fails the
+cumulative task; it is not promoted as a successful long-horizon model.

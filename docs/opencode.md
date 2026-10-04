@@ -86,3 +86,14 @@ with `opencode run` to request more worked reasoning and display it. These are
 learned instructions, not a guarantee of accuracy. The API returns thinking as
 `reasoning_content`; tool-looking text inside thinking cannot dispatch an action.
 See [reasoning.md](reasoning.md) for the data and evaluation recipe.
+
+For the measured narrow arithmetic-repair candidate, use
+`--checkpoint runs/grounding-v1/candidate.pt`. It passes the eight-instance grounding
+suite and still fails the broader four-task repair set. Later horizon candidates
+remain experimental; see [next-run.md](next-run.md).
+
+Malformed generated calls return non-retryable HTTP 422 (`invalid_model_output`).
+Three consecutive identical tool actions with unchanged observations return HTTP
+422 (`agent_loop_error`); a new user turn, changed result or different action resets
+that guard. This bounds repeated-read loops that OpenCode's soft step limit did not
+stop in testing. It does not substitute for learned recovery.

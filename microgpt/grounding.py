@@ -8,9 +8,24 @@ import hashlib
 import json
 from pathlib import Path
 import random
+import re
+import keyword
 
 from .practice import TOOLS
 from .protocol import reasoning_instruction
+
+
+def vocabulary(path, limit=10000):
+    """Identifier/text diversity from existing training data, never executed."""
+    words = set()
+    with path.open() as stream:
+        for line in stream:
+            record = json.loads(line)
+            for message in record['messages']:
+                words.update(w for w in re.findall(r'\b[A-Za-z][A-Za-z_]{2,20}\b', message.get('content') or '') if not keyword.iskeyword(w))
+            if len(words) >= limit:
+                break
+    return sorted(words)[:limit]
 
 
 def episode(seed, tools, read_only=False):

@@ -108,6 +108,24 @@ def parse_reply(text, tools, finish_reason):
     return message, reason
 
 
+def repeated_tool_cycle(messages, limit=3):
+    """Detect identical consecutive actions AND observations without a new user turn.
+
+Three identical reads or unchanged failed checks are no progress. A changed tool
+result, a different action, or a new user message resets this narrow guard.
+"""
+    signatures = []
+    end = len(messages)
+    while end >= 2 and len(signatures) < limit:
+        assistant, result = messages[end - 2:end]
+        calls = assistant.get('tool_calls', [])
+        if assistant.get('role') != 'assistant' or result.get('role') != 'tool' or len(calls) != 1:
+            break
+        signatures.append(json.dumps([calls[0]['function'], result.get('content')], sort_keys=True))
+        end -= 2
+    return len(signatures) == limit and len(set(signatures)) == 1
+
+
 def parse_actions(text, tools, finish_reason):
     """Never execute output. Only return complete, offered, schema-valid calls."""
     matches = list(re.finditer(r"<tool_call>\s*(.*?)\s*</tool_call>", text, re.DOTALL))

@@ -73,3 +73,39 @@ actual multi-round execution before being called a successful long-horizon model
 Malformed model tool output now returns non-retryable HTTP 422 with error type
 `invalid_model_output`. Previously a 502 made OpenCode repeatedly retry deterministic
 invalid output. Calls remain undispatched; this does not improve model correctness.
+
+The first horizon candidate retained 7/8 arithmetic repairs but failed the first
+two cumulative rounds. It repeatedly read the same file. Installed OpenCode's
+`steps` setting did not act as a hard action ceiling: one round made 104 reads.
+The API now rejects three consecutive identical action/observation pairs with
+`agent_loop_error` (HTTP 422), before further inference. Different observations,
+different actions, and new user turns reset this narrow guard. It does not establish
+long-horizon skill; it bounds an observed failure mode.
+
+Counterfactual replay of the captured synthetic evaluation request showed that
+removing OpenCode's read footer changed another read into an attempted edit, though
+that edit was malformed. Renaming the function or using a familiar comment alone
+did not resolve the repeated read. Training now includes actual read footer format,
+absolute display paths, more comment patterns, and recovery from a redundant read.
+A further experiment uses 10,000 identifier/word types extracted from the existing
+Magicoder training source, addressing copying beyond a handful of fixed names.
+No downloaded code executes during construction. The actual evaluation task
+solutions are not incorporated into training.
+
+The vocabulary-diverse recipe is:
+
+```sh
+.venv/bin/python -m microgpt.horizon_data --tools data/opencode-tools-v1.json \
+  --out data/horizon-v3.jsonl --vocabulary-data data/magicoder-large.jsonl --count 4000
+.venv/bin/python -m microgpt.trajectories --input data/horizon-v3.jsonl \
+  data/grounding-v1.jsonl data/reasoning-trace.jsonl data/smoltalk-large.jsonl \
+  data/multilingual-large.jsonl data/magicoder-large.jsonl --out data/horizon-sft-v3 \
+  --tokenizer data/large-v1 --max-length 32768 --limit 100000 --pack-episodes
+```
+
+This data contains 55,053 train / 2,945 validation episodes. The current experiment
+`runs/horizon-v4` continues our `runs/horizon-v3/best.pt`, with 2,500 updates maximum,
+learning rate 5e-5, accumulation 2, a 30-minute ceiling, balanced source/length bins,
+and 20% general replay. Main sources are `horizon-session`, `horizon-handoff`,
+`grounding-read`, `grounding-edit`, and `reasoning-trace`. Earlier failed candidates
+are retained for comparison; the 8/8 short-task candidate is not overwritten.
