@@ -401,3 +401,27 @@ Actual OpenCode TUI runs passed the first two tasks, beyond the automated CLI te
 The auxiliary title agent initially made an out-of-domain request that returned 422;
 disabling it removed that error in the second run. The prepared local lesson now
 starts at round three, with the first two model-written functions preserved.
+
+## User-discovered task-switch failure (2026-10-04)
+
+After successfully completing round three in the interactive lesson, the user asked:
+“create a simple hello world function that takes a name as a parameter to print it
+out in the message”. Session `ses_ef7683fbcffeqHLb9y5x8VJrrE` shows the model replaying
+its previous arithmetic edit twice, changing the target to nonexistent `helpers.py`.
+Each edit failed with file-not-found; intervening reads were denied by the lesson's
+permissions. The next generation ended with malformed tool JSON (missing comma,
+line 1 column 196), rejected as HTTP 422. The raw rejected generation is not in the
+session export, so its exact malformed text has not been recovered.
+
+This is an observed task-switch and instruction-following failure, followed by
+failed recovery and invalid serialization. The server remained healthy. Relaxing
+permissions or repairing JSON would not make the repeated arithmetic edit satisfy
+the greeting request. The existing fixed grader covers only arithmetic requirements
+and cannot validate a newly requested greeting. The session export is retained
+locally at `runs/opencode-lab/user-failure-session.json`.
+
+Consequently, the long-session scores establish repeated success within one trained
+family, not general simple-task readiness. A future acceptance gate must include
+changes of task family within the same session, independently grade printed output,
+and test recovery from unavailable paths. Keep this exact interaction held out of
+training. This failure is diagnosed, not fixed by the current checkpoint.
