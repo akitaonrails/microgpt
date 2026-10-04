@@ -1,10 +1,10 @@
 # Serve our scratch-trained model through OpenCode
 
-Complete [pretraining and assistant training](finetuning.md) first. The HTTP server
+Follow the [validated minimal recipe](agentic-minimum.md) first. The HTTP server
 requires our checkpoint and never downloads a model:
 
 ```sh
-.venv/bin/python -m microgpt.serve --checkpoint runs/scratch-sft/last.pt \
+.venv/bin/python -m microgpt.serve --checkpoint runs/agent-ready-v1/model.pt \
   --attention flash --host 127.0.0.1 --port 8000
 ```
 
@@ -54,10 +54,10 @@ same interface as the evaluator:
 
 ```sh
 .venv/bin/python scripts/agent_lab.py init --out runs/my-agent-lab
-opencode runs/my-agent-lab/work --pure --agent microgpt -m microgpt/microgpt
+.venv/bin/python scripts/agent_lab.py run --out runs/my-agent-lab
 ```
 
-Send the prompt printed by initialization. In another terminal, run
+The launcher opens the TUI with the current task prompt. In another terminal, run
 `.venv/bin/python scripts/agent_lab.py next --out runs/my-agent-lab` after each
 completed task. It independently checks every current requirement before advancing
 and prints the next prompt. `show` repeats the prompt; `check` only grades the code.
@@ -108,10 +108,17 @@ learned instructions, not a guarantee of accuracy. The API returns thinking as
 `reasoning_content`; tool-looking text inside thinking cannot dispatch an action.
 See [reasoning.md](reasoning.md) for the data and evaluation recipe.
 
-For the measured narrow arithmetic-repair candidate, use
-`--checkpoint runs/grounding-v1/candidate.pt`. It passes the eight-instance grounding
-suite and still fails the broader four-task repair set. Later horizon candidates
-remain experimental; see [next-run.md](next-run.md).
+The selected export passes 8/8 narrow repairs, four 16-round sessions and one
+32-round session. It still fails the broader four-task repair set. The exported
+settings enable canonical internal tool IDs, preserving API result associations
+while avoiding long random identifiers in model input. Its portable tokenizer
+includes the vocabulary, regex, special tokens and checksums, so serving does not
+need a tokenizer download. Resume training from the original full checkpoint.
+
+The teaching profile disables OpenCode's auxiliary title agent: its unrelated
+no-tools request caused HTTP 422 even while the actual coding task succeeded.
+Two real TUI tasks passed independent grading; the second, with titles disabled,
+produced no such error. Measured compatibility is with OpenCode 1.18.34.
 
 Malformed generated calls return non-retryable HTTP 422 (`invalid_model_output`).
 Three repetitions of the same one-to-three-action cycle with unchanged observations

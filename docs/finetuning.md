@@ -1,5 +1,9 @@
 # Minimal scratch-to-assistant training sequence
 
+For the shortest validated route, use the [minimal agent runbook](agentic-minimum.md).
+This document also retains the larger experimental curriculum and its failed stages.
+
+
 ## Larger training run
 
 For the current billion-token preparation, complete-episode curriculum and

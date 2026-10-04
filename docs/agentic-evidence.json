@@ -1,0 +1,5083 @@
+{
+  "date": "2026-10-04",
+  "implementation_commit": "6a2d6a9cab0ebbbdec643ac762585d10c9f994eb",
+  "deployment": {
+    "source_checkpoint": "runs/agent-direct-v1/candidate-mid.pt",
+    "source_sha256": "d51c25c493d9f7ba4227b962b3ca6d90e81414c4ffe40c87480e989e75c1f687",
+    "model_sha256": "0dfb55b0a9572b7fa42cf02386c2ff33331d063d77d8362fb0ab8826579fee24",
+    "parameters": 90969600,
+    "bytes": 363898165,
+    "step": 2250,
+    "origin": {
+      "initialization": "random",
+      "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+      "parent_step": 122071,
+      "parent_stage": "pretraining",
+      "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+      "pretraining_step": 122071
+    },
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "inference_settings": {
+      "canonical_tool_ids": true
+    },
+    "note": "Inference-only export; resume training from the original full checkpoint.",
+    "tokenizer_files": {
+      "encoding.json": "2e01d2ffa9c5a7d7094dc606c4f8c783f6a35a673ca5b489150fc459b0bfbf04",
+      "encoding.tiktoken": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    }
+  },
+  "export_checks": {
+    "weights_identical": true,
+    "optimizer_removed": true,
+    "canonical_default": true,
+    "parameters": 90969600,
+    "bytes": 363898165,
+    "portable_tokenizer_without_registry": true
+  },
+  "training": {
+    "foundation": "runs/coding-v1/foundation/last.pt",
+    "foundation_prepared_tokens": 947532764,
+    "foundation_additional_token_exposures": 1000005632,
+    "foundation_caveat": "Continued our own random-origin pilot; not a fresh single-run cold reproduction.",
+    "selected_sft_step": 2250,
+    "assistant_token_exposures": 4725998,
+    "learning_rate": 0.0001,
+    "accumulation": 2,
+    "seed": 42,
+    "data_manifest": {
+      "protocol": "microgpt-chat-v1",
+      "max_length": 32768,
+      "packed_episodes": true,
+      "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+      "sources": [
+        {
+          "file": "data/horizon-related-v1.jsonl",
+          "sha256": "013f7756daaf9c071456217fabe62b1a7de8da78526626a09557e9ba2b755ca0"
+        },
+        {
+          "file": "data/grounding-wire-v1.jsonl",
+          "sha256": "796d2e87c48e386e6ffed4a575c66a3a119c3caa4cea4bea2fcf412e3fb9270f"
+        },
+        {
+          "file": "data/smoltalk-large.jsonl",
+          "sha256": "6a2b6073549ea24aee1f21090e2c9646bf2e49d16c6dac27d1390d16ab7ce559"
+        }
+      ],
+      "counts": {
+        "scanned": 14000,
+        "train_episodes": 13063,
+        "overlength_or_empty": 200,
+        "val_episodes": 737
+      },
+      "splits": {
+        "train": {
+          "examples": 13063,
+          "assistant_tokens": 5254829,
+          "groups": 11310,
+          "examples_by_source": {
+            "horizon-session": 1899,
+            "horizon-handoff": 1713,
+            "grounding-read": 2519,
+            "grounding-edit": 5053,
+            "smoltalk": 1879
+          },
+          "sha256": "4b6a1cd8a107432fe6874d2cd47ac53b9452556ef281487888fa8a1a580e4ac0"
+        },
+        "val": {
+          "examples": 737,
+          "assistant_tokens": 285024,
+          "groups": 650,
+          "examples_by_source": {
+            "horizon-session": 101,
+            "horizon-handoff": 87,
+            "grounding-read": 148,
+            "grounding-edit": 280,
+            "smoltalk": 121
+          },
+          "sha256": "8af69d3a5f89d0786f346aa3cae21cdab19c9cf2fe55a3eb6b041ad661c6e636"
+        }
+      }
+    }
+  },
+  "cpu_tests_passed": 25,
+  "inference_checks": [
+    {
+      "cache_equivalence": "passed",
+      "source": {
+        "checkpoint": "runs/agent-ready-v1/model.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 90969600,
+        "stage": "sft",
+        "step": 2250,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "parent_step": 122071,
+          "parent_stage": "pretraining",
+          "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "pretraining_step": 122071
+        },
+        "canonical_tool_ids": true
+      }
+    },
+    {
+      "prompt_tokens": 8192,
+      "output_tokens": 16,
+      "seconds": 2.6256483789766207,
+      "peak_allocated_gb": 0.675323904,
+      "flash_ops": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::_flash_attention_forward"
+      ]
+    },
+    {
+      "prompt_tokens": 32752,
+      "output_tokens": 16,
+      "seconds": 5.888314735027961,
+      "peak_allocated_gb": 1.014988288,
+      "flash_ops": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::_flash_attention_forward"
+      ]
+    }
+  ],
+  "evaluations": [
+    {
+      "artifact": "runs/agent-direct-mid-horizon/results.json",
+      "sha256": "0d18c8b2fec81ce25beba6fcd35514711927f42740e73cdc0320de1c07149c5c",
+      "result": {
+        "label": "agent-direct-mid-canonical",
+        "kind": "model-evaluation",
+        "seed": 8675309,
+        "requested_rounds": 16,
+        "rounds": [
+          {
+            "round": 1,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 8900,
+            "uncached_input_tokens": 1854,
+            "output_tokens": 181,
+            "peak_prompt_tokens": 2021,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 2,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 11425,
+            "uncached_input_tokens": 380,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2552,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 3,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 14199,
+            "uncached_input_tokens": 429,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3132,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 4,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": true,
+            "cached_tokens": 21003,
+            "uncached_input_tokens": 516,
+            "output_tokens": 174,
+            "peak_prompt_tokens": 3816,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 5,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 20757,
+            "uncached_input_tokens": 527,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4494,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 6,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 24266,
+            "uncached_input_tokens": 576,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5221,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 7,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28020,
+            "uncached_input_tokens": 625,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5997,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 8,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef792a845ffe4QeFUbuXcmy2ZV",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 32019,
+            "uncached_input_tokens": 674,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6822,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 9,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 9297,
+            "uncached_input_tokens": 709,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2300,
+            "seconds": 5.7,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 10,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 13772,
+            "uncached_input_tokens": 772,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3223,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 11,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 18506,
+            "uncached_input_tokens": 821,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4195,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 12,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 23485,
+            "uncached_input_tokens": 870,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5216,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 13,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28709,
+            "uncached_input_tokens": 919,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6286,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 14,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 34178,
+            "uncached_input_tokens": 968,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 7405,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 15,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 39892,
+            "uncached_input_tokens": 1017,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8573,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 16,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef7922548ffezH6nNIoXDW45Ah",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 45851,
+            "uncached_input_tokens": 1066,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9790,
+            "seconds": 4.6,
+            "grade": "PASS\n"
+          }
+        ],
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "effort": "none",
+        "harness_sha256": "21125dfeddf9f8803bbf7d112bccc7404c5def879876016a144655fd20b019dd",
+        "tasks_sha256": "56a344094845cf93c87935a20d4b53757edf24ce216103f25405456a683910b5",
+        "session_handoff": "Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md",
+        "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+        "total_tool_calls": 66,
+        "passed": true
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-seed42/results.json",
+      "sha256": "ac3a3cd7258404ad5160e18cf805f41511578e1338a0f887e5b7a69cc5d5dff3",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "kind": "model-evaluation",
+        "seed": 42,
+        "requested_rounds": 16,
+        "rounds": [
+          {
+            "round": 1,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 10271,
+            "uncached_input_tokens": 483,
+            "output_tokens": 181,
+            "peak_prompt_tokens": 2021,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 2,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 11425,
+            "uncached_input_tokens": 380,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2552,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 3,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 14199,
+            "uncached_input_tokens": 429,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3132,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 4,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": true,
+            "cached_tokens": 21003,
+            "uncached_input_tokens": 516,
+            "output_tokens": 174,
+            "peak_prompt_tokens": 3816,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 5,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 20757,
+            "uncached_input_tokens": 527,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4494,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 6,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 24266,
+            "uncached_input_tokens": 576,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5221,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 7,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28020,
+            "uncached_input_tokens": 625,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5997,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 8,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef79021e6ffeCU1NJcGSXZ7lky",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 32019,
+            "uncached_input_tokens": 674,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6822,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 9,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 9297,
+            "uncached_input_tokens": 709,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2300,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 10,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 13772,
+            "uncached_input_tokens": 772,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3223,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 11,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 18506,
+            "uncached_input_tokens": 821,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4195,
+            "seconds": 4.5,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 12,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 23485,
+            "uncached_input_tokens": 870,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5216,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 13,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28709,
+            "uncached_input_tokens": 919,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6286,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 14,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 34178,
+            "uncached_input_tokens": 968,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 7405,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 15,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 39892,
+            "uncached_input_tokens": 1017,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8573,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 16,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f9f37ffe6Wp1FLsjDOfiVH",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 45851,
+            "uncached_input_tokens": 1066,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9790,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          }
+        ],
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "effort": "none",
+        "harness_sha256": "21125dfeddf9f8803bbf7d112bccc7404c5def879876016a144655fd20b019dd",
+        "tasks_sha256": "e54206bec91db57e37b79cd805803309b3c683c4dfde0630a1e67a28bb72f0ca",
+        "session_handoff": "Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md",
+        "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+        "total_tool_calls": 66,
+        "passed": true
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-seed271828/results.json",
+      "sha256": "9dd78f73328994d57be08826f541c0f60a37899edef517d380b11156edb7ce8e",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "kind": "model-evaluation",
+        "seed": 271828,
+        "requested_rounds": 16,
+        "rounds": [
+          {
+            "round": 1,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 10271,
+            "uncached_input_tokens": 483,
+            "output_tokens": 181,
+            "peak_prompt_tokens": 2021,
+            "seconds": 4.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 2,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 11425,
+            "uncached_input_tokens": 380,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2552,
+            "seconds": 4.6,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 3,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 14199,
+            "uncached_input_tokens": 429,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3132,
+            "seconds": 4.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 4,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": true,
+            "cached_tokens": 21003,
+            "uncached_input_tokens": 516,
+            "output_tokens": 174,
+            "peak_prompt_tokens": 3816,
+            "seconds": 4.5,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 5,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 20757,
+            "uncached_input_tokens": 527,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4494,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 6,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 24266,
+            "uncached_input_tokens": 576,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5221,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 7,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28020,
+            "uncached_input_tokens": 625,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5997,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 8,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78f1009ffeO2ew0fr9CaH1Tg",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 32019,
+            "uncached_input_tokens": 674,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6822,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 9,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 9297,
+            "uncached_input_tokens": 709,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2300,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 10,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 13772,
+            "uncached_input_tokens": 772,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3223,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 11,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 18506,
+            "uncached_input_tokens": 821,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4195,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 12,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 23485,
+            "uncached_input_tokens": 870,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5216,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 13,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28709,
+            "uncached_input_tokens": 919,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6286,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 14,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 34178,
+            "uncached_input_tokens": 968,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 7405,
+            "seconds": 4.5,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 15,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 39892,
+            "uncached_input_tokens": 1017,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8573,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 16,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78e8701ffeJNTpdZG0cwUFyP",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 45851,
+            "uncached_input_tokens": 1066,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9790,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          }
+        ],
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "effort": "none",
+        "harness_sha256": "21125dfeddf9f8803bbf7d112bccc7404c5def879876016a144655fd20b019dd",
+        "tasks_sha256": "0e62cf21d274c387579cb2b588393665b2f79f3dfe44bbb808785fe678813b93",
+        "session_handoff": "Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md",
+        "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+        "total_tool_calls": 66,
+        "passed": true
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-seed314159/results.json",
+      "sha256": "3a8ff6ba6b6847fae4fb726c8424cacdfa0c3f109777748076f862e8587bc38e",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "kind": "model-evaluation",
+        "seed": 314159,
+        "requested_rounds": 16,
+        "rounds": [
+          {
+            "round": 1,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 10290,
+            "uncached_input_tokens": 488,
+            "output_tokens": 181,
+            "peak_prompt_tokens": 2026,
+            "seconds": 5.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 2,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 11455,
+            "uncached_input_tokens": 382,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2559,
+            "seconds": 4.7,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 3,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 14239,
+            "uncached_input_tokens": 431,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3141,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 4,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": true,
+            "cached_tokens": 21064,
+            "uncached_input_tokens": 518,
+            "output_tokens": 174,
+            "peak_prompt_tokens": 3827,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 5,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 20817,
+            "uncached_input_tokens": 529,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4507,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 6,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 24336,
+            "uncached_input_tokens": 578,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5236,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 7,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28100,
+            "uncached_input_tokens": 627,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6014,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 8,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78dfbe1ffeMf5zsx22lwKdWT",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 32109,
+            "uncached_input_tokens": 676,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6841,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 9,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 9312,
+            "uncached_input_tokens": 711,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2304,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 10,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 13797,
+            "uncached_input_tokens": 774,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3229,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 11,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 18541,
+            "uncached_input_tokens": 823,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4203,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 12,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 23530,
+            "uncached_input_tokens": 872,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5226,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 13,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 28764,
+            "uncached_input_tokens": 921,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6298,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 14,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 34243,
+            "uncached_input_tokens": 970,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 7419,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 15,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 39967,
+            "uncached_input_tokens": 1019,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8589,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 16,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78d761affeMxKffdXkCBRtdI",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 45936,
+            "uncached_input_tokens": 1068,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9808,
+            "seconds": 4.5,
+            "grade": "PASS\n"
+          }
+        ],
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "effort": "none",
+        "harness_sha256": "21125dfeddf9f8803bbf7d112bccc7404c5def879876016a144655fd20b019dd",
+        "tasks_sha256": "e7d89180b0fc2c6697068fbcb6cdb4ef1deff07f18f6e66a185b8bbade1e3890",
+        "session_handoff": "Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md",
+        "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+        "total_tool_calls": 66,
+        "passed": true
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-seed20261004/results.json",
+      "sha256": "13273f9a607deaf5247422997b6841bdc5dbc6a615a2e3200b599622035c6de4",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "kind": "model-evaluation",
+        "seed": 20261004,
+        "requested_rounds": 32,
+        "rounds": [
+          {
+            "round": 1,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 10251,
+            "uncached_input_tokens": 479,
+            "output_tokens": 181,
+            "peak_prompt_tokens": 2016,
+            "seconds": 4.4,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 2,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 11395,
+            "uncached_input_tokens": 378,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2545,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 3,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 14159,
+            "uncached_input_tokens": 427,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 3123,
+            "seconds": 4.3,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 4,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 5,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": true,
+            "cached_tokens": 20942,
+            "uncached_input_tokens": 514,
+            "output_tokens": 174,
+            "peak_prompt_tokens": 3805,
+            "seconds": 4.5,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 5,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 20697,
+            "uncached_input_tokens": 525,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4481,
+            "seconds": 4.6,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 6,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 24196,
+            "uncached_input_tokens": 574,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5206,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 7,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 27940,
+            "uncached_input_tokens": 623,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5980,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 8,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 31929,
+            "uncached_input_tokens": 672,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6803,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 9,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 36163,
+            "uncached_input_tokens": 721,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 7675,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 10,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 40642,
+            "uncached_input_tokens": 770,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8596,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 11,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 45366,
+            "uncached_input_tokens": 819,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9566,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 12,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 50335,
+            "uncached_input_tokens": 868,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 10585,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 13,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 55549,
+            "uncached_input_tokens": 917,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 11653,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 14,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 61008,
+            "uncached_input_tokens": 966,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 12770,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 15,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 66712,
+            "uncached_input_tokens": 1015,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 13936,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 16,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78ceae0ffe9M9NA5lmeFWnaL",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 72661,
+            "uncached_input_tokens": 1064,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 15151,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 17,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 10234,
+            "uncached_input_tokens": 1099,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 2688,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 18,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 16659,
+            "uncached_input_tokens": 1162,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 4001,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 19,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 23343,
+            "uncached_input_tokens": 1211,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 5363,
+            "seconds": 3.7,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 20,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 30272,
+            "uncached_input_tokens": 1260,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 6774,
+            "seconds": 3.8,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 21,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 37446,
+            "uncached_input_tokens": 1309,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 8234,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 22,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 44865,
+            "uncached_input_tokens": 1358,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 9743,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 23,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 52529,
+            "uncached_input_tokens": 1407,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 11301,
+            "seconds": 4.0,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 24,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 60438,
+            "uncached_input_tokens": 1456,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 12908,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 25,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 68592,
+            "uncached_input_tokens": 1505,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 14564,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 26,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 76991,
+            "uncached_input_tokens": 1554,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 16269,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 27,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 85635,
+            "uncached_input_tokens": 1603,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 18023,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 28,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 94524,
+            "uncached_input_tokens": 1652,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 19826,
+            "seconds": 4.1,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 29,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 103658,
+            "uncached_input_tokens": 1701,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 21678,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 30,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 113037,
+            "uncached_input_tokens": 1750,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 23579,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 31,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 122661,
+            "uncached_input_tokens": 1799,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 25529,
+            "seconds": 4.2,
+            "grade": "PASS\n"
+          },
+          {
+            "round": 32,
+            "correct": true,
+            "checked": true,
+            "completed": true,
+            "passed": true,
+            "tool_calls": 4,
+            "session": "ses_ef78beaf5ffe7kE3MbcN3602fN",
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "read",
+                "status": "completed"
+              },
+              {
+                "name": "edit",
+                "status": "completed"
+              },
+              {
+                "name": "check",
+                "status": "completed"
+              }
+            ],
+            "recovered_transient_error": false,
+            "cached_tokens": 132530,
+            "uncached_input_tokens": 1848,
+            "output_tokens": 156,
+            "peak_prompt_tokens": 27528,
+            "seconds": 3.9,
+            "grade": "PASS\n"
+          }
+        ],
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "effort": "none",
+        "harness_sha256": "21125dfeddf9f8803bbf7d112bccc7404c5def879876016a144655fd20b019dd",
+        "tasks_sha256": "309af8b053f2cbc7c1ac4206b3fad481a941f9135944a9fc8931cea1703b64fe",
+        "session_handoff": "Fresh session halfway through; trusted harness preserves requirements in TASK_STATE.md",
+        "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+        "total_tool_calls": 130,
+        "passed": true
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-grounding/results.json",
+      "sha256": "3cace51de72c9ec6650a6cc88d70c77950237dbc7538c412439e55628456a527",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "steps": 8,
+        "suite": "grounding",
+        "effort": "none",
+        "harness_sha256": "3d30546f16ac2514e963de3203eca5f71e087f6b5ac77be24a357a590b55524e",
+        "tasks_sha256": "18f68e12f26226612503f111c68a553ad59a7464a57abed237faaf6107b04f8e",
+        "opencode": "mise ~/.config/mise/config.toml tools: opencode@1.18.34\n1.18.34",
+        "tasks": [
+          {
+            "id": "grounding-0",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.4,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value - 26",
+                  "newString": "return value + 26"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1501,
+                "input": 108,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1368
+                }
+              },
+              {
+                "total": 1640,
+                "input": 93,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1500
+                }
+              },
+              {
+                "total": 1687,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1639
+                }
+              },
+              {
+                "total": 1725,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1686
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-1",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.2,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value + 10",
+                  "newString": "return value * 10"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1499,
+                "input": 104,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1637,
+                "input": 92,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1498
+                }
+              },
+              {
+                "total": 1684,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1636
+                }
+              },
+              {
+                "total": 1722,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1683
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-2",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.4,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value * 24 - 18",
+                  "newString": "return value * 24 + 18"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1502,
+                "input": 107,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1649,
+                "input": 95,
+                "output": 53,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1501
+                }
+              },
+              {
+                "total": 1696,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1648
+                }
+              },
+              {
+                "total": 1734,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1695
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-3",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.7,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value - 34",
+                  "newString": "return value + 34"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1501,
+                "input": 106,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1640,
+                "input": 93,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1500
+                }
+              },
+              {
+                "total": 1687,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1639
+                }
+              },
+              {
+                "total": 1725,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1686
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-4",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.7,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value + 20",
+                  "newString": "return value * 20"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1501,
+                "input": 105,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1371
+                }
+              },
+              {
+                "total": 1640,
+                "input": 93,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1500
+                }
+              },
+              {
+                "total": 1687,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1639
+                }
+              },
+              {
+                "total": 1725,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1686
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-5",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.4,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value * 9 - 12",
+                  "newString": "return value * 9 + 12"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1500,
+                "input": 105,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1646,
+                "input": 94,
+                "output": 53,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1499
+                }
+              },
+              {
+                "total": 1693,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1645
+                }
+              },
+              {
+                "total": 1731,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1692
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-6",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.5,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value - 5",
+                  "newString": "return value + 5"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1501,
+                "input": 106,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1640,
+                "input": 93,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1500
+                }
+              },
+              {
+                "total": 1687,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1639
+                }
+              },
+              {
+                "total": 1725,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1686
+                }
+              }
+            ]
+          },
+          {
+            "id": "grounding-7",
+            "passed": true,
+            "grade": "PASS\n",
+            "returncode": 0,
+            "seconds": 3.6,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value - 27",
+                  "newString": "return value + 27"
+                },
+                "error": ""
+              },
+              {
+                "name": "check",
+                "status": "completed",
+                "input": {},
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1499,
+                "input": 103,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1371
+                }
+              },
+              {
+                "total": 1637,
+                "input": 92,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1498
+                }
+              },
+              {
+                "total": 1684,
+                "input": 30,
+                "output": 18,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1636
+                }
+              },
+              {
+                "total": 1722,
+                "input": 31,
+                "output": 8,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1683
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-basic/results.json",
+      "sha256": "7c75f1f2a5fa86922ad5c637353f83e7ab5ee897c4b271f507a66d65ac20cde8",
+      "result": {
+        "label": "agent-direct-2250-canonical",
+        "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+        "steps": 8,
+        "suite": "basic",
+        "effort": "none",
+        "harness_sha256": "3d30546f16ac2514e963de3203eca5f71e087f6b5ac77be24a357a590b55524e",
+        "tasks_sha256": "2cf738029f23edd1ebb758a63d53a98c875e7840cf0adacdf9f279895c63b878",
+        "opencode": "mise ~/.config/mise/config.toml tools: opencode@1.18.34\n1.18.34",
+        "tasks": [
+          {
+            "id": "mean",
+            "passed": false,
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.mean([1, 2]) == 1.5\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "returncode": 0,
+            "seconds": 2.8,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1514,
+                "input": 119,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1670,
+                "input": 97,
+                "output": 60,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1513
+                }
+              }
+            ]
+          },
+          {
+            "id": "chunks",
+            "passed": false,
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks([1,2,3,4,5], 2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "returncode": 1,
+            "seconds": 3.6,
+            "errors": [
+              {
+                "name": "APIError",
+                "data": {
+                  "message": "Model emitted an invalid tool call: 'newString' is a required property\n\nFailed validating 'required' in schema:\n    {'$schema': 'https://json-schema.org/draft/2020-12/schema',\n     'type': 'object',\n     'properties': {'filePath': {'type': 'string',\n                                 'description': 'The absolute path to the '\n                                                'file to modify'},\n                    'oldString': {'type': 'string',\n                                  'description': 'The text to replace'},\n                    'newString': {'type': 'string',\n                                  'description': 'The text to replace it '\n                                                 'with (must be different '\n                                                 'from oldString)'},\n                    'replaceAll': {'type': 'boolean',\n                                   'description': 'Replace all occurrences '\n                                                  'of oldString (default '\n                                                  'false)'}},\n     'required': ['filePath', 'oldString', 'newString']}\n\nOn instance:\n    {'filePath': 'solution.py', 'oldString': 'return value * 0'}",
+                  "statusCode": 422,
+                  "isRetryable": false,
+                  "responseHeaders": {
+                    "content-length": "1268",
+                    "content-type": "application/json",
+                    "date": "Sun, 04 Oct 2026 19:48:30 GMT",
+                    "server": "uvicorn"
+                  },
+                  "responseBody": "{\"error\":{\"message\":\"Model emitted an invalid tool call: 'newString' is a required property\\n\\nFailed validating 'required' in schema:\\n    {'$schema': 'https://json-schema.org/draft/2020-12/schema',\\n     'type': 'object',\\n     'properties': {'filePath': {'type': 'string',\\n                                 'description': 'The absolute path to the '\\n                                                'file to modify'},\\n                    'oldString': {'type': 'string',\\n                                  'description': 'The text to replace'},\\n                    'newString': {'type': 'string',\\n                                  'description': 'The text to replace it '\\n                                                 'with (must be different '\\n                                                 'from oldString)'},\\n                    'replaceAll': {'type': 'boolean',\\n                                   'description': 'Replace all occurrences '\\n                                                  'of oldString (default '\\n                                                  'false)'}},\\n     'required': ['filePath', 'oldString', 'newString']}\\n\\nOn instance:\\n    {'filePath': 'solution.py', 'oldString': 'return value * 0'}\",\"type\":\"invalid_model_output\"}}",
+                  "metadata": {
+                    "url": "http://127.0.0.1:8014/v1/chat/completions"
+                  }
+                }
+              }
+            ],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "error",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value * 0",
+                  "newString": "return value * 0"
+                },
+                "error": "No changes to apply: oldString and newString are identical."
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1521,
+                "input": 126,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1684,
+                "input": 117,
+                "output": 47,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1520
+                }
+              }
+            ]
+          },
+          {
+            "id": "unique",
+            "passed": false,
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.unique([3,1,3,2,1]) == [3,1,2]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "returncode": 0,
+            "seconds": 19.5,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1513,
+                "input": 118,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 5700,
+                "input": 92,
+                "output": 4096,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1512
+                }
+              }
+            ]
+          },
+          {
+            "id": "counts",
+            "passed": false,
+            "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_words('One one TWO') == {'one':2,'two':1}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "returncode": 0,
+            "seconds": 3.0,
+            "errors": [],
+            "tools": [
+              {
+                "name": "read",
+                "status": "completed",
+                "input": {
+                  "filePath": "solution.py"
+                },
+                "error": ""
+              },
+              {
+                "name": "edit",
+                "status": "error",
+                "input": {
+                  "filePath": "solution.py",
+                  "oldString": "return value * 1 for word in text.split(' ').",
+                  "newString": "return value * 1 for word in text.split(' ')."
+                },
+                "error": "No changes to apply: oldString and newString are identical."
+              }
+            ],
+            "tokens": [
+              {
+                "total": 1528,
+                "input": 133,
+                "output": 25,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1370
+                }
+              },
+              {
+                "total": 1733,
+                "input": 105,
+                "output": 101,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1527
+                }
+              },
+              {
+                "total": 1770,
+                "input": 63,
+                "output": 39,
+                "reasoning": 0,
+                "cache": {
+                  "write": 0,
+                  "read": 1668
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-reasoning.json",
+      "sha256": "b012407e46b4787d6968311fe72b85f33bd8406295e8d61112321c2ae7b2f2d9",
+      "result": {
+        "checkpoint": "agent-direct-2250-canonical",
+        "note": "Held-out inputs; family 3 is a held-out procedural template. No model code is executed.",
+        "results": [
+          {
+            "task": 0,
+            "family": 0,
+            "expected": "26",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values as the input. It then print the values as the values as the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 105,
+              "completion_tokens": 27,
+              "total_tokens": 132,
+              "prompt_tokens_details": {
+                "cached_tokens": 4
+              }
+            },
+            "seconds": 0.1469510169699788
+          },
+          {
+            "task": 0,
+            "family": 0,
+            "expected": "26",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value * 3. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 143,
+              "completion_tokens": 23,
+              "total_tokens": 166,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.10141304100397974
+          },
+          {
+            "task": 1,
+            "family": 1,
+            "expected": "-3",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `result` function takes a list of values and returns the value. It then print the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 138,
+              "completion_tokens": 22,
+              "total_tokens": 160,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.0976851430023089
+          },
+          {
+            "task": 1,
+            "family": 1,
+            "expected": "-3",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `result` function takes a list of values and returns the value. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 176,
+              "completion_tokens": 20,
+              "total_tokens": 196,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.08479493495542556
+          },
+          {
+            "task": 2,
+            "family": 2,
+            "expected": "14",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value as a list of integers as your final answer.\\n\", \"newString\": \"    return value * 10 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 7\\n\"}}</ value * 2 + 7\\n\\",
+            "reasoning": null,
+            "finish_reason": "length",
+            "usage": {
+              "prompt_tokens": 111,
+              "completion_tokens": 256,
+              "total_tokens": 367,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 1.0971258940408006
+          },
+          {
+            "task": 2,
+            "family": 2,
+            "expected": "14",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value as a list of integers as your final answer.\\n\", \"newString\": \"    return value * 10 + 7\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\\ndef sorted(value):\\n    return value * 4 + 2\\n\"}}</ value * 2\\n\"}}</ value * 2\\n\"}}</",
+            "reasoning": null,
+            "finish_reason": "length",
+            "usage": {
+              "prompt_tokens": 149,
+              "completion_tokens": 256,
+              "total_tokens": 405,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 1.0403130640042946
+          },
+          {
+            "task": 3,
+            "family": 3,
+            "expected": "9",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the corresponding integer as the input. It then print the corresponding integer as the number of values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 123,
+              "completion_tokens": 32,
+              "total_tokens": 155,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.13792156102135777
+          },
+          {
+            "task": 3,
+            "family": 3,
+            "expected": "9",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 161,
+              "completion_tokens": 20,
+              "total_tokens": 181,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.09113442595116794
+          },
+          {
+            "task": 4,
+            "family": 0,
+            "expected": "4",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value * 2.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 123,
+              "completion_tokens": 19,
+              "total_tokens": 142,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.08514113898854703
+          },
+          {
+            "task": 4,
+            "family": 0,
+            "expected": "4",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value * 2. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 161,
+              "completion_tokens": 23,
+              "total_tokens": 184,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.10852355195675045
+          },
+          {
+            "task": 5,
+            "family": 1,
+            "expected": "18",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `result` function takes a list of values and returns the value. It then print the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 141,
+              "completion_tokens": 22,
+              "total_tokens": 163,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.10699810204096138
+          },
+          {
+            "task": 5,
+            "family": 1,
+            "expected": "18",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `result` function takes a list of values and returns the value. All values are the integers. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 179,
+              "completion_tokens": 26,
+              "total_tokens": 205,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.11970720300450921
+          },
+          {
+            "task": 6,
+            "family": 2,
+            "expected": "15",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value as a list of integers as your final answer.\\n\", \"newString\": \"    return value * 12 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2\\n\"}}</ value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2\\n\"}}</ value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2\\n\"}}</ value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2\\n\"}}</ value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2\\n\"}}</ value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</ value * 2 + 2",
+            "reasoning": null,
+            "finish_reason": "length",
+            "usage": {
+              "prompt_tokens": 108,
+              "completion_tokens": 256,
+              "total_tokens": 364,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 1.1366347770672292
+          },
+          {
+            "task": 6,
+            "family": 2,
+            "expected": "15",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value as a list of integers as your final answer.\\n\", \"newString\": \"    return value * 12 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2\\n\"}}</value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2\\n\"}}</value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2\\n\"}}</value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2\\n\"}}</value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2\\n\"}}</value * 2 + 2\\n\\ndef integer_to_number(value):\\n    return value * 4 + 2\\n\"}}</value * 4 + 2",
+            "reasoning": null,
+            "finish_reason": "length",
+            "usage": {
+              "prompt_tokens": 146,
+              "completion_tokens": 256,
+              "total_tokens": 402,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 1.139452610979788
+          },
+          {
+            "task": 7,
+            "family": 3,
+            "expected": "13",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of integers as input. It then print the values of the integers. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 135,
+              "completion_tokens": 27,
+              "total_tokens": 162,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.1258603259921074
+          },
+          {
+            "task": 7,
+            "family": 3,
+            "expected": "13",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 173,
+              "completion_tokens": 20,
+              "total_tokens": 193,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.09828531800303608
+          },
+          {
+            "task": 8,
+            "family": 0,
+            "expected": "120",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values as the input. It then print the values as the values as the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 105,
+              "completion_tokens": 27,
+              "total_tokens": 132,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.12591608799993992
+          },
+          {
+            "task": 8,
+            "family": 0,
+            "expected": "120",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value * 4. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 143,
+              "completion_tokens": 23,
+              "total_tokens": 166,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.10373889305628836
+          },
+          {
+            "task": 9,
+            "family": 1,
+            "expected": "-4",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value. It then print the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 132,
+              "completion_tokens": 22,
+              "total_tokens": 154,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.1030631170142442
+          },
+          {
+            "task": 9,
+            "family": 1,
+            "expected": "-4",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `result` function takes a list of values and returns the value. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 170,
+              "completion_tokens": 20,
+              "total_tokens": 190,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.08900948194786906
+          },
+          {
+            "task": 10,
+            "family": 2,
+            "expected": "0",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value as a list of integers as your final answer.\\n\", \"newString\": \"    return value * 1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\\ndef sorted(value):\\n    return value * 1 + 5\\n\"}}</1 + 5\\n\"}}</1 + 5\\n\"}}</",
+            "reasoning": null,
+            "finish_reason": "length",
+            "usage": {
+              "prompt_tokens": 108,
+              "completion_tokens": 256,
+              "total_tokens": 364,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 1.08807112602517
+          },
+          {
+            "task": 10,
+            "family": 2,
+            "expected": "0",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "To print the function's value. The function should return the value * 1 and the function should return the value * 1.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 146,
+              "completion_tokens": 28,
+              "total_tokens": 174,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.11577771895099431
+          },
+          {
+            "task": 11,
+            "family": 3,
+            "expected": "10",
+            "effort": "none",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value. It then print the values.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 132,
+              "completion_tokens": 22,
+              "total_tokens": 154,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.09903045697137713
+          },
+          {
+            "task": 11,
+            "family": 3,
+            "expected": "10",
+            "effort": "high",
+            "budget": 256,
+            "correct": false,
+            "answer": "The `main` function takes a list of values and returns the value. All checks passed.",
+            "reasoning": null,
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 170,
+              "completion_tokens": 20,
+              "total_tokens": 190,
+              "prompt_tokens_details": {
+                "cached_tokens": 10
+              }
+            },
+            "seconds": 0.09045368898659945
+          }
+        ],
+        "scores": [
+          {
+            "budget": 256,
+            "effort": "none",
+            "held_out_template": false,
+            "correct": 0,
+            "total": 9
+          },
+          {
+            "budget": 256,
+            "effort": "none",
+            "held_out_template": true,
+            "correct": 0,
+            "total": 3
+          },
+          {
+            "budget": 256,
+            "effort": "high",
+            "held_out_template": false,
+            "correct": 0,
+            "total": 9
+          },
+          {
+            "budget": 256,
+            "effort": "high",
+            "held_out_template": true,
+            "correct": 0,
+            "total": 3
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "runs/agent-direct-context.json",
+      "sha256": "22dd4dc2f68f9acb4ebf783882e240b35aaf604a9ffbd8caffc6437244021b59",
+      "result": {
+        "checkpoint": "runs/agent-ready-v1/model.pt",
+        "kind": "synthetic exact retrieval, not code comprehension",
+        "results": [
+          {
+            "window": 8192,
+            "prompt_tokens": 8128,
+            "position_fraction": 0.05,
+            "expected": "693999",
+            "answer": "",
+            "passed": false,
+            "usage": null,
+            "error": "HTTP Error 422: Unprocessable Entity: {\"error\":{\"message\":\"Model emitted an invalid tool call: Expecting ':' delimiter: line 1 column 7 (char 6)\",\"type\":\"invalid_model_output\"}}"
+          },
+          {
+            "window": 8192,
+            "prompt_tokens": 8128,
+            "position_fraction": 0.5,
+            "expected": "202752",
+            "answer": "<tool_call>{\"8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-8, preserve UTF-",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 8128,
+              "completion_tokens": 64,
+              "total_tokens": 8192,
+              "prompt_tokens_details": {
+                "cached_tokens": 400
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 8192,
+            "prompt_tokens": 8128,
+            "position_fraction": 0.95,
+            "expected": "173805",
+            "answer": "",
+            "passed": false,
+            "usage": null,
+            "error": "HTTP Error 422: Unprocessable Entity: {\"error\":{\"message\":\"Model emitted an invalid tool call: Expecting ':' delimiter: line 1 column 7 (char 6)\",\"type\":\"invalid_model_output\"}}"
+          },
+          {
+            "window": 16384,
+            "prompt_tokens": 16318,
+            "position_fraction": 0.05,
+            "expected": "702153",
+            "answer": "<tool_call>{\"name\": \"edit\", \"arguments\": {\"filePath\": \"src/convert.py\", \"oldString\": \"    return value * 8 + 2\\n\", \"newString\": \"    return value * 8 + 2\\n\\ndef Python. All checks passed. All checks passed",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 16318,
+              "completion_tokens": 64,
+              "total_tokens": 16382,
+              "prompt_tokens_details": {
+                "cached_tokens": 820
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 16384,
+            "prompt_tokens": 16318,
+            "position_fraction": 0.5,
+            "expected": "887900",
+            "answer": "<tool_call>{\"name\": \"edit\", \"arguments\": {\"filePath\": \"src/convert.py\", \"oldString\": \"    return value * 8 + 2\\n\", \"newString\": \"    return value * 8 + 2\\n\\ndef Python. All checks passed. All checks passed",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 16318,
+              "completion_tokens": 64,
+              "total_tokens": 16382,
+              "prompt_tokens_details": {
+                "cached_tokens": 820
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 16384,
+            "prompt_tokens": 16318,
+            "position_fraction": 0.95,
+            "expected": "456482",
+            "answer": "<tool_call>{\"name\": \"edit\", \"arguments\": {\"filePath\": \"src/convert.py\", \"oldString\": \"    return value * 8 + 2\\n\", \"newString\": \"    return value * 8 + 2\\n\\ndef Python. All checks passed. All checks passed",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 16318,
+              "completion_tokens": 64,
+              "total_tokens": 16382,
+              "prompt_tokens_details": {
+                "cached_tokens": 8140
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 32768,
+            "prompt_tokens": 32698,
+            "position_fraction": 0.05,
+            "expected": "979680",
+            "answer": "<tool_call>{\"name\": \"edit",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 32698,
+              "completion_tokens": 9,
+              "total_tokens": 32707,
+              "prompt_tokens_details": {
+                "cached_tokens": 1630
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 32768,
+            "prompt_tokens": 32698,
+            "position_fraction": 0.5,
+            "expected": "530188",
+            "answer": "<tool_call>{\"name\": \"edit",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 32698,
+              "completion_tokens": 9,
+              "total_tokens": 32707,
+              "prompt_tokens_details": {
+                "cached_tokens": 1630
+              }
+            },
+            "error": null
+          },
+          {
+            "window": 32768,
+            "prompt_tokens": 32698,
+            "position_fraction": 0.95,
+            "expected": "753627",
+            "answer": "<tool_call>{\"name\": \"edit",
+            "passed": false,
+            "usage": {
+              "prompt_tokens": 32698,
+              "completion_tokens": 9,
+              "total_tokens": 32707,
+              "prompt_tokens_details": {
+                "cached_tokens": 16330
+              }
+            },
+            "error": null
+          }
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Synthetic narrow arithmetic family, not general software engineering.",
+    "Trusted harness maintains TASK_STATE.md; autonomous summarization not established.",
+    "32K allocation and long task horizon do not establish arbitrary retrieval.",
+    "Deep reasoning and broad conversational competence not demonstrated.",
+    "Buffered SSE, one prefix cache, local single trust domain."
+  ],
+  "interactive": {
+    "first_session": "ses_ef78a2186ffelz7EgjQZE3Sp0A",
+    "second_session": "ses_ef785bb9dffeqetwGERA36X1bW",
+    "independently_graded_tasks": 2,
+    "opencode": "1.18.34",
+    "title_agent_disabled_after_first": true
+  }
+}

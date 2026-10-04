@@ -2,17 +2,20 @@
 
 ## Latest measured state
 
-The original full curriculum is complete; the progress entries below are historical.
-The wire-format follow-up at `runs/horizon-wire-v1/candidate.pt` passed 16/16
-cumulative OpenCode rounds with seed 849723, including a failed-checker retry and
-fresh-session handoff (65 calls). Repeats passed 15/16 with seed 1337 and 21/32
-with seed 20261004. Its separate scores are 8/8 arithmetic repairs and 0/4 broader
-repairs. It is not yet a consistently reliable long-session model.
+The selected deployment is `runs/agent-ready-v1/model.pt`: 90,969,600 parameters,
+random-origin foundation followed by one focused SFT stage, selected at step 2250.
+It passed four 16-round cumulative OpenCode sessions and a 32-round session
+(130 calls, 27,528-token peak prompt), plus 8/8 narrow arithmetic repairs.
+Broader repairs scored 0/4; reasoning scored 0/12 both directly and with high effort;
+arbitrary exact retrieval scored 0/9 across 8K/16K/32K. Harness-maintained filesystem
+state supports the successful sessions. These results do not establish general
+coding, autonomous summarization, conversation, or deep reasoning capability.
 
-The 23 current CPU tests pass, including masked erroneous actions, recovery fixture
-execution, incomplete-thinking rejection and repeated read/edit-cycle containment.
-The [minimal-agent notebook](agentic-minimum.md) explains the follow-up directly
-from our foundation and separates model skills from harness-provided state.
+All 25 CPU tests pass. Exported weights equal the selected training checkpoint;
+the bundled tokenizer loads without the tiktoken registry/network. Exact-prefix
+cache checks and profiled Flash dispatch through a 32K allocation passed.
+See the [reproducible runbook](agentic-minimum.md) and [evidence](agentic-evidence.json).
+The dated progress entries below preserve the experimental history.
 
 The sole implementation target is our GPT initialized randomly. The earlier
 pretrained-model experiment has been removed, including its project checkpoints,
@@ -22,12 +25,12 @@ model. Public source datasets and the original scratch-demo artifacts are retain
 Owner of these checks: the implementing agent. Verification distinguishes code
 correctness, training execution, protocol compatibility and actual model ability.
 
-## Larger curriculum: implemented, training still in progress
+## Historical progress: larger curriculum
 
-The active run is `runs/coding-v1`; consult `status.json` and each stage's
+The original run was `runs/coding-v1`; consult `status.json` and each stage's
 `metrics.jsonl` for live progress. It continues our random-origin pilot, with
 the same 90,969,600 parameters and frozen o200k_base tokenizer. No external model
-weights or rented GPU are involved. Its final model capability results are pending.
+weights or rented GPU are involved. Its final capability results failed the targets; see the selected follow-up above.
 
 Prepared data: 947,532,764 training tokens; 62,366 training / 3,475 held-out SFT
 episodes, with 33,785,800 / 2,240,035 assistant target tokens. The complete-episode

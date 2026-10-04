@@ -1,5 +1,9 @@
 # Larger scratch training and OpenCode capability gates
 
+For the shortest validated route, use the [minimal agent runbook](agentic-minimum.md).
+This document also retains the larger experimental curriculum and its failed stages.
+
+
 The first 91M pilot failed all four repository repairs and produced no tool
 calls. The next run keeps our randomly initialized architecture and o200k_base
 token IDs; no external model weights are used. Its objective is basic coding

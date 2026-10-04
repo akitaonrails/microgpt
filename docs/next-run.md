@@ -1,11 +1,10 @@
 # Correcting the first full run
 
-**Current follow-up (2026-10-04):** the recovery run below has finished. Testing with
-explicit `--effort none` exposed a reasoning/protocol failure rather than complete
-loss of short-task ability. Wire-format SFT subsequently achieved one 16/16 session,
-but repeat seeds still failed late. See [the minimal-agent notebook](agentic-minimum.md)
-for the clean foundation-to-agent experiment and current evidence. The entries below
-preserve the earlier experimental sequence; they are not all required recipe steps.
+**Completed follow-up (2026-10-04):** a single focused SFT stage directly from our
+scratch foundation produced the selected 2250-step export. It passed four 16-round
+sessions and one 32-round session. Follow the [minimal agent runbook](agentic-minimum.md)
+for the final recipe and limitations. The entries below preserve earlier experiments;
+they are not prerequisites and are not currently running.
 
 Baseline commit: `4d98c3a`. All four training stages finished, but the final model
 passed 0/4 basic repairs, failed the first two horizon rounds, retrieved 0/9 context

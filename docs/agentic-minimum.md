@@ -6,6 +6,131 @@ We retain the 90,969,600-parameter model and o200k tokenizer. Its tied vocabular
 matrix accounts for 76,807,296 parameters, leaving 14,162,304 for the transformer
 and normalization. The parameter headline alone overstates its reasoning capacity.
 
+## Validated result
+
+The final teaching artifact is `runs/agent-ready-v1/model.pt`: 363,898,165 bytes,
+with the tokenizer and deployment manifest beside it. It contains our weights and
+serving settings, with optimizer/RNG state removed. Tensor equality was checked
+against the full training checkpoint. No pretrained model weights were imported.
+
+The successful route is our scratch foundation followed by **one SFT stage of
+2,250 updates**, not the chain of experimental checkpoints below. That stage used
+13,063 training / 737 validation episodes and consumed 4,725,998 assistant-token
+exposures. Its recorded wall time was 430.4 seconds on the RTX 5090, with concurrent
+evaluation activity; this is an observed run time, not an isolated speed benchmark.
+
+| Check on the frozen 2,250-step model | Result |
+|---|---|
+| Cumulative OpenCode runs, seeds 8675309, 42, 271828, 314159 | 16/16 each |
+| Longer run, seed 20261004 | 32/32; 130 real tool calls |
+| Short arithmetic repairs | 8/8 |
+| Original broader repairs | 0/4 |
+| Program tracing, 256-token budget | 0/12 direct; 0/12 thinking |
+| Exact retrieval at 8K/16K/32K | 0/9 |
+| Interactive OpenCode, unquoted user input | Two cumulative tasks passed |
+| Flash Attention and cold/warm cache checks | Passed through the 32K allocation limit |
+
+Every cumulative run includes a transient checker failure, a fresh-session handoff,
+and independent tests of all earlier requirements. The largest observed prompt in
+the 32-round run was **27,528 tokens**. The state file is maintained by the harness;
+these results do not establish model-written compaction summaries or reliable
+retrieval from arbitrary long text. Conversation probes also remain poor.
+
+This is a working **narrow agent lesson**, not a general coding assistant or a
+deep-reasoning model. “Minimum” describes the working implementation and training
+sequence found here, not a proven lower bound on parameters or pretraining tokens.
+Hashes, seeds and measurements are recorded in [the evidence file](agentic-evidence.json).
+
+## Use the model here
+
+The workspace service is running on port 8000. Its process record is
+`runs/agent-ready-v1/service.json`. To start it again after stopping it:
+
+```sh
+.venv/bin/python -m microgpt.serve --checkpoint runs/agent-ready-v1/model.pt \
+  --device cuda --attention flash --port 8000 --max-output 4096
+```
+
+Open the prepared interactive lesson, already advanced past the two tested tasks:
+
+```sh
+.venv/bin/python scripts/agent_lab.py run --out runs/opencode-lab
+```
+
+Keep that OpenCode session open. After it completes a task, run `agent_lab.py next
+--out runs/opencode-lab` in another terminal and paste the printed next prompt.
+`next` independently checks all current requirements before advancing. For a fresh
+lesson, use `agent_lab.py init --out runs/my-lab`, then `run --out runs/my-lab`.
+See [the OpenCode guide](opencode.md) for the restricted tools and state-file boundary.
+
+## Reproduce the short successful route
+
+Use the CUDA environment in [the scratch guide](finetuning.md), OpenCode 1.18.34
+and the pinned Docker image used by the evaluator. Prepare just the required source
+datasets and original tool exercises:
+
+```sh
+bash scripts/prepare_agent_data.sh
+```
+
+This reuses complete artifacts and keeps dataset writes under the authorized NAS
+root. The foundation mixture is CodeParrot, OpenCoder, Cosmopedia, SmolTalk and
+multilingual SmolTalk2. Magicoder supplies identifier vocabulary for the original
+exercises. The SFT corpus contains 5,254,829 assistant target tokens; its 1,879
+SmolTalk training conversations are replay data, not evidence of conversational skill.
+
+The measured model uses our existing `runs/coding-v1/foundation/last.pt`, which
+has random-initialization ancestry and includes an earlier small pretraining pilot.
+For a new foundation starting directly from random weights, the command is:
+
+```sh
+.venv/bin/python -m microgpt.train --config configs/coding-foundation.toml \
+  --data data/large-v1 --out runs/my-foundation --device cuda \
+  --sequence-length 2048 --attention flash
+```
+
+That cold run is not a bit-for-bit reproduction of the pilot-initialized foundation;
+rerun the behavioral gates. The prepared corpus has 947,532,764 training tokens,
+and the foundation configuration requests about one billion token exposures.
+No claim is made that this is the smallest sufficient pretraining budget.
+
+For the measured SFT recipe, select a fresh output directory:
+
+```sh
+.venv/bin/python -m microgpt.finetune --data data/agent-related-v1 \
+  --out runs/my-agent-sft --checkpoint runs/coding-v1/foundation/last.pt \
+  --steps 2250 --accumulation 2 --lr 0.0001 --eval-every 250 --eval-examples 16 \
+  --device cuda --attention flash --max-length 32768 --balanced-sources \
+  --balanced-lengths --short-replay 0.2 \
+  --sources horizon-session horizon-handoff grounding-read grounding-edit
+.venv/bin/python scripts/export_agent.py --checkpoint runs/my-agent-sft/last.pt \
+  --out runs/my-agent --canonical-tool-ids
+.venv/bin/python -m microgpt.serve --checkpoint runs/my-agent/model.pt \
+  --device cuda --attention flash --port 8010 --max-output 4096
+```
+
+Replace the foundation path when testing a new cold run. SFT uses a constant learning
+rate, so stopping at update 2,250 reproduces the selected training point's schedule.
+Export preserves weights and records internal tool-ID normalization as a serving
+setting. The measured training corpus used numbered synthetic IDs; future
+experiments can also pass `--canonical-tool-ids` during trajectory preparation.
+That optional corpus change needs its own validation.
+
+In another terminal, evaluate the model actually loaded on port 8010:
+
+```sh
+.venv/bin/python scripts/eval_horizon.py --url http://127.0.0.1:8010/v1 \
+  --out runs/my-horizon --label 'my-agent export' --effort none --rounds 32 --seed 20261004
+.venv/bin/python scripts/eval_opencode.py --url http://127.0.0.1:8010/v1 \
+  --out runs/my-repairs --label 'same export' --effort none --suite grounding
+```
+
+Repeat with fresh seeds and keep failed results. The general four-task repair suite,
+reasoning and context tests remain separate. Keep the full SFT checkpoint for
+training continuation; the smaller exported model is for inference only. The same
+model code and export can be used on an H100 via the [hardware runbook](hardware.md);
+no rented machine was used for these results.
+
 ## Acceptance criteria
 
 A successful demonstration must use the actual model and real OpenCode, with no
@@ -122,7 +247,7 @@ the same deterministic failure. It now returns non-retryable HTTP 422 with a cle
 error type. Invalid calls remain undispatched. API errors, wrong answers and failed
 tests must be reported separately.
 
-## Current experiment
+## Experiments leading to this result
 
 `horizon-wire-v1` uses the captured four-tool interface, actual observation formatting,
 quoted CLI requests, and direct actions. It keeps random task values and diverse
@@ -170,9 +295,12 @@ corpus. This smaller SFT corpus does not establish conversational quality.
 
 The tested route should ultimately require only random initialization → pretraining
 → one assistant/tool SFT stage → serving → independent OpenCode evaluation.
-Whether this clean SFT matches the longer experimental lineage is being measured.
+This first clean SFT recipe failed the complete session gate. The later
+`agent-direct-v1` run used the corrected related-name curriculum and is the
+successful one-stage SFT route documented above.
 
-Reproduce this experiment after the foundation and source preparation in
+The following historical commands reproduce that earlier experiment, not the
+recommended final recipe. They start after the foundation and source preparation in
 [the training runbook](training-plan.md). Run from the repository root, with the
 existing `data` symlink pointing inside the authorized NAS dataset directory.
 All output paths below must be fresh:
@@ -255,3 +383,21 @@ all share a prefix and differ in their numeric suffix. The `--related-names`
 curriculum adds same-prefix siblings in half of sessions, balanced independently
 of the error-recovery pattern. Prefixes still come from the existing vocabulary;
 evaluation identifiers, values and solutions are not inserted into training.
+
+## Portable deployment and the interactive client
+
+The export bundles `model.pt`, `encoding.json`, `encoding.tiktoken`, and
+`deployment.json`. Vocabulary ranks, regex and special tokens are preserved; loading
+was checked with the tiktoken registry disabled. Copy this directory as a unit.
+The optimizer is excluded, so keep the original checkpoint for continued training.
+All 25 CPU checks pass, including offline tokenizer identity and corruption rejection.
+
+The successful recipe combines related-identifier recovery examples with canonical
+internal tool IDs. Earlier failures of ID normalization alone remain useful negative
+results; the final combination passed the repeat seeds listed above. These internal
+IDs do not change client-visible call/result association.
+
+Actual OpenCode TUI runs passed the first two tasks, beyond the automated CLI tests.
+The auxiliary title agent initially made an out-of-domain request that returned 422;
+disabling it removed that error in the second run. The prepared local lesson now
+starts at round three, with the first two model-written functions preserved.

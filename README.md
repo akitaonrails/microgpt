@@ -9,17 +9,17 @@ The project has two scales: a 0.9M byte-tokenizer lesson and a larger student mo
 with multilingual tokenization, a 32K context allocation limit, Flash Attention,
 KV caching and an OpenCode-compatible server. A short pilot checks the engineering;
 useful coding and conversation require substantial training and behavioral evaluation.
-The first full run scored **0/4 general repairs**. A focused follow-up now passes
-**8/8 arithmetic repair instances through OpenCode**, a narrow trained task family. See [measured evidence](docs/verification.md) before interpreting
-a saved checkpoint. A later candidate completed a **16-round cumulative session**
-with error recovery and a fresh-session handoff, but repeat seeds still exposed
-failures. The [minimal-agent notebook](docs/agentic-minimum.md) tracks the complete
-workflow, its training recipe, and those limitations.
+The selected **90,969,600-parameter scratch model** completed four 16-round
+OpenCode sessions and one **32-round session with 130 tool calls**, including
+checker-error recovery and a fresh-session handoff. It passes 8/8 narrow arithmetic
+repairs, but 0/4 broader repairs and 0/12 reasoning problems in either tested mode.
+This teaches a complete agent workflow for a small trained task family.
 
-The larger training pipeline is now implemented: **947.5M pretraining tokens**,
-**78,192 complete SFT training episodes**, and a separate long-horizon stage.
-The completed 12-hour-budget run is recorded in `runs/coding-v1/status.json`.
-Its final evaluations failed the capability targets; see [the corrective experiment](docs/next-run.md). See the [training plan and runbook](docs/training-plan.md).
+Start with the [minimal agent runbook](docs/agentic-minimum.md): one foundation
+pretraining stage, one focused assistant-training stage, a portable export, and a
+restricted OpenCode lesson. The selected export is `runs/agent-ready-v1/model.pt`.
+The [committed evidence](docs/agentic-evidence.json) records hashes and measurements;
+[verification](docs/verification.md) preserves the earlier failed experiments.
 
 ## Offline first lesson
 

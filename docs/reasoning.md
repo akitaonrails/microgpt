@@ -6,6 +6,12 @@ teacher-generated text is supervision, so this is also trace distillation. It is
 not reinforcement learning, and printing a thinking section does not demonstrate
 correct reasoning.
 
+The selected agent baseline uses **`none` effort**. Its held-out reasoning score
+is **0/12 with none and 0/12 with high**, at a 256-token answer budget. Thinking
+serialization is implemented; deep reasoning is not demonstrated. The curriculum
+below records earlier experiments, not a required stage of the successful narrow
+agent recipe. See [the current runbook](agentic-minimum.md).
+
 ## Data and filtering
 
 The reproducible entry point is `bash scripts/prepare_coding_data.sh`. Downloads,
@@ -68,7 +74,7 @@ returns no action. Both thinking and answer consume the output-token budget.
 `reasoning_effort` accepts `none`, `low`, `medium`, or `high`; these select learned
 instructions, not guaranteed amounts of computation. OpenCode's example config
 advertises reasoning and offers these variants through `reasoningEffort`, with
-medium as default. The server output ceiling is 4,096 tokens. SSE is buffered until
+none as default. The server output ceiling is 4,096 tokens. SSE is buffered until
 generation and tool validation finish. Exact-prefix KV caching remains supported;
 clients that omit previous thinking can reduce cache reuse.
 
