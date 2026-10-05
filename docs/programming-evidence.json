@@ -2578,5 +2578,162 @@
     "stop_after_non_improving_checkpoints": 3,
     "status_file": "runs/programming-continuation/status.json",
     "automatic_promotion": false
+  },
+  "completed_continuation": {
+    "status": "milestones_exhausted",
+    "pid": 3562867,
+    "started": "2026-10-04T21:24:28.308956+00:00",
+    "initial_step": 24000,
+    "milestones": [
+      48000,
+      80000,
+      120000,
+      160000
+    ],
+    "hours": 4.0,
+    "stages": [
+      {
+        "target": 48000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 48000,
+          "train_loss": 1.8531603813171387,
+          "val_loss": 0.29626529230094095,
+          "val_loss_by_source": {
+            "code-feedback": 1.8535730352992188,
+            "conversation-replay": 3.086939962811609,
+            "educational-tools": 0.0914824328081156,
+            "horizon-handoff": 0.017123704131817994,
+            "horizon-session": 0.005087632456697326,
+            "magicoder": 1.3861308643436732,
+            "opencodeinstruct": 0.9810056463685087,
+            "opencoder-educational": 0.16565258504430713,
+            "programming-direct": 0.0014699520106660202,
+            "programming-tools": 0.0005877650681028727
+          },
+          "assistant_tokens_seen": 32992045,
+          "seconds": 1592.9,
+          "budget_reached": false,
+          "peak_memory_gb": 2.910958592
+        },
+        "checkpoint": "runs/programming-v2/checkpoint-48000.pt",
+        "direct": {
+          "passed": 1,
+          "total": 8
+        },
+        "agent": {
+          "passed": 1,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 80000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 80000,
+          "train_loss": 0.33167000114917755,
+          "val_loss": 0.27805023368802184,
+          "val_loss_by_source": {
+            "code-feedback": 1.7274942614571462,
+            "conversation-replay": 2.9554379274267424,
+            "educational-tools": 0.07001694825725305,
+            "horizon-handoff": 0.010354000786951638,
+            "horizon-session": 0.010660557615397135,
+            "magicoder": 1.2917760991751213,
+            "opencodeinstruct": 0.8597123951360743,
+            "opencoder-educational": 0.10127695268755288,
+            "programming-direct": 0.0006428277047234587,
+            "programming-tools": 0.00027319465946567433
+          },
+          "assistant_tokens_seen": 55086684,
+          "seconds": 1987.5,
+          "budget_reached": false,
+          "peak_memory_gb": 2.910297088
+        },
+        "checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+        "direct": {
+          "passed": 4,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 120000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 120000,
+          "train_loss": 0.5330211892724037,
+          "val_loss": 0.27297570115545855,
+          "val_loss_by_source": {
+            "code-feedback": 1.7077780847030555,
+            "conversation-replay": 2.962441802118929,
+            "educational-tools": 0.06684179097262737,
+            "horizon-handoff": 0.007735806622964951,
+            "horizon-session": 0.0026591522333546448,
+            "magicoder": 1.356287095240291,
+            "opencodeinstruct": 0.8210478403128176,
+            "opencoder-educational": 0.12607822485121065,
+            "programming-direct": 0.0007372157415375113,
+            "programming-tools": 0.00016979372048808727
+          },
+          "assistant_tokens_seen": 82768912,
+          "seconds": 2582.1,
+          "budget_reached": false,
+          "peak_memory_gb": 2.91460352
+        },
+        "checkpoint": "runs/programming-v2/checkpoint-120000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 160000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 160000,
+          "train_loss": 0.15796469897031784,
+          "val_loss": 0.27109224748025607,
+          "val_loss_by_source": {
+            "code-feedback": 1.7207539911789027,
+            "conversation-replay": 2.9272220840393883,
+            "educational-tools": 0.04540417225505092,
+            "horizon-handoff": 0.008645501405726529,
+            "horizon-session": 0.003278095512366601,
+            "magicoder": 1.2990396467495862,
+            "opencodeinstruct": 0.7914112766530351,
+            "opencoder-educational": 0.08052331591515165,
+            "programming-direct": 0.0001685107417870313,
+            "programming-tools": 0.00020120210216592276
+          },
+          "assistant_tokens_seen": 110623221,
+          "seconds": 2585.5,
+          "budget_reached": false,
+          "peak_memory_gb": 2.907469824
+        },
+        "checkpoint": "runs/programming-v2/checkpoint-160000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      }
+    ],
+    "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
+    "updated": "2026-10-05T00:03:17.426631+00:00"
   }
 }

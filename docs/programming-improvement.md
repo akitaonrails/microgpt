@@ -231,3 +231,51 @@ PID; SIGTERM requests a graceful stop. Use a fresh output directory for a subseq
 invocation and milestones above the saved step. This runner continues while the
 interactive coding session is idle; its status file, not this launch-time note,
 is authoritative about whether it is still running.
+
+
+### Continuation outcome and recovery curriculum (October 5)
+
+The continuation finished all scheduled milestones, rather than reaching the goal:
+
+| Step | Direct programming | Mixed agent session |
+| --- | ---: | ---: |
+| 48,000 | 1/8 | 1/8 |
+| 80,000 | 4/8 | 0/8 |
+| 120,000 | 2/8 | 0/8 |
+| 160,000 | 2/8 | 0/8 |
+
+The last checkpoint had 110,623,221 assistant-token exposures. In the 80K trace,
+the model read the right file, applied a function, and called check, but produced a
+literal interpolation placeholder and failed to repair it. Later turns inherited
+the failure. The 160K session also encountered repeated tool cycles and eventually
+exhausted its context allowance. Protocol compatibility is insufficient for task
+completion. Longer training at the same mixture did not reliably improve behavior.
+
+The next controlled change is `scripts/prepare_programming_recovery.py`: 11,967
+simulated repair and task-switch episodes built from the 3,989 previously checked
+OpenCoder references. Repair examples replace a function body with an explicit
+NotImplementedError and teach reading, checking, restoring the reference, checking,
+and stopping. Task switches span up to six files. Explicit signatures are extracted
+with AST parsing, never execution. Every constituent of a combined episode belongs
+to the same original hashed train/validation partition. This prevents this generator
+from moving reference answers across partitions, but is not a semantic deduplication
+claim about the public corpus.
+
+Limitations: only original references were executed against upstream tests. Failure
+observations and multi-file success observations are simulated. NotImplementedError
+repair does not cover arbitrary semantic errors. These examples do not establish
+long-session competence, autonomous memory management, or robust recovery. The
+unchanged real-tool development evaluations remain the behavioral gate; their prompts
+and expected answers are not imported into this curriculum.
+
+Run the next stage with `bash scripts/train_programming_recovery.sh` after generating
+`data/programming-recovery-v1.jsonl`. It prepares `data/programming-sft-v3` on the NAS,
+starts from our random-origin 80K checkpoint with a **fresh optimizer**, lowers the
+learning rate from 1e-4 to 3e-5, and uses 20% recovery plus 10% task-switch sampling.
+Other sources supply coding replay and 1% conversation. This changes both curriculum
+and optimizer settings; results cannot isolate either change individually. After
+1,000 initial updates the bounded runner evaluates at 5K, 10K, 20K and 40K new-stage
+steps. Stage steps reset; they are not total lifetime updates. Launch output lives in
+`runs/programming-recovery-launch.log`; subsequent controller status lives in
+`runs/programming-recovery-continuation/status.json`. No checkpoint is automatically
+promoted to the user's server.
