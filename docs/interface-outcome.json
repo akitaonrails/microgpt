@@ -1,0 +1,105 @@
+{
+  "status": "milestones_exhausted",
+  "pid": 1608567,
+  "started": "2026-10-06T17:11:41.070084+00:00",
+  "initial_step": 3000,
+  "milestones": [
+    5000,
+    10000,
+    20000
+  ],
+  "hours": 1.9,
+  "stages": [
+    {
+      "target": 5000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 5000,
+        "train_loss": 0.028873125091195107,
+        "val_loss": 0.19471389205405723,
+        "val_loss_by_source": {
+          "programming-interface": 0.19471389205405723
+        },
+        "assistant_tokens_seen": 792422,
+        "seconds": 191.8,
+        "budget_reached": false,
+        "peak_memory_gb": 5.082929664
+      },
+      "checkpoint": "runs/interface-v1/checkpoint-5000.pt",
+      "direct": {
+        "passed": 8,
+        "total": 100
+      },
+      "passed_gates": false,
+      "code_diagnostics": {
+        "passed": 8,
+        "syntax_valid": 92,
+        "requested_function_present": 50,
+        "parameter_names_match": 50,
+        "total": 100
+      }
+    },
+    {
+      "target": 10000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 10000,
+        "train_loss": 0.007152630714699626,
+        "val_loss": 0.22752705122551065,
+        "val_loss_by_source": {
+          "programming-interface": 0.22752705122551065
+        },
+        "assistant_tokens_seen": 1584702,
+        "seconds": 483.6,
+        "budget_reached": false,
+        "peak_memory_gb": 5.081409536
+      },
+      "checkpoint": "runs/interface-v1/checkpoint-10000.pt",
+      "direct": {
+        "passed": 1,
+        "total": 100
+      },
+      "passed_gates": false,
+      "code_diagnostics": {
+        "passed": 1,
+        "syntax_valid": 85,
+        "requested_function_present": 37,
+        "parameter_names_match": 37,
+        "total": 100
+      }
+    },
+    {
+      "target": 20000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 20000,
+        "train_loss": 0.03218931471928954,
+        "val_loss": 0.2292086442620544,
+        "val_loss_by_source": {
+          "programming-interface": 0.2292086442620544
+        },
+        "assistant_tokens_seen": 3164356,
+        "seconds": 982.3,
+        "budget_reached": false,
+        "peak_memory_gb": 5.08371456
+      },
+      "checkpoint": "runs/interface-v1/checkpoint-20000.pt",
+      "direct": {
+        "passed": 0,
+        "total": 100
+      },
+      "passed_gates": false,
+      "code_diagnostics": {
+        "passed": 0,
+        "syntax_valid": 85,
+        "requested_function_present": 40,
+        "parameter_names_match": 40,
+        "total": 100
+      }
+    }
+  ],
+  "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
+  "updated": "2026-10-06T17:42:52.972986+00:00",
+  "conclusion": "Best development result at 5K; extending the small interface curriculum regressed to 0/100 at 20K. No checkpoint is agent-ready.",
+  "best_development_checkpoint": "runs/interface-v1/checkpoint-5000.pt"
+}

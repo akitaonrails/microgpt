@@ -230,8 +230,11 @@ function and parameter-name matches to 37/100. Assistant target exposures reache
 1,584,702. Validation loss also worsened (0.1947 at 5K to 0.2275), although the
 sampled training loss was just 0.0072. The 5K checkpoint remains preferable on
 development execution; additional training is not monotonic improvement. The
-predeclared final 20K comparison remains bounded and is not permission for an
-indefinite extension of this branch.
+predeclared final 20K comparison subsequently finished at **0/100**, with 85/100
+valid Python outputs and 40/100 parameter-name matches after 3,164,356 assistant
+target exposures. This branch is finished. Its best checkpoint remains 5K;
+extending the same small curriculum did not improve programming. The frozen
+summary is [interface-outcome.json](interface-outcome.json).
 
 Passing variants cover four of twenty families: negatives 1/5, product 2/5,
 longest 1/5, and is_sorted 4/5. None of the twenty families passes all five
@@ -242,9 +245,11 @@ not establish programming competence or readiness for tool training.
 
 Artifacts: `runs/interface-math-continuation-v1/eval-5000/direct/results.json`
 and `analysis.json`; analysis command is `scripts/analyze_programming.py`.
-The unchanged 10K/20K checkpoint comparisons continue before selecting a next
-training branch. There have been no further observed watchdog errors through
-this checkpoint, which does not establish a root cause or a permanent fix.
+No further watchdog errors were observed through the completed 20K training run.
+That does not establish a root cause or a permanent fix. The broader checked-data
+branch is now running under `runs/interface-diverse-continuation-v1`, with its
+preregistered manifest in `runs/interface-diverse-experiment-v1.json` and bootstrap
+output in `runs/interface-diverse-launch.log`.
 
 ### Preparing a broader checked selection
 

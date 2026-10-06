@@ -3,9 +3,9 @@
 **Current experiment:** the [controlled capacity pilot](docs/capacity-pilot.md)
 finished without a meaningful programming gain. A subsequent focused instruction
 curriculum improved the scratch 239M candidate from 1/100 to **8/100** development
-variants at 5K updates. This is still far below useful programming competence;
-later checkpoints are being evaluated. The served 91M artifact below remains a
-narrow arithmetic lesson.
+variants at 5K updates, then regressed to 1/100 at 10K and 0/100 at 20K. A broader
+checked-data comparison is now running. This is still far below useful programming
+competence. The served 91M artifact below remains a narrow arithmetic lesson.
 
 
 An independently written PyTorch GPT inspired by
