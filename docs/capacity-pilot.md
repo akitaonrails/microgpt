@@ -463,3 +463,38 @@ out of 100. Meeting it does not meet the project's programming or agent-readines
 gates. Status and lineage are recorded in `runs/format-comparison-v1/status.json`.
 Both training and evaluation artifacts are retained; no candidate replaces the
 existing service automatically.
+
+The matched result was **7/100 for each arm**. Parameter-name matches improved
+from 58 to 66/100 with varied layouts, while syntactically valid outputs fell
+from 91 to 83/100. Thus the narrow format criterion passed, but programming did
+not improve. Both checkpoints were worse than their 17/100 parent, which remains
+selected. [request-format-outcome.json](request-format-outcome.json) records this
+distinction explicitly. Each arm consumed exactly 840,346 assistant target tokens.
+
+Both short continuations reset the sampler to seed 42 on the same ordered answers,
+replaying early samples already consumed by the parent. This was matched between
+arms, so it does not invalidate the format comparison, but it limits the meaning
+of “more training”: those exposures were not a fresh traversal of the curriculum.
+
+### Larger-batch optimization pilot
+
+`scripts/train_batched_pilot.sh` starts from the retained 17/100 parent, using the
+varied layouts, microbatch eight / accumulation four, LR 1e-5, and a new fixed
+sampling seed, 20261006. The larger batch averages more examples per update and
+the lower rate makes smaller parameter updates. These are hypotheses about
+stability, not established explanations for the earlier regressions. Batch size,
+learning rate and sampling seed change together; no result will be attributed to
+one of them in isolation.
+
+The first gate is 2,000 updates, approximately 5.4M assistant-target exposures.
+Extension requires at least 22/100 direct passes, 75/100 matching parameter lists,
+90/100 syntactically valid outputs, and passes in at least five task families.
+Only after passing that gate does the script continue to 5K/10K/20K total updates
+with a three-hour continuation ceiling. A failed gate stops this recipe. Neither
+outcome automatically promotes a model or counts as OpenCode readiness.
+
+Manifest: `runs/batched-learning-experiment-v1.json`. Initial status:
+`runs/batched-learning-pilot-v1/status.json`; decision:
+`runs/batched-learning-pilot-decision.json`; conditional longer-run status:
+`runs/batched-learning-continuation-v1/status.json`. Actual token exposures are
+recorded at every checkpoint; the estimate above is not substituted for them.

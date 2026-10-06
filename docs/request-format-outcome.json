@@ -1,0 +1,96 @@
+{
+  "status": "completed",
+  "started": "2026-10-06T18:33:48.162548+00:00",
+  "hypothesis": "Varied request layouts improve signature copying and code execution on ordinary prompts.",
+  "parent": "runs/interface-diverse-v2/checkpoint-10000.pt",
+  "parent_sha256": "41904377acb109c6171bd7898217e6f7bfb4d0e29e7851afedbab2454fef5d36",
+  "parent_direct": {
+    "passed": 17,
+    "total": 100
+  },
+  "microbatch": 2,
+  "accumulation": 1,
+  "steps_per_arm": 5000,
+  "learning_rate": 3e-05,
+  "seed": 42,
+  "attention": "math",
+  "git_commit": "076aff7881aa1357448fe75df82cedb8fd26a54d",
+  "data_manifests": {
+    "control": "95ab7814898282195cc8b70fd3e51036d258b3012b27a9424d145f05509702e5",
+    "varied": "fb0bbaf5e6ff0c1c5b6cfdb627addea7382cbfe4c11dcb61d95356037c314068"
+  },
+  "selection": "Adopt varied format only if direct passes do not regress versus control and parameter-name matches improve by at least 5/100. Never automatically promote to serving.",
+  "phases": [
+    {
+      "arm": "control",
+      "status": "evaluated",
+      "result": {
+        "target": 5000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 5000,
+          "train_loss": 0.05120576173067093,
+          "val_loss": 0.17319742041098485,
+          "val_loss_by_source": {
+            "programming-interface": 0.17319742041098485
+          },
+          "assistant_tokens_seen": 840346,
+          "seconds": 236.8,
+          "budget_reached": false,
+          "peak_memory_gb": 4.817105408
+        },
+        "checkpoint": "runs/format-comparison-v1/control/checkpoint-5000.pt",
+        "direct": {
+          "passed": 7,
+          "total": 100
+        },
+        "code_diagnostics": {
+          "passed": 7,
+          "syntax_valid": 91,
+          "requested_function_present": 58,
+          "parameter_names_match": 58,
+          "total": 100
+        },
+        "passed_gates": false
+      }
+    },
+    {
+      "arm": "varied",
+      "status": "evaluated",
+      "result": {
+        "target": 5000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 5000,
+          "train_loss": 0.04693096876144409,
+          "val_loss": 0.17887558576909154,
+          "val_loss_by_source": {
+            "programming-interface": 0.17887558576909154
+          },
+          "assistant_tokens_seen": 840346,
+          "seconds": 241.8,
+          "budget_reached": false,
+          "peak_memory_gb": 4.817423872
+        },
+        "checkpoint": "runs/format-comparison-v1/varied/checkpoint-5000.pt",
+        "direct": {
+          "passed": 7,
+          "total": 100
+        },
+        "code_diagnostics": {
+          "passed": 7,
+          "syntax_valid": 83,
+          "requested_function_present": 66,
+          "parameter_names_match": 66,
+          "total": 100
+        },
+        "passed_gates": false
+      }
+    }
+  ],
+  "acceptance_used": false,
+  "format_criterion_passed": true,
+  "overall_programming_improved": false,
+  "selected_checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+  "conclusion": "Both continuations scored 7/100 versus 17/100 for their parent. Varied layouts improved parameter-name matches by 8/100, satisfying the narrow format criterion without improving code correctness."
+}

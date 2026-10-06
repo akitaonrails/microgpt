@@ -76,6 +76,11 @@ are also relevant. Both currently advertise gated access; unauthenticated source
 retrieval was restricted when checked. This project does not bypass those gates.
 Do not substitute an unverified mirror simply because it exposes the same name.
 
+The [Python-Edu subset of SmolLM-Corpus](https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus#python-edu)
+also distributes file identifiers, repository paths and educational scores; its
+card retrieves source contents separately from Software Heritage S3. It is not a
+direct-content shortcut around the Stack-Edu retrieval requirement.
+
 Large raw-code collections teach code distribution. They do not replace
 conversation examples, schema-conditioned tool calls, repair trajectories, or
 independent executable evaluations. Start with measured adaptation; storing a
