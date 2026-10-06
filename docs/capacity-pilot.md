@@ -247,9 +247,9 @@ Artifacts: `runs/interface-math-continuation-v1/eval-5000/direct/results.json`
 and `analysis.json`; analysis command is `scripts/analyze_programming.py`.
 No further watchdog errors were observed through the completed 20K training run.
 That does not establish a root cause or a permanent fix. The broader checked-data
-branch is now running under `runs/interface-diverse-continuation-v1`, with its
-preregistered manifest in `runs/interface-diverse-experiment-v1.json` and bootstrap
-output in `runs/interface-diverse-launch.log`.
+branch uses `runs/interface-diverse-continuation-v2`, with its
+preregistered manifest in `runs/interface-diverse-experiment-v2.json` and bootstrap
+output in `runs/interface-diverse-launch-v2.log`.
 
 ### Preparing a broader checked selection
 
@@ -287,7 +287,7 @@ The expanded renamed-reference run executes normalized tests. Its failures and
 assertion-free sources are removed by `filter_interface_curriculum.py`, preserving
 the already checked random names rather than regenerating them. The filtered
 report links back to the original sandbox report and checks both source hashes.
-Only `programming-interface-diverse-sft-v2` is eligible for training; the earlier
+Only `programming-interface-diverse-sft-v3` is eligible for training; the earlier
 unfiltered tokenization is retained as preparation history.
 
 `scripts/train_interface_diversity.sh` records parent/data/evaluation hashes before
@@ -317,8 +317,8 @@ preparer versions. Relevant artifacts:
 - `data/educational-tools-diverse-v1.source.json`: initial source selection.
 - `runs/interface-diverse-reference-checks.json`: all renamed execution outcomes.
 - `runs/interface-diverse-test-audit.json`: assertion/indentation audit.
-- `runs/interface-diverse-filtered-checks.json`: retained IDs and parent report hash.
-- `data/programming-interface-diverse-sft-v2/manifest.json`: actual training split.
+- `runs/interface-diverse-filtered-checks-v2.json`: retained IDs, code grouping and parent report hash.
+- `data/programming-interface-diverse-sft-v3/manifest.json`: actual training split.
 
 The filtered curriculum preserves the checked identifiers:
 
@@ -328,13 +328,33 @@ source scripts/dataset-env.sh
   --input data/programming-interface-diverse-v1.jsonl \
   --checks runs/interface-diverse-reference-checks.json \
   --source "$MICROGPT_DATA_ROOT/raw/opencoder-educational/educational_instruct/train-00000-of-00001.parquet" \
-  --out data/programming-interface-diverse-checked-v1.jsonl \
-  --out-checks runs/interface-diverse-filtered-checks.json
+  --out data/programming-interface-diverse-checked-v2.jsonl \
+  --out-checks runs/interface-diverse-filtered-checks-v2.json --group-by-code
 .venv/bin/python -m microgpt.trajectories \
-  --input data/programming-interface-diverse-checked-v1.jsonl \
-  --out data/programming-interface-diverse-sft-v2 --tokenizer data/large-v1 \
+  --input data/programming-interface-diverse-checked-v2.jsonl \
+  --out data/programming-interface-diverse-sft-v3 --tokenizer data/large-v1 \
   --max-length 8192 --limit 200000 --pack-episodes --canonical-tool-ids
 bash scripts/train_interface_diversity.sh
 ```
 
 These commands refuse existing outputs. Do not rerun them over the recorded run.
+
+### Split audit before capability selection
+
+The first broader run was stopped at step 2,640, before any development execution
+evaluation, after an audit found 231 code ASTs shared across its train/validation
+splits when normalizing function names. Original instruction groups alone did
+not prevent duplicated implementations under different descriptions.
+
+The filtered curriculum now links both original instruction groups and matching
+normalized-code groups before splitting. This keeps transitive duplicate groups
+together. The independent audit confirmed zero matching normalized ASTs across
+splits, preserved all original instruction groups, and verified that every field
+other than split-group metadata was unchanged. The 20,967 references contain
+17,056 such ASTs: 16,242 train and 814 validation. This does not prove semantic
+deduplication or exclude exposure during the earlier foundation/adapter stages.
+
+The corrected branch restarts from the same original parent, not from the
+interrupted run. Evidence: `runs/interface-diverse-v2-diversity.json`; interrupted
+run: `runs/interface-diverse-continuation-v1/status.json`. This split correction
+was made before observing a capability score for the broader-data branch.
