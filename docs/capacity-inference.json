@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "cache_equivalence": "passed",
+      "source": {
+        "checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 238568448,
+        "stage": "sft",
+        "step": 10000,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/capacity-pilot-v1/candidate-adapter/last.pt",
+          "parent_step": 5000,
+          "parent_stage": "sft",
+          "pretraining_checkpoint": "runs/capacity-pilot-v1/foundation/last.pt",
+          "pretraining_step": 122071
+        },
+        "canonical_tool_ids": true,
+        "constrained_tools": false
+      }
+    },
+    {
+      "prompt_tokens": 8192,
+      "output_tokens": 16,
+      "seconds": 4.008227956015617,
+      "peak_allocated_gb": 1.795778048,
+      "flash_ops": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::_flash_attention_forward"
+      ]
+    },
+    {
+      "prompt_tokens": 32752,
+      "output_tokens": 16,
+      "seconds": 9.468984349980019,
+      "peak_allocated_gb": 2.777146368,
+      "flash_ops": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::_flash_attention_forward"
+      ]
+    }
+  ],
+  "script_sha256": "0a47a1cd1148f6b059d4ed2cb2fe6143282601cff61217a9f650736a29edc76c",
+  "note": "Allocation, Flash dispatch and short greedy cold/warm/changed-prefix cache checks. Synthetic filler is not a retrieval/reasoning benchmark. Times include profiler overhead; allocated memory excludes other processes."
+}

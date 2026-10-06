@@ -3,8 +3,10 @@
 ## Larger prepared selection
 
 The new selection contains 947,532,764 pretraining train tokens from CodeParrot,
-OpenCoder, Cosmopedia, SmolTalk and multilingual SmolTalk2. About 12 GiB of raw
-shards are present on the NAS, including Magicoder and SWE-smith for SFT.
+OpenCoder, Cosmopedia, SmolTalk and multilingual SmolTalk2. As of October 6, 2026,
+the pinned raw-source manifests account for 20.40 GB (decimal), including 6.86 GB
+of OpenCodeInstruct and 7.74 GB of CodeParrot. These are downloaded source bytes,
+not all prepared or consumed training data.
 See [the source proportions and reproducible commands](training-plan.md).
 These are selected subsets; downloaded bytes, prepared tokens and tokens actually
 consumed by training are different quantities. Manifests record each one.
@@ -12,8 +14,9 @@ consumed by training are different quantities. Manifests record each one.
 The local `data` symlink points to
 `/mnt/gigachad/microgpt/dataset/project-data`. Raw shards, dataset caches,
 temporary files and prepared token arrays belong under that NAS directory.
-The NAS mount had approximately 16 TiB free when checked; the local data disk had
-316 GiB free. Only the authorized `microgpt/dataset` subtree is used on the NAS.
+Only the authorized `microgpt/dataset` subtree is used on the NAS. Check current
+free space before each large preparation; earlier free-space snapshots are not
+capacity guarantees.
 
 Before downloads or preparation:
 
@@ -34,14 +37,14 @@ that selection, not every old shard that may remain in the directory.
 
 | Source | What it contributes | Access / size considerations |
 | --- | --- | --- |
-| [CodeParrot-clean](https://huggingface.co/datasets/codeparrot/codeparrot-clean) | Deduplicated Python source from GitHub; raw pretraining | Card reports about 50 GB of code / 5.36M files; Hub lists about 12.8 GB compressed. Four downloaded shards total 988 MB. Per-file license retained and filtered. |
+| [CodeParrot-clean](https://huggingface.co/datasets/codeparrot/codeparrot-clean) | Deduplicated Python source from GitHub; raw pretraining | Card reports about 50 GB of code / 5.36M files; Hub lists about 12.8 GB compressed. The current manifest contains 32 downloaded shards totaling 7.74 GB. Per-file license retained and filtered. |
 | [CommitPackFT](https://huggingface.co/datasets/bigcode/commitpackft) | Before/after files and commit instructions | Selected Python, Ruby and TypeScript shards total 350 MB. Dataset card MIT does not replace individual repository licenses. Ambiguous repository aliases and unselected licenses are excluded. |
-| [Magicoder OSS-Instruct](https://huggingface.co/datasets/ise-uiuc/Magicoder-OSS-Instruct-75K) | Short coding questions and solutions | MIT dataset card; preserve teacher/source restrictions and provenance. The current sample contains 400 Python pairs. |
+| [Magicoder OSS-Instruct](https://huggingface.co/datasets/ise-uiuc/Magicoder-OSS-Instruct-75K) | Short coding questions and solutions | MIT dataset card; preserve teacher/source restrictions and provenance. The initial teaching sample contains 400 Python pairs. |
 | [SWE-smith trajectories](https://huggingface.co/datasets/SWE-bench/SWE-smith-trajectories) | Successful repository repair demonstrations | Keep source success labels, complete histories and observations. Labels have not been independently re-executed here. Most examples exceed an 8K budget. |
 | [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) | Everyday conversations and multilingual instruction following | Downloaded the `no_think` everyday and multilingual subsets: 0.9 MB and 317 MB compressed. The multilingual source includes Portuguese, Spanish, French, Italian, German, Arabic, Russian and Chinese. Licenses depend on the component; keep the downloaded card and original-source attribution. |
 
-The approximately 1.66 GB downloaded above is a useful initial corpus, not a
-full-scale pretraining run. `curate` makes bounded seeded reservoir samples,
+The commands below reproduce the smaller initial download; they are not an
+inventory of the current NAS selection. `curate` makes bounded seeded reservoir samples,
 preserves repository groups and licenses, rejects incomplete conversations, and
 writes provenance beside each output. License filtering is a dataset selection
 rule, not a blanket legal conclusion. Original attribution requirements remain.
@@ -60,6 +63,21 @@ Increase shard and byte budgets deliberately for bigger experiments. A sample
 from the first few shards is not a representative sample of the whole corpus.
 The preparers remain teaching-scale implementations: bounded records are held
 in RAM. Streaming downloads do not make their preparation stages out-of-core.
+
+## Independently checked programming answers
+
+The current data experiment selects up to 100,000 single-function answers from
+[nvidia/OpenCodeInstruct](https://huggingface.co/datasets/nvidia/OpenCodeInstruct),
+using its pinned local 50-shard download. It requires a successful restricted-Docker
+reference run and a failing empty-implementation control. Upstream perfect scores
+alone are insufficient: 8/1,000 pilot references failed independently. The pilot
+retained 992; preparation of the larger selection is tracked in
+`data/verified-opencodeinstruct-v1.source.json` when complete.
+
+The dataset card uses CC-BY-4.0. Source revision, answer IDs, transformations,
+checksums, and execution-image identity accompany the selection. Supplied tests
+can be incomplete or share mistakes with the answer. See
+[the experiment history](capacity-pilot.md) for those limits and training results.
 
 ## Larger alternatives
 

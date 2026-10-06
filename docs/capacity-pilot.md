@@ -579,3 +579,14 @@ validation episodes with seed 20261007. The continuation controller carries that
 setting through resume. Tests cover deterministic sampling, balanced sources,
 unchanged bucket contents and legacy order. Execution-based model selection remains
 necessary regardless of the reported loss.
+
+### 239M inference capacity verification
+
+The retained 239M checkpoint passed the existing cold/warm and changed-prefix cache
+equivalence checks. Actual Flash kernels dispatched for 8,192-token and
+32,752-token prompts, each followed by 16 generated tokens. Peak allocated memory
+was 1.80 GB and 2.78 GB respectively. Instrumented elapsed times were 4.01 and 9.47
+seconds; these include profiler overhead and are not serving latency guarantees.
+[capacity-inference.json](capacity-inference.json) preserves the measurements.
+Synthetic filler established allocation and dispatch, not useful 32K recall,
+reasoning, or long-session programming. Those remain separate unmet gates.
