@@ -1,0 +1,124 @@
+{
+  "checkpoint": "runs/interface-diverse-v2/checkpoint-5000.pt",
+  "development": {
+    "passed": 10,
+    "syntax_valid": 92,
+    "requested_function_present": 47,
+    "parameter_names_match": 47,
+    "total": 100
+  },
+  "development_families": {
+    "suffix": {
+      "passed": 0,
+      "total": 5
+    },
+    "negatives": {
+      "passed": 0,
+      "total": 5
+    },
+    "rotate": {
+      "passed": 0,
+      "total": 5
+    },
+    "prefix": {
+      "passed": 0,
+      "total": 5
+    },
+    "product": {
+      "passed": 4,
+      "total": 5
+    },
+    "flatten": {
+      "passed": 2,
+      "total": 5
+    },
+    "frequencies": {
+      "passed": 0,
+      "total": 5
+    },
+    "between": {
+      "passed": 0,
+      "total": 5
+    },
+    "alternating": {
+      "passed": 0,
+      "total": 5
+    },
+    "chunks": {
+      "passed": 0,
+      "total": 5
+    },
+    "safe_divide": {
+      "passed": 0,
+      "total": 5
+    },
+    "longest": {
+      "passed": 4,
+      "total": 5
+    },
+    "merge": {
+      "passed": 0,
+      "total": 5
+    },
+    "first_match": {
+      "passed": 0,
+      "total": 5
+    },
+    "difference": {
+      "passed": 0,
+      "total": 5
+    },
+    "nonempty": {
+      "passed": 0,
+      "total": 5
+    },
+    "extension": {
+      "passed": 0,
+      "total": 5
+    },
+    "title_words": {
+      "passed": 0,
+      "total": 5
+    },
+    "distance": {
+      "passed": 0,
+      "total": 5
+    },
+    "is_sorted": {
+      "passed": 0,
+      "total": 5
+    }
+  },
+  "original_curriculum_prompts": {
+    "passed": 11,
+    "syntax_valid": 38,
+    "requested_function_present": 38,
+    "parameter_names_match": 38,
+    "total": 40
+  },
+  "curriculum_families": {
+    "seen_train": {
+      "passed": 5,
+      "total": 20
+    },
+    "validation": {
+      "passed": 6,
+      "total": 20
+    }
+  },
+  "repeated_signature": {
+    "passed": 16,
+    "syntax_valid": 95,
+    "requested_function_present": 88,
+    "parameter_names_match": 86,
+    "total": 100
+  },
+  "paired_transitions": {
+    "both_pass": 8,
+    "base_only": 2,
+    "probe_only": 8,
+    "both_fail": 82
+  },
+  "intervention": "Append Use the exact function signature SIGNATURE. Signature extracted from the existing user prompt, not the reference solution. Same checkpoint, tests and generation settings.",
+  "interpretation": "Request format strongly affects interface copying, but code correctness remains weak. Curriculum and repeated-signature scores are diagnostics, not replacement capability scores."
+}

@@ -375,3 +375,50 @@ executing code so it cannot be parsed as checker JSON. The initial noisy report
 is retained separately. The direct evaluator's optional `--exact-prompt` preserves
 these original curriculum requests; default development evaluation is unchanged.
 No diagnostic answers are added to training.
+
+The corrected broader branch scored 10/100 at 5K (92 valid Python outputs,
+47 matching parameter lists) and 17/100 at 10K (96 valid outputs, 65 matching
+parameter lists). At 5K, passing variants cover only product, flatten and longest.
+The original-prompt diagnostic scored 5/20 early training examples and 6/20
+validation examples, with 38/40 matching parameter lists. These tasks differ from
+the development set, so that comparison alone does not isolate prompt effects.
+
+A paired diagnostic on the same 5K checkpoint appended `Use the exact function
+signature SIGNATURE.` to each unchanged development request. Signatures were
+extracted from the user prompt, not reference answers. It produced 86/100 matching
+parameter lists but only 16/100 correct programs (eight new passes, two lost passes,
+eight passes shared with the original requests). Repeating an existing cue helps
+interface copying, while program semantics remain weak. These diagnostic scores
+do not replace the unmodified development score. Frozen results:
+[interface-diagnostics.json](interface-diagnostics.json).
+
+`vary_interface_prompts.py` prepares eight generic request layouts from the checked
+public curriculum. It reads no benchmark material. All 167,736 assistant answers,
+source IDs and split groups remain unchanged; 146,769 user requests change and
+20,967 retain the original layout. The byte/content comparison is recorded in
+`runs/programming-format-variety-audit.json`. Prepared data is
+`data/programming-format-variety-sft-v1`; this is a subsequent intervention, not
+a mid-run change to the broader-data comparison.
+
+### Microbatching short lessons
+
+The original SFT loop processes one episode per forward/backward pass. Optional
+`--microbatch` now right-pads independent sequences and gathers each example's
+supervised positions before projecting to the large vocabulary. Padding lies
+after real tokens, so causal attention cannot let it influence those tokens.
+The loss averages each episode's own token mean, preserving the existing training
+objective rather than silently weighting longer answers more heavily.
+
+An authored regression compares losses and all parameter gradients against
+separate passes, including unequal lengths, gaps in supervised labels, multiple
+vocabulary chunks and activation checkpointing. All 40 project tests pass.
+GPU floating-point execution can still differ; this is objective equivalence,
+not a promise of bitwise-identical training trajectories. Default microbatch one
+preserves the existing path, and old checkpoints resume with that default.
+
+`profile_finetune.py` measures disposable training copies at fixed example order
+and effective batch (`microbatch × accumulation`). It saves no model weights.
+The GPU profiles run after the capability experiment finishes. Their token rate
+counts assistant targets, not all input tokens; it cannot be compared directly
+with the foundation's all-token throughput. Larger effective batches are a
+separate optimization choice, not an automatic model-quality improvement.
