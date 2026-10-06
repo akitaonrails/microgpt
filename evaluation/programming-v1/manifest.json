@@ -1,0 +1,13 @@
+{
+  "note": "100 variants per split, 20 families per split. Family sets are disjoint. Not asserted uncontaminated relative to public training.",
+  "development": {
+    "sha256": "54d4a93508f0d24f96136e86056d24c2d476552be80c9795fa3093f9e49d5ac2",
+    "tasks": 100,
+    "families": 20
+  },
+  "acceptance": {
+    "sha256": "3e96fd481c5bc258574b6c8acab3f5f07536c421de2eca66bf0c4a09301ec41d",
+    "tasks": 100,
+    "families": 20
+  }
+}

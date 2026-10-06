@@ -70,6 +70,53 @@ class TrainingTests(unittest.TestCase):
         self.assertEqual([x for x in packed['labels'] if x != -100], expected_targets)
         self.assertEqual(assistant_examples(record, tokenizer, 5, pack=True), [])
 
+    def test_staged_pretraining_preserves_schedule_and_weights(self):
+        import subprocess
+        import sys
+        from pathlib import Path
+        import torch
+        from microgpt.prepare import demo_documents, prepare
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            prepare(list(demo_documents()), base / 'data')
+            config = base / 'model.toml'
+            config.write_text('[model]\ncontext=32\nlayers=1\nheads=2\nwidth=16\n'
+                              '[train]\nsteps=4\nbatch_size=1\naccumulation=1\n'
+                              'learning_rate=0.001\nwarmup=1\neval_every=2\neval_batches=1\nseed=42\n')
+            command = [sys.executable, '-m', 'microgpt.train', '--config', str(config),
+                       '--data', str(base / 'data'), '--device', 'cpu']
+            subprocess.run(command + ['--out', str(base / 'full')], check=True, capture_output=True)
+            subprocess.run(command + ['--out', str(base / 'staged'), '--stop-at-step', '2'], check=True, capture_output=True)
+            midpoint = torch.load(base / 'staged/last.pt', weights_only=True)
+            self.assertEqual(midpoint['step'], 2)
+            self.assertEqual(midpoint['settings']['steps'], 4)
+            subprocess.run(command + ['--out', str(base / 'staged'), '--resume', str(base / 'staged/last.pt')], check=True, capture_output=True)
+            full = torch.load(base / 'full/last.pt', weights_only=True)
+            staged = torch.load(base / 'staged/last.pt', weights_only=True)
+            for name in full['model']:
+                torch.testing.assert_close(full['model'][name], staged['model'][name], rtol=0, atol=0)
+
+    def test_packed_and_individual_turn_losses_agree(self):
+        import torch
+        from microgpt.model import GPT, ModelConfig
+        from microgpt.finetune import loss_for
+        record = {'messages': [
+            {'role': 'user', 'content': 'Double 3.'},
+            {'role': 'assistant', 'content': '6'},
+            {'role': 'user', 'content': 'Now double 4.'},
+            {'role': 'assistant', 'content': '8'}]}
+        tokenizer = Tokenizer()
+        torch.manual_seed(19)
+        model = GPT(ModelConfig(context=1024, width=32, heads=2, layers=1)).eval()
+        packed = assistant_examples(record, tokenizer, 1024, pack=True)[0]
+        separate = assistant_examples(record, tokenizer, 1024)
+        with torch.no_grad():
+            observed, count = loss_for(model, packed, torch.device('cpu'))
+            losses = [loss_for(model, item, torch.device('cpu')) for item in separate]
+        self.assertEqual(count, sum(n for _, n in losses))
+        expected = sum(loss * n for loss, n in losses) / count
+        torch.testing.assert_close(observed, expected)
+
     def test_indexed_curriculum_keeps_whole_episodes_and_checks_hash(self):
         import hashlib
         import json

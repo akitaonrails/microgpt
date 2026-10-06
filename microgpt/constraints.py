@@ -32,7 +32,8 @@ class ToolGrammar:
                 'name': {'const': tool['function']['name']},
                 'arguments': tool['function'].get('parameters', {'type': 'object'})},
                 'required': ['name', 'arguments'], 'additionalProperties': False} for tool in tools]
-            format = {'type': 'triggered_tags', 'triggers': ['<tool_call>'], 'tags': [
+            format = {'type': 'triggered_tags', 'triggers': ['<tool_call>'],
+                      'excludes': ['</tool_call>'], 'tags': [
                 {'type': 'tag', 'begin': '<tool_call>', 'end': '</tool_call>',
                  'content': {'type': 'json_schema', 'json_schema': {'anyOf': schemas}, 'max_whitespace_cnt': 1}}]}
         return self.compiler.compile_structural_tag({'type': 'structural_tag', 'format': format})

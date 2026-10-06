@@ -1,0 +1,2881 @@
+{
+  "note": "Diagnostic probes, not a readiness claim. Oracle results are assisted. 100 development variants cover 20 correlated families.",
+  "tests": 35,
+  "profile": [
+    {
+      "layers": 8,
+      "width": 384,
+      "parameters": 90969600,
+      "tokens_per_second": 42346.272135493586,
+      "seconds": 3.8690536790527403,
+      "peak_allocated_gb": 7.772709888,
+      "device": "NVIDIA GeForce RTX 5090",
+      "steps": 20,
+      "sequence_length": 2048,
+      "note": "Warmup excluded; small sampled workload, not sustained-run estimate."
+    },
+    {
+      "layers": 12,
+      "width": 768,
+      "parameters": 238568448,
+      "tokens_per_second": 32863.549560522326,
+      "seconds": 4.9854626840678975,
+      "peak_allocated_gb": 11.193499136,
+      "device": "NVIDIA GeForce RTX 5090",
+      "steps": 20,
+      "sequence_length": 2048,
+      "note": "Warmup excluded; small sampled workload, not sustained-run estimate."
+    }
+  ],
+  "evaluations": {
+    "80k-fresh": {
+      "server": {
+        "status": "ok",
+        "model": "microgpt",
+        "context": 32768,
+        "source": {
+          "checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+          "context": 32768,
+          "attention": "flash",
+          "parameters": 90969600,
+          "stage": "sft",
+          "step": 80000,
+          "origin": {
+            "initialization": "random",
+            "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "parent_step": 122071,
+            "parent_stage": "pretraining",
+            "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "pretraining_step": 122071
+          },
+          "canonical_tool_ids": true,
+          "constrained_tools": true
+        }
+      },
+      "harness_sha256": "4af8bb2b91a8c7da1ffa12e92abc4469d98d7dd2d857813198abf76b32bbd03f",
+      "mode": "fresh",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 7\n    print(\n         ^\nSyntaxError: '(' was never closed\n"
+        },
+        {
+          "id": "clamp",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.clamp(-4, 0, 8) == 0\n           ^^^^^^^\nAttributeError: module 'solution' has no attribute 'clamp'\n"
+        },
+        {
+          "id": "initials",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.initials('  ada   lovelace ') == 'AL'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "squares",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "join",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "lookup",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    \", \nIndentationError: unexpected indent\n"
+        },
+        {
+          "id": "strip_lower",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.normalize_label('  Ab C  ') == 'ab c'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "count",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        }
+      ]
+    },
+    "80k-oracle": {
+      "server": {
+        "status": "ok",
+        "model": "microgpt",
+        "context": 32768,
+        "source": {
+          "checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+          "context": 32768,
+          "attention": "flash",
+          "parameters": 90969600,
+          "stage": "sft",
+          "step": 80000,
+          "origin": {
+            "initialization": "random",
+            "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "parent_step": 122071,
+            "parent_stage": "pretraining",
+            "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "pretraining_step": 122071
+          },
+          "canonical_tool_ids": true,
+          "constrained_tools": true
+        }
+      },
+      "harness_sha256": "4af8bb2b91a8c7da1ffa12e92abc4469d98d7dd2d857813198abf76b32bbd03f",
+      "mode": "oracle",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    print(f\"Hello, {name}!\\\")\n          ^\nSyntaxError: unterminated f-string literal (detected at line 4)\n"
+        },
+        {
+          "id": "clamp",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "initials",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    return \\\n            ^\nSyntaxError: unexpected EOF while parsing\n"
+        },
+        {
+          "id": "squares",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "join",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [
+            {
+              "name": "APIError",
+              "data": {
+                "message": "Unmatched closing tool-call tag",
+                "statusCode": 422,
+                "isRetryable": false,
+                "responseHeaders": {
+                  "content-length": "85",
+                  "content-type": "application/json",
+                  "date": "Tue, 06 Oct 2026 02:35:21 GMT",
+                  "server": "uvicorn"
+                },
+                "responseBody": "{\"error\":{\"message\":\"Unmatched closing tool-call tag\",\"type\":\"invalid_model_output\"}}",
+                "metadata": {
+                  "url": "http://127.0.0.1:8022/v1/chat/completions"
+                }
+              }
+            }
+          ],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    return \\\\ndef join_names(names):\n            ^\nSyntaxError: unexpected character after line continuation character\n"
+        },
+        {
+          "id": "lookup",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "strip_lower",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "count",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": true,
+          "errors": [],
+          "grade": "PASS\n"
+        }
+      ]
+    },
+    "foundation-raw": {
+      "server": {
+        "checkpoint": "runs/coding-v1/foundation/last.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 90969600,
+        "stage": "pretrain",
+        "step": 122071,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/scratch-pretrain/last.pt",
+          "parent_step": 1000
+        },
+        "canonical_tool_ids": false,
+        "constrained_tools": false
+      },
+      "mode": "raw",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "harness_sha256": "2c7e58932e7d20da548d261a5c4059f8dbdcb5ece96cd5c48f6c3320777bcb52",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 72\n    print(\"Hello, %s\" %\n         ^\nSyntaxError: '(' was never closed\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "clamp",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.clamp(-4, 0, 8) == 0\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+          "finish_reason": "stop",
+          "completion_tokens": 6
+        },
+        {
+          "id": "initials",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.initials('  ada   lovelace ') == 'AL'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+          "finish_reason": "stop",
+          "completion_tokens": 15
+        },
+        {
+          "id": "squares",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.square_evens(v) == [4, 0, 16]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+          "finish_reason": "stop",
+          "completion_tokens": 14
+        },
+        {
+          "id": "join",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.join_names(['a', 'b']) == 'a, b'\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 3, in join_names\n    return join_names(names, \" \".join([\"%s=%s\" % (k, v) for k, v in names.items() if k not in names]))\n                                                                    ^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'items'\n",
+          "finish_reason": "stop",
+          "completion_tokens": 37
+        },
+        {
+          "id": "lookup",
+          "passed": true,
+          "grade": "PASS\n",
+          "finish_reason": "stop",
+          "completion_tokens": 18
+        },
+        {
+          "id": "strip_lower",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.normalize_label('  Ab C  ') == 'ab c'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+          "finish_reason": "stop",
+          "completion_tokens": 7
+        },
+        {
+          "id": "count",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_matches([[1], [2], [1]], [1]) == 2\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 3, in count_matches\n    return count_matches(values, target)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 3, in count_matches\n    return count_matches(values, target)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 3, in count_matches\n    return count_matches(values, target)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  [Previous line repeated 996 more times]\nRecursionError: maximum recursion depth exceeded\n",
+          "finish_reason": "stop",
+          "completion_tokens": 10
+        }
+      ]
+    },
+    "80k-raw": {
+      "server": {
+        "checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 90969600,
+        "stage": "sft",
+        "step": 80000,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "parent_step": 122071,
+          "parent_stage": "pretraining",
+          "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "pretraining_step": 122071
+        },
+        "canonical_tool_ids": true,
+        "constrained_tools": false
+      },
+      "mode": "raw",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "harness_sha256": "2c7e58932e7d20da548d261a5c4059f8dbdcb5ece96cd5c48f6c3320777bcb52",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    print(\"\", end!\")\n                  ^\nSyntaxError: unterminated string literal (detected at line 4)\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "clamp",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 9\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 34
+        },
+        {
+          "id": "initials",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 6\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 18
+        },
+        {
+          "id": "squares",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    return sum(i for i in range(0, len(values) if values[i] % 2 == 0), 0)\n                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSyntaxError: expected 'else' after 'if' expression\n",
+          "finish_reason": "stop",
+          "completion_tokens": 30
+        },
+        {
+          "id": "join",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 6\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 17
+        },
+        {
+          "id": "lookup",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 7\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 19
+        },
+        {
+          "id": "strip_lower",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 10\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 53
+        },
+        {
+          "id": "count",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 20
+        }
+      ]
+    },
+    "160k-raw": {
+      "server": {
+        "checkpoint": "runs/programming-v2/checkpoint-160000.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 90969600,
+        "stage": "sft",
+        "step": 160000,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "parent_step": 122071,
+          "parent_stage": "pretraining",
+          "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "pretraining_step": 122071
+        },
+        "canonical_tool_ids": true,
+        "constrained_tools": false
+      },
+      "mode": "raw",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "harness_sha256": "2c7e58932e7d20da548d261a5c4059f8dbdcb5ece96cd5c48f6c3320777bcb52",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 6
+        },
+        {
+          "id": "clamp",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 10
+        },
+        {
+          "id": "initials",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 15\n    `````` testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing \n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "squares",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 5\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 33
+        },
+        {
+          "id": "join",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    return join_names(names: in case case_names(names) else ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ', ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' respective respective values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values values v\n                           ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "lookup",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    return self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._self._ self self._self._self._ self self._self._self._ self self._self._ self self._ self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self self se\n                                                                                                                                                                                                                                                                              ^^^^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "strip_lower",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 11
+        },
+        {
+          "id": "count",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 8\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 34
+        }
+      ]
+    },
+    "recovery-raw": {
+      "server": {
+        "checkpoint": "runs/programming-v3/checkpoint-40000.pt",
+        "context": 32768,
+        "attention": "flash",
+        "parameters": 90969600,
+        "stage": "sft",
+        "step": 40000,
+        "origin": {
+          "initialization": "random",
+          "parent_checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+          "parent_step": 80000,
+          "parent_stage": "sft",
+          "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+          "pretraining_step": 122071
+        },
+        "canonical_tool_ids": true,
+        "constrained_tools": false
+      },
+      "mode": "raw",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "harness_sha256": "2c7e58932e7d20da548d261a5c4059f8dbdcb5ece96cd5c48f6c3320777bcb52",
+      "tasks_sha256": "2385c769b3874e96c035f8f9ec066dde3e9af401caacf9ce73f9138968442b61",
+      "tasks": [
+        {
+          "id": "greeting",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    print Hello, NAME!\n    ^^^^^^^^^^^^^^^^^\nSyntaxError: Missing parentheses in call to 'print'. Did you mean print(...)?\n",
+          "finish_reason": "stop",
+          "completion_tokens": 8
+        },
+        {
+          "id": "clamp",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 9\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 29
+        },
+        {
+          "id": "initials",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 10\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 33
+        },
+        {
+          "id": "squares",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 31
+        },
+        {
+          "id": "join",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 6\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 16
+        },
+        {
+          "id": "lookup",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 6\n    return default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, default) if default else default.get(key, d\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^\nSyntaxError: '(' was never closed\n",
+          "finish_reason": "length",
+          "completion_tokens": 768
+        },
+        {
+          "id": "strip_lower",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 10\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 58
+        },
+        {
+          "id": "count",
+          "passed": false,
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    ```\n    ^\nSyntaxError: invalid syntax\n",
+          "finish_reason": "stop",
+          "completion_tokens": 15
+        }
+      ]
+    },
+    "80k-development-direct": {
+      "server": {
+        "status": "ok",
+        "model": "microgpt",
+        "context": 32768,
+        "source": {
+          "checkpoint": "runs/programming-v2/checkpoint-80000.pt",
+          "context": 32768,
+          "attention": "flash",
+          "parameters": 90969600,
+          "stage": "sft",
+          "step": 80000,
+          "origin": {
+            "initialization": "random",
+            "parent_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "parent_step": 122071,
+            "parent_stage": "pretraining",
+            "pretraining_checkpoint": "runs/coding-v1/foundation/last.pt",
+            "pretraining_step": 122071
+          },
+          "canonical_tool_ids": true,
+          "constrained_tools": true
+        }
+      },
+      "harness_sha256": "5caf1b2d5a62b1cd8cb368da02f2378677edc1f7610cdd2be2db415825bfc2f8",
+      "mode": "direct",
+      "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+      "tasks_sha256": "a2ea13914870c6b5d3d913c2de1de2ca8bc70ccdae24376fa2c4dcf016723952",
+      "tasks": [
+        {
+          "id": "suffix_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement the suffix_0 function in Python. The function will remove the suffix only when it is nonempty and occurs at the end; otherwise, it will return text. The function will return the Python code in a farewell message.\n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "suffix_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.suffix_1('ababa','ba') == 'aba'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "suffix_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.suffix_2('ababa','ba') == 'aba'\n           ^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'suffix_2'\n"
+        },
+        {
+          "id": "suffix_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1, in <module>\n    import text\nModuleNotFoundError: No module named 'text'\n"
+        },
+        {
+          "id": "suffix_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 8\n    text = \"The quick brown fox jumps over lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy lazy\n           ^\nSyntaxError: unterminated string literal (detected at line 8)\n"
+        },
+        {
+          "id": "negatives_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use the built-in Python function `neg` to perform the following steps:\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "negatives_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use the built-in Python function `neg` to perform the operation. This function will return the value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the negative value of the neg\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "negatives_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.negatives_2([-2,0,3,-1]) == 2\n           ^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'negatives_2'\n"
+        },
+        {
+          "id": "negatives_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.negatives_3([-2,0,3,-1]) == 2\n           ^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'negatives_3'\n"
+        },
+        {
+          "id": "negatives_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To implement negatives_4(values) with this behavior, we can use the built-in Python function `int()` to convert each value to a decimal number. The function will return the decimal value of the value, and the function will return the decimal value of the value.\n       ^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "rotate_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use a recursive approach. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive ap\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "rotate_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 2\n    if lst == []\n                ^\nSyntaxError: expected ':'\n"
+        },
+        {
+          "id": "rotate_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_2([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in rotate_2\n    return [value[-1:] + values[:-2:] for value in values]\n            ~~~~~^^^^^\nTypeError: 'int' object is not subscriptable\n"
+        },
+        {
+          "id": "rotate_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use the rotate_3 function from the rotate_3 function. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 function to rotate around. We can use the rotate_3 function from the rotate_3 functi\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "rotate_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use a recursive approach. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive approach to solve the problem. We can use a recursive ap\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "prefix_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement a Python code that takes a list of words as input and returns a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining \n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "prefix_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure, I can help you with that. Here's the Python function prefix_1(words, prefix): The function `prefix_1(words)` takes a list of words as input and returns a list of strings that start with prefix, maintaining order. The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix): The function `prefix_1(words, prefix\n                                        ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "prefix_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.prefix_2(['ab','ba','ac'],'a') == ['ab','ac']\n           ^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'prefix_2'\n"
+        },
+        {
+          "id": "prefix_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Let's execute the code to create the prefix with prefix.\n       ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "prefix_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand that you want to use a Python function `find` to find and return the Python code in a given order. This function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order. The function will return a list of strings that start with prefix, maintaining order.\n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "product_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement the product_0 function in Python. This function takes an input and returns a list of integers, where each integer is the product of all the numbers in the input list. The function will return a list of integers, where each integer is the product of all the numbers in the input list. The function will return a list of integers, where each integer is the product of all the numbers in the input list.\n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "product_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.product_1([2,-3,4]) == -24\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "product_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.product_2([2,-3,4]) == -24\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'product_2'\n"
+        },
+        {
+          "id": "product_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.product_3([2,-3,4]) == -24\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "product_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement a Python code that takes a list of numbers as input and returns a list of numbers multiplied by the product of all numbers in the list. The function will return a list of numbers multiplied by the product of all numbers in the list. The function will return a list of numbers multiplied by the product of all numbers in the list.\n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "flatten_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.flatten_0([[1,2],[],[3]]) == [1,2,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "flatten_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.flatten_1([[1,2],[],[3]]) == [1,2,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "flatten_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To flatten a list of lists by exactly one level, we can use a combination of Python's built-in flatten method. This method will iterate over the list and keep track of the elements. The flattened list will be a list of lists, where each sublist contains a value and a value.\n                                                                                       ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "flatten_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.flatten_3([[1,2],[],[3]]) == [1,2,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 2, in flatten_3\n    return [item for item in rows if item in list]\n                                     ^^^^^^^^^^^^\nTypeError: argument of type 'type' is not iterable\n"
+        },
+        {
+          "id": "flatten_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.flatten_4([[1,2],[],[3]]) == [1,2,3]\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'flatten_4'. Did you mean: 'flatten_list'?\n"
+        },
+        {
+          "id": "frequencies_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the code:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "frequencies_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Let's write the code to implement this function.\n       ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "frequencies_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To accomplish this, we can use a dictionary to store the items of the items. We can use a dictionary to store the items. We can use a dictionary to store the items. Here's the code:\n                                                                                                                                                                             ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "frequencies_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the code:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "frequencies_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To implement frequencies_4(values) with this behavior, we can use a dictionary to store the items. We can use a dictionary to store the items. Here's the code:\n                                                                                                                                                       ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "between_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_0([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'between_0'\n"
+        },
+        {
+          "id": "between_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand that you want to use Python's built-in function `int()` in Python. This function returns a list of integers, where each integer is the sum of all the integers in the input list, and the function returns a list of integers.\n                                            ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "between_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been successfully defined. This function accepts a list of values and returns a list of integers. The function returns a list of integers within the inclusive bounds, in the specified order. The function returns only the Python code that returns only the Python code in a farewell, in the specified order.\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "between_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_3([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'between_3'\n"
+        },
+        {
+          "id": "between_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand that you want to use a Python function to calculate the numeric items within the inclusive bounds, in a real-world scenario. This function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric items in the range [inclusive]. The function will return a list of integers, where each integer is the numeric item\n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "alternating_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand your concern. The code has been executed successfully and it returns the result of the alternating function. The function ` alternating_0` has been defined successfully. \n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "alternating_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand. The function ` alternating_1(values)` has been defined. This function takes an array of integers as input and returns every other item, starting with index 0. The function returns only the Python code in a farewell.\n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "alternating_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_2([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'alternating_2'\n"
+        },
+        {
+          "id": "alternating_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand. The Python code has been executed successfully. The output of the following code is: \n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "alternating_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_4([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'alternating_4'\n"
+        },
+        {
+          "id": "chunks_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks_0([1,2,3,4,5],2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "chunks_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 10\n    return [left, right, _ + [right - 1], [left, right], [right, left], [left, right]]) + [right, left, right, right]\n                                                                                      ^\nSyntaxError: unmatched ')'\n"
+        },
+        {
+          "id": "chunks_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 4\n    return defaultdict(list(map(list, zip(*values)))\n                      ^\nSyntaxError: '(' was never closed\n"
+        },
+        {
+          "id": "chunks_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure, to create chunks_3 values in Python, you can use the `zip` function from the `zip` module. Here's the code:\n                                                                                                         ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "chunks_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the code:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "safe_divide_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.safe_divide_0(1,0) is None\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "safe_divide_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python function ` safe_divide_1(numerator, denominator)` has been defined. This function takes an input `numerator`, `denominator`, and `numerator` as input and returns the quotient of the input `numerator`, `denominator`, and `numerator`.\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "safe_divide_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been successfully defined. The Python code defines a function `divide_2(numerator, denominator)` that takes an integer `numerator` and returns the quotient of `numerator` and `denominator`.\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "safe_divide_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Let's execute the code to verify its correctness.\n       ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "safe_divide_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been executed successfully. The Python code has been executed successfully and returned the result of the Python code. The Python code has been executed successfully and returned the result of the Python code.\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "longest_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.longest_0(['a','bc','de']) == 'bc'\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'longest_0'\n"
+        },
+        {
+          "id": "longest_1",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "longest_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been successfully defined. The function `longest_string` takes a list of words as input and returns the length of the longest string. The function returns the first on ties in the list. If the list of words is empty, it returns None. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. If the list of words is empty, it returns only the first one. I\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "longest_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.longest_3(['a','bc','de']) == 'bc'\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'longest_3'\n"
+        },
+        {
+          "id": "longest_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.longest_4(['a','bc','de']) == 'bc'\n           ^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'longest_4'\n"
+        },
+        {
+          "id": "merge_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 30\n    print(\"Given [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, \n          ^\nSyntaxError: unterminated string literal (detected at line 30)\n"
+        },
+        {
+          "id": "merge_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.merge_1(a,b) == b\n           ^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 2, in merge_1\n    return dict(sorted(left, right))\n                ^^^^^^^^^^^^^^^^^^^\nTypeError: sorted expected 1 argument, got 2\n"
+        },
+        {
+          "id": "merge_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand your concern. The Python code can be used to merge two lists of integers into a single list. Here's how it can do it:\n                                                                                                                  ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "merge_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Let's execute the code now.\n       ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "merge_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Given list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]\nSorted list: {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 1}\nTraceback (most recent call last):\n  File \"/grader.py\", line 5, in <module>\n    assert s.merge_4(a,b) == b\n           ^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'merge_4'\n"
+        },
+        {
+          "id": "first_match_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the code to implement the first matching_0 in Python:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "first_match_1",
+          "current_task_correct": true,
+          "passed": true,
+          "code_correct": true,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "PASS\n"
+        },
+        {
+          "id": "first_match_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.first_match_2([[2],[1],[2]],[2]) == 0\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'first_match_2'. Did you mean: 'find_first_match_2'?\n"
+        },
+        {
+          "id": "first_match_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 8, in <module>\n    print(find_first_match_3(values, 3))  # Output should be 3\n                             ^^^^^^\nNameError: name 'values' is not defined\n"
+        },
+        {
+          "id": "first_match_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I can help you with that. Here's a Python code snippet that uses the built-in Python function `is_hashable` to check if a given value is a valid hash. The function `is_hashable` takes an integer `values` as input and returns `True` if the value is a valid hash, and `False` otherwise. \n                                        ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "difference_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_0([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "difference_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To solve this problem, we can use the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the concept of the c\n       ^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "difference_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been executed successfully. The output of the Python code is `1 - item1 - item2 - item3 - item4 - item5 - item6 - item7 - item8 - item9 - item10 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item11 - item\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "difference_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_3([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'difference_3'\n"
+        },
+        {
+          "id": "difference_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand your concern. For instance, the function `find_consecutive_diff` is defined in Python, and it returns the same result as the original function. The function returns the same result as the original function, but it returns only the Python code in a real-world scenario. \n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "nonempty_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_0([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'nonempty_0'\n"
+        },
+        {
+          "id": "nonempty_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_1([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'nonempty_1'\n"
+        },
+        {
+          "id": "nonempty_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_2([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'nonempty_2'\n"
+        },
+        {
+          "id": "nonempty_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1, in <module>\n    values = [value for value in values if value is not None]\n                                 ^^^^^^\nNameError: name 'values' is not defined. Did you mean: 'value'?\n"
+        },
+        {
+          "id": "nonempty_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand that the code has been executed successfully. The Python code has been successfully defined and tested with a list of values [1, 2, 3, 4, 5] and a list of values [5, 7, 8, 10] with the list [1, 2, 3, 4, 5] and a list of values [5, 7, 8, 10].\n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "extension_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_0('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 6, in extension_0\n    return pathlib.maketrans('', '', path)[1:]\n           ^^^^^^^^^^^^^^^^^\nAttributeError: module 'pathlib' has no attribute 'maketrans'\n"
+        },
+        {
+          "id": "extension_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure, I can help you with that. Here's the code:\n                                        ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "extension_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    The Python code has been successfully defined. This function takes a path to the given file path, and returns the final filename extension without its dot. It returns a list of the file extension without its dot. If no extension is found, it returns a list of the file extension without its dot.\n        ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "extension_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To create extension_3(path) in Python, we can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use the `os` module in Python. We can use\n       ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "extension_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_4('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 6, in extension_4\n    return pathlib.maketrans('', '', path)[1:]\n           ^^^^^^^^^^^^^^^^^\nAttributeError: module 'pathlib' has no attribute 'maketrans'\n"
+        },
+        {
+          "id": "title_words_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.title_words_0('  hELLo WORLD ') == ['Hello','World']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "title_words_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will write a Python function called `capitalize_words_1` that takes a text input and returns a list of words. The function will iterate through each word in the input text, capitalizes the input text, and then return the result as a list. The function will return a list of words in a readable format.\n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "title_words_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.title_words_2('  hELLo WORLD ') == ['Hello','World']\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'title_words_2'\n"
+        },
+        {
+          "id": "title_words_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.title_words_3('  hELLo WORLD ') == ['Hello','World']\n           ^^^^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'title_words_3'\n"
+        },
+        {
+          "id": "title_words_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! I will implement the code to split on whitespace and return the resulting words as a list, each capitalized. The code will iterate over the input text and return the corresponding words as a list, each capitalized. The code will iterate over the input text and return the corresponding words as a list, each capitalized.\n        ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "distance_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the Python code:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "distance_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.distance_1([1,-2],[4,2]) == 7\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 2, in distance_1\n    return abs(left) - abs(right)\n           ^^^^^^^^^\nTypeError: bad operand type for abs(): 'list'\n"
+        },
+        {
+          "id": "distance_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 3\n    Here's the Python code:\n        ^\nSyntaxError: unterminated string literal (detected at line 3)\n"
+        },
+        {
+          "id": "distance_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To create distance_3(left, right) in Python, we can use the Euclidean algorithm. The Euclidean algorithm is efficient for finding the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square root of the square roo\n       ^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "distance_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand your concern. The distance between equal-length numeric lists is the sum of absolute coordinate differences between equal-length numeric lists. The function returns the sum of absolute coordinate differences between equal-length numeric lists. \n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "id": "is_sorted_0",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure! Here's a Python code snippet that implements the above logic:\n              ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "is_sorted_1",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    Sure, I can help you with that. Here's the Python function `is_sorted_1` checks whether a list is sorted in ascending order:\n                                        ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "is_sorted_2",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": true,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.is_sorted_2([1,1,2]) is True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        {
+          "id": "is_sorted_3",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    To create a Python code in Python, we can use the built-in Python function `is_sorted()` and `sort()` functions. Here's the code:\n                                                                                                                         ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+        },
+        {
+          "id": "is_sorted_4",
+          "current_task_correct": false,
+          "passed": false,
+          "code_correct": false,
+          "completed": false,
+          "checked": false,
+          "errors": [],
+          "grade": "Traceback (most recent call last):\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 1\n    I understand that the code is not allowed for the given requirements. The function `is_sorted_4(values)` checks whether a list of values is sorted in ascending order. If the list is not sorted, it returns False. If the list is sorted in ascending order, it returns True. Otherwise, it returns False.\n      ^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+        }
+      ]
+    }
+  },
+  "grader-controls": [
+    {
+      "id": "greeting",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "clamp",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "initials",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "squares",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "join",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "lookup",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "strip_lower",
+      "reference_passed": true,
+      "empty_rejected": true
+    },
+    {
+      "id": "count",
+      "reference_passed": true,
+      "empty_rejected": true
+    }
+  ],
+  "development-controls": {
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "tasks": [
+      {
+        "id": "suffix_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'suffix_0'"
+      },
+      {
+        "id": "suffix_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'suffix_1'"
+      },
+      {
+        "id": "suffix_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'suffix_2'"
+      },
+      {
+        "id": "suffix_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'suffix_3'"
+      },
+      {
+        "id": "suffix_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'suffix_4'"
+      },
+      {
+        "id": "negatives_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'negatives_0'"
+      },
+      {
+        "id": "negatives_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'negatives_1'"
+      },
+      {
+        "id": "negatives_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'negatives_2'"
+      },
+      {
+        "id": "negatives_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'negatives_3'"
+      },
+      {
+        "id": "negatives_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'negatives_4'"
+      },
+      {
+        "id": "rotate_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'rotate_0'"
+      },
+      {
+        "id": "rotate_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'rotate_1'"
+      },
+      {
+        "id": "rotate_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'rotate_2'"
+      },
+      {
+        "id": "rotate_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'rotate_3'"
+      },
+      {
+        "id": "rotate_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'rotate_4'"
+      },
+      {
+        "id": "prefix_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'prefix_0'"
+      },
+      {
+        "id": "prefix_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'prefix_1'"
+      },
+      {
+        "id": "prefix_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'prefix_2'"
+      },
+      {
+        "id": "prefix_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'prefix_3'"
+      },
+      {
+        "id": "prefix_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'prefix_4'"
+      },
+      {
+        "id": "product_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'product_0'"
+      },
+      {
+        "id": "product_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'product_1'"
+      },
+      {
+        "id": "product_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'product_2'"
+      },
+      {
+        "id": "product_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'product_3'"
+      },
+      {
+        "id": "product_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'product_4'"
+      },
+      {
+        "id": "flatten_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'flatten_0'"
+      },
+      {
+        "id": "flatten_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'flatten_1'"
+      },
+      {
+        "id": "flatten_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'flatten_2'"
+      },
+      {
+        "id": "flatten_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'flatten_3'"
+      },
+      {
+        "id": "flatten_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'flatten_4'"
+      },
+      {
+        "id": "frequencies_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'frequencies_0'"
+      },
+      {
+        "id": "frequencies_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'frequencies_1'"
+      },
+      {
+        "id": "frequencies_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'frequencies_2'"
+      },
+      {
+        "id": "frequencies_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'frequencies_3'"
+      },
+      {
+        "id": "frequencies_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'frequencies_4'"
+      },
+      {
+        "id": "between_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'between_0'"
+      },
+      {
+        "id": "between_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'between_1'"
+      },
+      {
+        "id": "between_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'between_2'"
+      },
+      {
+        "id": "between_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'between_3'"
+      },
+      {
+        "id": "between_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'between_4'"
+      },
+      {
+        "id": "alternating_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'alternating_0'"
+      },
+      {
+        "id": "alternating_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'alternating_1'"
+      },
+      {
+        "id": "alternating_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'alternating_2'"
+      },
+      {
+        "id": "alternating_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'alternating_3'"
+      },
+      {
+        "id": "alternating_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'alternating_4'"
+      },
+      {
+        "id": "chunks_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'chunks_0'"
+      },
+      {
+        "id": "chunks_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'chunks_1'"
+      },
+      {
+        "id": "chunks_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'chunks_2'"
+      },
+      {
+        "id": "chunks_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'chunks_3'"
+      },
+      {
+        "id": "chunks_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'chunks_4'"
+      },
+      {
+        "id": "safe_divide_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'safe_divide_0'"
+      },
+      {
+        "id": "safe_divide_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'safe_divide_1'"
+      },
+      {
+        "id": "safe_divide_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'safe_divide_2'"
+      },
+      {
+        "id": "safe_divide_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'safe_divide_3'"
+      },
+      {
+        "id": "safe_divide_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'safe_divide_4'"
+      },
+      {
+        "id": "longest_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'longest_0'"
+      },
+      {
+        "id": "longest_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'longest_1'"
+      },
+      {
+        "id": "longest_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'longest_2'"
+      },
+      {
+        "id": "longest_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'longest_3'"
+      },
+      {
+        "id": "longest_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'longest_4'"
+      },
+      {
+        "id": "merge_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'merge_0'"
+      },
+      {
+        "id": "merge_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'merge_1'"
+      },
+      {
+        "id": "merge_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'merge_2'"
+      },
+      {
+        "id": "merge_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'merge_3'"
+      },
+      {
+        "id": "merge_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'merge_4'"
+      },
+      {
+        "id": "first_match_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'first_match_0'"
+      },
+      {
+        "id": "first_match_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'first_match_1'"
+      },
+      {
+        "id": "first_match_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'first_match_2'"
+      },
+      {
+        "id": "first_match_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'first_match_3'"
+      },
+      {
+        "id": "first_match_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'first_match_4'"
+      },
+      {
+        "id": "difference_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'difference_0'"
+      },
+      {
+        "id": "difference_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'difference_1'"
+      },
+      {
+        "id": "difference_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'difference_2'"
+      },
+      {
+        "id": "difference_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'difference_3'"
+      },
+      {
+        "id": "difference_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'difference_4'"
+      },
+      {
+        "id": "nonempty_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'nonempty_0'"
+      },
+      {
+        "id": "nonempty_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'nonempty_1'"
+      },
+      {
+        "id": "nonempty_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'nonempty_2'"
+      },
+      {
+        "id": "nonempty_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'nonempty_3'"
+      },
+      {
+        "id": "nonempty_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'nonempty_4'"
+      },
+      {
+        "id": "extension_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'extension_0'"
+      },
+      {
+        "id": "extension_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'extension_1'"
+      },
+      {
+        "id": "extension_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'extension_2'"
+      },
+      {
+        "id": "extension_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'extension_3'"
+      },
+      {
+        "id": "extension_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'extension_4'"
+      },
+      {
+        "id": "title_words_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'title_words_0'"
+      },
+      {
+        "id": "title_words_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'title_words_1'"
+      },
+      {
+        "id": "title_words_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'title_words_2'"
+      },
+      {
+        "id": "title_words_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'title_words_3'"
+      },
+      {
+        "id": "title_words_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'title_words_4'"
+      },
+      {
+        "id": "distance_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'distance_0'"
+      },
+      {
+        "id": "distance_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'distance_1'"
+      },
+      {
+        "id": "distance_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'distance_2'"
+      },
+      {
+        "id": "distance_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'distance_3'"
+      },
+      {
+        "id": "distance_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'distance_4'"
+      },
+      {
+        "id": "is_sorted_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'is_sorted_0'"
+      },
+      {
+        "id": "is_sorted_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'is_sorted_1'"
+      },
+      {
+        "id": "is_sorted_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'is_sorted_2'"
+      },
+      {
+        "id": "is_sorted_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'is_sorted_3'"
+      },
+      {
+        "id": "is_sorted_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'is_sorted_4'"
+      }
+    ]
+  },
+  "acceptance-controls": {
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "tasks": [
+      {
+        "id": "deduplicate_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'deduplicate_0'"
+      },
+      {
+        "id": "deduplicate_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'deduplicate_1'"
+      },
+      {
+        "id": "deduplicate_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'deduplicate_2'"
+      },
+      {
+        "id": "deduplicate_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'deduplicate_3'"
+      },
+      {
+        "id": "deduplicate_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'deduplicate_4'"
+      },
+      {
+        "id": "running_total_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'running_total_0'"
+      },
+      {
+        "id": "running_total_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'running_total_1'"
+      },
+      {
+        "id": "running_total_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'running_total_2'"
+      },
+      {
+        "id": "running_total_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'running_total_3'"
+      },
+      {
+        "id": "running_total_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'running_total_4'"
+      },
+      {
+        "id": "transpose_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'transpose_0'"
+      },
+      {
+        "id": "transpose_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'transpose_1'"
+      },
+      {
+        "id": "transpose_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'transpose_2'"
+      },
+      {
+        "id": "transpose_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'transpose_3'"
+      },
+      {
+        "id": "transpose_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'transpose_4'"
+      },
+      {
+        "id": "intersection_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'intersection_0'"
+      },
+      {
+        "id": "intersection_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'intersection_1'"
+      },
+      {
+        "id": "intersection_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'intersection_2'"
+      },
+      {
+        "id": "intersection_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'intersection_3'"
+      },
+      {
+        "id": "intersection_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'intersection_4'"
+      },
+      {
+        "id": "median_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'median_0'"
+      },
+      {
+        "id": "median_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'median_1'"
+      },
+      {
+        "id": "median_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'median_2'"
+      },
+      {
+        "id": "median_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'median_3'"
+      },
+      {
+        "id": "median_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'median_4'"
+      },
+      {
+        "id": "group_length_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'group_length_0'"
+      },
+      {
+        "id": "group_length_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'group_length_1'"
+      },
+      {
+        "id": "group_length_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'group_length_2'"
+      },
+      {
+        "id": "group_length_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'group_length_3'"
+      },
+      {
+        "id": "group_length_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'group_length_4'"
+      },
+      {
+        "id": "invert_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'invert_0'"
+      },
+      {
+        "id": "invert_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'invert_1'"
+      },
+      {
+        "id": "invert_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'invert_2'"
+      },
+      {
+        "id": "invert_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'invert_3'"
+      },
+      {
+        "id": "invert_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'invert_4'"
+      },
+      {
+        "id": "pairwise_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pairwise_0'"
+      },
+      {
+        "id": "pairwise_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pairwise_1'"
+      },
+      {
+        "id": "pairwise_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pairwise_2'"
+      },
+      {
+        "id": "pairwise_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pairwise_3'"
+      },
+      {
+        "id": "pairwise_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pairwise_4'"
+      },
+      {
+        "id": "pad_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pad_0'"
+      },
+      {
+        "id": "pad_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pad_1'"
+      },
+      {
+        "id": "pad_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pad_2'"
+      },
+      {
+        "id": "pad_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pad_3'"
+      },
+      {
+        "id": "pad_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'pad_4'"
+      },
+      {
+        "id": "split_once_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'split_once_0'"
+      },
+      {
+        "id": "split_once_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'split_once_1'"
+      },
+      {
+        "id": "split_once_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'split_once_2'"
+      },
+      {
+        "id": "split_once_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'split_once_3'"
+      },
+      {
+        "id": "split_once_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'split_once_4'"
+      },
+      {
+        "id": "anagram_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'anagram_0'"
+      },
+      {
+        "id": "anagram_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'anagram_1'"
+      },
+      {
+        "id": "anagram_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'anagram_2'"
+      },
+      {
+        "id": "anagram_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'anagram_3'"
+      },
+      {
+        "id": "anagram_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'anagram_4'"
+      },
+      {
+        "id": "factorial_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'factorial_0'"
+      },
+      {
+        "id": "factorial_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'factorial_1'"
+      },
+      {
+        "id": "factorial_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'factorial_2'"
+      },
+      {
+        "id": "factorial_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'factorial_3'"
+      },
+      {
+        "id": "factorial_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'factorial_4'"
+      },
+      {
+        "id": "gcd_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'gcd_0'"
+      },
+      {
+        "id": "gcd_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'gcd_1'"
+      },
+      {
+        "id": "gcd_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'gcd_2'"
+      },
+      {
+        "id": "gcd_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'gcd_3'"
+      },
+      {
+        "id": "gcd_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'gcd_4'"
+      },
+      {
+        "id": "binary_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'binary_0'"
+      },
+      {
+        "id": "binary_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'binary_1'"
+      },
+      {
+        "id": "binary_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'binary_2'"
+      },
+      {
+        "id": "binary_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'binary_3'"
+      },
+      {
+        "id": "binary_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'binary_4'"
+      },
+      {
+        "id": "line_count_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'line_count_0'"
+      },
+      {
+        "id": "line_count_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'line_count_1'"
+      },
+      {
+        "id": "line_count_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'line_count_2'"
+      },
+      {
+        "id": "line_count_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'line_count_3'"
+      },
+      {
+        "id": "line_count_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'line_count_4'"
+      },
+      {
+        "id": "json_keys_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'json_keys_0'"
+      },
+      {
+        "id": "json_keys_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'json_keys_1'"
+      },
+      {
+        "id": "json_keys_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'json_keys_2'"
+      },
+      {
+        "id": "json_keys_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'json_keys_3'"
+      },
+      {
+        "id": "json_keys_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'json_keys_4'"
+      },
+      {
+        "id": "basename_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'basename_0'"
+      },
+      {
+        "id": "basename_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'basename_1'"
+      },
+      {
+        "id": "basename_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'basename_2'"
+      },
+      {
+        "id": "basename_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'basename_3'"
+      },
+      {
+        "id": "basename_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'basename_4'"
+      },
+      {
+        "id": "leap_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'leap_0'"
+      },
+      {
+        "id": "leap_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'leap_1'"
+      },
+      {
+        "id": "leap_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'leap_2'"
+      },
+      {
+        "id": "leap_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'leap_3'"
+      },
+      {
+        "id": "leap_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'leap_4'"
+      },
+      {
+        "id": "seconds_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'seconds_0'"
+      },
+      {
+        "id": "seconds_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'seconds_1'"
+      },
+      {
+        "id": "seconds_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'seconds_2'"
+      },
+      {
+        "id": "seconds_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'seconds_3'"
+      },
+      {
+        "id": "seconds_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'seconds_4'"
+      },
+      {
+        "id": "strip_comments_0",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'strip_comments_0'"
+      },
+      {
+        "id": "strip_comments_1",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'strip_comments_1'"
+      },
+      {
+        "id": "strip_comments_2",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'strip_comments_2'"
+      },
+      {
+        "id": "strip_comments_3",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'strip_comments_3'"
+      },
+      {
+        "id": "strip_comments_4",
+        "reference": true,
+        "empty": false,
+        "empty_error": "module 'solution' has no attribute 'strip_comments_4'"
+      }
+    ]
+  }
+}

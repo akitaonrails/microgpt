@@ -1,0 +1,19 @@
+# Controlled architecture comparison: same corpus, seed, optimizer and 1B schedule
+# as coding-foundation.toml. Intermediate stops preserve the full cosine schedule.
+[model]
+context = 32768
+layers = 12
+heads = 12
+width = 768
+
+[train]
+steps = 122071
+batch_size = 1
+accumulation = 4
+learning_rate = 0.0003
+warmup = 500
+eval_every = 500
+eval_batches = 16
+gradient_checkpointing = false
+loss_chunk = 0
+seed = 42

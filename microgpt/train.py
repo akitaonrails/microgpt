@@ -54,6 +54,7 @@ def main():
     parser.add_argument("--out", type=Path, default=Path("runs/demo"))
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--steps", type=int, help="Total optimizer steps, including resumed steps")
+    parser.add_argument("--stop-at-step", type=int, help="Checkpoint at this absolute step without changing the full learning-rate schedule")
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--resume", type=Path)
     source.add_argument("--init-from", type=Path, help="Continue our weights with a new data/window stage and fresh optimizer")
@@ -118,6 +119,8 @@ def run_training(args, parser):
             torch.cuda.set_rng_state_all(checkpoint["cuda_rng"])
         start = checkpoint["step"]
         origin = checkpoint.get("origin", origin)
+    if args.stop_at_step is not None and not start < args.stop_at_step <= settings["steps"]:
+        parser.error("stop-at-step must exceed the saved step and fit the full schedule")
     if start >= settings["steps"]:
         parser.error("--steps must exceed the checkpoint step")
     args.out.mkdir(parents=True, exist_ok=True)
@@ -159,7 +162,7 @@ def run_training(args, parser):
             loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
-        budget_reached = bool(stopping) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)
+        budget_reached = bool(stopping) or (args.stop_at_step is not None and step + 1 >= args.stop_at_step) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)
         if (step + 1) % settings["eval_every"] == 0 or step + 1 == settings["steps"] or budget_reached:
             val_loss = evaluate(model, val, settings["batch_size"], settings["eval_batches"], device, loss_chunk)
             elapsed = time.monotonic() - started

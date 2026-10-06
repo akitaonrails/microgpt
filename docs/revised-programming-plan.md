@@ -231,8 +231,9 @@ If two tranches improve held-out loss but not execution, revisit data/format/cap
 instead of adding tool templates. Track genuinely distinct content separately.
 
 Use 2K then 4K sequences initially. Keep long-context inference support, but do not
-pay 32K training costs while simple functions fail. Predeclare an LR schedule and
-effective token batch; our old trainer only warmed up to a constant LR. Benchmark
+pay 32K training costs while simple functions fail. Predeclare the LR schedule and
+effective token batch. Correction after full trainer inspection: pretraining already
+uses warmup plus cosine decay to 10% of peak; SFT uses a constant rate. Benchmark
 AdamW first; a new optimizer is a separate experiment, not another simultaneous change.
 
 The old 91M foundation reported about 55.7K tokens/sec: 1B tokens is about five hours,

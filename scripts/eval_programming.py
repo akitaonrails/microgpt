@@ -36,15 +36,32 @@ TASKS = [
 ]
 
 
+# Assisted diagnostics only. Never import these reference answers into training.
+REFERENCES = {
+    'greeting': 'def greet(name):\n    print(f"Hello, {name}!")\n',
+    'clamp': 'def clamp(value, low, high):\n    return min(high, max(low, value))\n',
+    'initials': 'def initials(name):\n    return "".join(word[0].upper() for word in name.split())\n',
+    'squares': 'def square_evens(values):\n    return [v * v for v in values if v % 2 == 0]\n',
+    'join': 'def join_names(names):\n    return ", ".join(names)\n',
+    'lookup': 'def lookup(mapping, key, default=None):\n    return mapping.get(key, default)\n',
+    'strip_lower': 'def normalize_label(text):\n    return text.strip().lower()\n',
+    'count': 'def count_matches(values, target):\n    return sum(v == target for v in values)\n',
+}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--url', default='http://127.0.0.1:8000/v1')
     p.add_argument('--out', type=Path, required=True)
-    p.add_argument('--mode', choices=['direct', 'agent'], default='direct')
+    p.add_argument('--mode', choices=['direct', 'agent', 'fresh', 'oracle'], default='direct')
     p.add_argument('--limit', type=int, default=len(TASKS))
+    p.add_argument('--tasks-file', type=Path, help='Frozen JSONL task set; references are used only in assisted controls')
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
-    tasks = TASKS[:args.limit]
+    records = [json.loads(line) for line in args.tasks_file.open()] if args.tasks_file else None
+    all_tasks = [(r['id'], r['prompt'], r['tests']) for r in records] if records else TASKS
+    tasks = all_tasks[:args.limit]
+    references = {r['id']: r['reference'] for r in records} if records else REFERENCES
     health = httpx.get(args.url.removesuffix('/v1') + '/health', timeout=10)
     health.raise_for_status()
     summary = {'server': health.json(), 'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
@@ -57,6 +74,9 @@ def main():
         session = None
         cumulative = ''
         for name, prompt, tests in tasks:
+            if args.mode in ('fresh', 'oracle'):
+                session = None
+                solution.write_text('# Python utilities\n')
             cumulative = cumulative + tests if args.mode == 'agent' else tests
             grader.write_text("import sys\nsys.path.insert(0, '/work')\nimport solution as s\n" + cumulative + "print('PASS')\n")
             completed, checked, errors = False, False, []
@@ -78,6 +98,8 @@ def main():
                 cli = ['opencode', 'run', '--pure', '--dir', str(work), '--agent', 'microgpt', '-m', 'microgpt/microgpt', '--format', 'json']
                 if session:
                     cli += ['--session', session]
+                if args.mode == 'oracle':
+                    prompt += '\nApply this supplied reference implementation exactly:\n```python\n' + references[name] + '```'
                 try:
                     run = subprocess.run(cli + [prompt + ' Add it to solution.py; preserve existing functions and run check.'],
                         env=env, capture_output=True, text=True, timeout=90)

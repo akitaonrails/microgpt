@@ -90,6 +90,7 @@ class ProgrammingTests(unittest.TestCase):
         for invalid in [valid.replace('read', 'delete'), valid.replace(',"arguments"', '"arguments"'),
                         '<tool_call>{"name":"read","arguments":{}}</tool_call>']:
             self.assertFalse(grammar.matcher(tools).accept_string(invalid))
+        self.assertFalse(grammar.matcher(tools).accept_string('Done.</tool_call>'))
         self.assertFalse(grammar.matcher([]).accept_string(valid))
         self.assertTrue(grammar.matcher([]).accept_string('Here is Python code.'))
         # Schema property order affects constrained decoding. Sorting its keys
@@ -99,6 +100,8 @@ class ProgrammingTests(unittest.TestCase):
             'required': ['filePath', 'oldString', 'newString'], 'additionalProperties': False}}}
         edit_text = '<tool_call>{"name":"edit","arguments":{"filePath":"a.py","oldString":"old","newString":"new"}}</tool_call>'
         self.assertTrue(grammar.matcher([edit]).accept_string(edit_text))
+        literal_tag = edit_text.replace('\"new\"', '\"</tool_call>\"')
+        self.assertTrue(grammar.matcher([edit]).accept_string(literal_tag))
         self.assertFalse(grammar.matcher([edit]).accept_string(edit_text.replace('{\"name\":', '{\"name\":' + ' ' * 20)))
 
         message, reason = parse_reply('<think>' + valid + '</think>Done.', tools, 'stop')
