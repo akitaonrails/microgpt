@@ -1,0 +1,12 @@
+{
+  "episodes": 727,
+  "excluded": {
+    "inconsistent_checks": 4,
+    "random_imports": 9
+  },
+  "current_checks_sha256": "5ca71679f99ba5d7e78a14dc9bacc3d7a541dcf0d5d9743e4d4e96df5a2e1f2b",
+  "previous_checks_sha256": "7628cb0165d109ef5a067b24f00e920983d7c6b5cd34a7188ef0db94c2c321b1",
+  "source_sha256": "b451384bf6350732ad0521ab894c107eb25ffa76e0c1cd661a13bfc156af1001",
+  "output_sha256": "53b7ba92a156a9334af4e78a10cd6657c368f69ade3a4ee46c5fe15326a01860",
+  "note": "Same before/after program and fail/pass outcomes in two executions; excludes random/secrets reference imports. Not a proof of determinism or complete test coverage. Retained messages and split groups unchanged; no training performed."
+}

@@ -1,0 +1,115 @@
+{
+  "stages": [
+    {
+      "target": 500,
+      "status": "evaluated",
+      "metrics": {
+        "step": 500,
+        "train_loss": 0.47653208673000336,
+        "val_loss": 0.7341797963559525,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.7341797963559525
+        },
+        "assistant_tokens_seen": 2454569,
+        "seconds": 170.2,
+        "budget_reached": false,
+        "peak_memory_gb": 6.538980352
+      },
+      "checkpoint": "runs/verified-code-learning-v1/checkpoint-500.pt",
+      "direct": {
+        "passed": 24,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 24,
+        "syntax_valid": 96,
+        "requested_function_present": 68,
+        "parameter_names_match": 65,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 1000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 1000,
+        "train_loss": 0.46314142644405365,
+        "val_loss": 0.6486428112533108,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.6486428112533108
+        },
+        "assistant_tokens_seen": 4925989,
+        "seconds": 339.3,
+        "budget_reached": false,
+        "peak_memory_gb": 8.118715904
+      },
+      "checkpoint": "runs/verified-code-learning-v1/checkpoint-1000.pt",
+      "direct": {
+        "passed": 24,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 24,
+        "syntax_valid": 100,
+        "requested_function_present": 66,
+        "parameter_names_match": 65,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 2000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 2000,
+        "train_loss": 0.46383941918611526,
+        "val_loss": 0.5704295901042469,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.5704295901042469
+        },
+        "assistant_tokens_seen": 9852956,
+        "seconds": 677.5,
+        "budget_reached": false,
+        "peak_memory_gb": 8.112856576
+      },
+      "checkpoint": "runs/verified-code-learning-v1/checkpoint-2000.pt",
+      "direct": {
+        "passed": 21,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 21,
+        "syntax_valid": 100,
+        "requested_function_present": 68,
+        "parameter_names_match": 65,
+        "total": 100
+      },
+      "passed_gates": false
+    }
+  ],
+  "decision": {
+    "extend": false,
+    "counts": {
+      "passed": 21,
+      "syntax_valid": 100,
+      "requested_function_present": 68,
+      "parameter_names_match": 65,
+      "total": 100
+    },
+    "families_with_passes": 6,
+    "reason": "Stop this data pilot: progression gate unmet"
+  },
+  "selected_checkpoint": "runs/verified-code-learning-v1/checkpoint-500.pt",
+  "tie_break": "Earliest checkpoint among equal direct scores",
+  "selected_direct": 24,
+  "signature_diagnostic": {
+    "passed": 24,
+    "syntax_valid": 91,
+    "requested_function_present": 86,
+    "parameter_names_match": 86,
+    "total": 100
+  },
+  "interface_augmentation_criterion_met": false,
+  "ready_for_opencode": false
+}

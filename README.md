@@ -1,10 +1,11 @@
 # MicroGPT Lab — train our own model from scratch
 
-**Current capability:** the scratch 239M candidate passes **17/100** development
-variants at 10K updates on a broader checked-code curriculum. This is still far
-below useful programming competence. The [controlled experiments](docs/capacity-pilot.md)
-separate code correctness, request-format sensitivity and training-data defects.
-The served 91M artifact below remains a narrow arithmetic lesson.
+**Current capability:** the scratch 239M candidate passes **24/100** development
+variants after 500 updates on independently checked public programming answers.
+This remains far below useful programming competence. The
+[controlled experiments](docs/capacity-pilot.md) separate code correctness,
+request-format sensitivity and training-data defects. The served 91M artifact
+below remains a narrow arithmetic lesson.
 
 
 An independently written PyTorch GPT inspired by

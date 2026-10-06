@@ -691,3 +691,54 @@ does not supply answers. A gain of at least ten direct passes accompanied by at 
 90 correct parameter interfaces would support a targeted interface-augmentation
 experiment. Otherwise prioritize the remaining program-logic deficit. These are
 next-experiment criteria, not relaxed readiness gates or headline model scores.
+
+### Completed checked-public-data pilot
+
+Direct scores were **24/100, 24/100, and 21/100** at 500, 1,000 and 2,000 updates.
+The earlier 500-update checkpoint is retained among equal highest direct scores.
+It consumed 2,454,569 assistant tokens; the final checkpoint consumed 9,852,956.
+At 500, 13 previously failed cases passed while six earlier successes regressed.
+This is a development-set gain over 17/100, not agent readiness or a statistical
+claim based on 100 independent problems (the variants are correlated).
+
+At 2K, all outputs parsed, but only 65/100 parameter interfaces matched. The
+extension gate failed and no 5K/10K/20K continuation launched. Repeating the exact
+signature in the selected checkpoint's prompts raised interface matches from
+65 to 86/100, yet correctness stayed **24/100** and valid Python fell to 91/100.
+This failed the predeclared interface-augmentation criterion: copying improves,
+but the program-logic deficit remains. The results are frozen in
+[verified-code-learning-outcome.json](verified-code-learning-outcome.json).
+
+The next control adapts the same existing 1B-token scratch foundation directly on
+the checked public data, omitting the earlier SFT chain. It keeps this pilot's LR,
+effective batch, sampler seed, validation sample and 500/1K/2K evaluation points.
+This tests prior-SFT ancestry before paying for another billion pretraining tokens
+(roughly eleven hours at the observed 25.3K tokens/sec, not a guarantee). A further
+extension requires at least 29 direct passes plus the existing interface/syntax/
+family criteria. No inference is made that more pretraining must solve the problem.
+
+Meanwhile, `prepare_large --source codeparrot --tokens 3000000000` prepares a larger
+repository-grouped source stream from the already-downloaded pinned shards on the
+NAS. It uses the existing license/length selection and exact-text deduplication.
+This is a preparation ceiling, not a completed token count or training exposure.
+Architecture, tokenizer and the served model are unchanged.
+
+### Scoped edits and stochastic test gotchas
+
+Repair preparation now optionally uses `--scoped-edits`: the smallest unique changed
+line span replaces the bug, preserving other functions without copying the whole
+file. The exact replacement is executed and must reproduce the checked reference
+file. Tests cover repeated-line disambiguation and insertions that preserve prior
+code. This matters for long sessions, where repeatedly rewriting an entire growing
+file wastes context and risks regressions.
+
+Repeating the repair checks yielded 740 instead of 737 retained examples. Three
+changed retention status and one selected a different failing mutation; all four
+references imported `random`. A single passing run had overstated the stability of
+those labels. The filtered scoped corpus retains **727 examples** whose before/after
+programs and fail/pass outcomes agreed in both executions, excluding another nine
+references importing random/secrets. [scoped-repair-data.json](scoped-repair-data.json)
+records both evidence hashes. This is not a proof of determinism or complete test
+coverage. The generator's new `--exclude-random-imports` option conservatively checks
+ordinary random/secrets imports in both references and tests for future runs.
+The older corpora remain experiment history; no repair corpus has trained a model.

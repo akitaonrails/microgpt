@@ -7,6 +7,7 @@ import argparse
 import ast
 import copy
 import hashlib
+import inspect
 import json
 from pathlib import Path
 import random
@@ -51,7 +52,45 @@ def mutations(code, seed, limit=4):
     return result
 
 
-WORKER = r'''
+def scoped_edit(before, after):
+    """Find a unique whole-line replacement while preserving unchanged surroundings."""
+    if before == after:
+        raise ValueError('No edit needed')
+    old_lines, new_lines = before.splitlines(keepends=True), after.splitlines(keepends=True)
+    start = 0
+    while start < min(len(old_lines), len(new_lines)) and old_lines[start] == new_lines[start]:
+        start += 1
+    old_end, new_end = len(old_lines), len(new_lines)
+    while old_end > start and new_end > start and old_lines[old_end - 1] == new_lines[new_end - 1]:
+        old_end -= 1
+        new_end -= 1
+    while True:
+        old = ''.join(old_lines[start:old_end])
+        new = ''.join(new_lines[start:new_end])
+        if old and before.count(old) == 1:
+            return old, new
+        if start:
+            start -= 1
+        elif old_end < len(old_lines):
+            old_end += 1
+            new_end += 1
+        else:
+            return before, after
+
+
+def random_imports(code):
+    """Conservatively identify ordinary imports of random-number APIs."""
+    modules = set()
+    for node in ast.walk(ast.parse(code)):
+        if isinstance(node, ast.Import):
+            modules.update(alias.name.split('.')[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            modules.add(node.module.split('.')[0])
+    return modules & {'random', 'secrets'}
+
+
+# Mount one worker file; the helper tested on the host is copied verbatim into it.
+WORKER = inspect.getsource(scoped_edit) + r'''
 import json, pathlib, subprocess, sys, tempfile
 
 def check(root):
@@ -83,13 +122,17 @@ for line in open('/input.jsonl'):
                     continue
                 # Execute the same exact-string edit represented in the lesson.
                 current = solution.read_text()
-                if current.count(before) != 1:
+                old, new = scoped_edit(before, reference) if item['scoped_edits'] else (before, reference)
+                if current.count(old) != 1:
                     raise RuntimeError('Ambiguous edit')
-                solution.write_text(current.replace(before, reference, 1))
+                solution.write_text(current.replace(old, new, 1))
+                if solution.read_text() != reference:
+                    raise RuntimeError('Scoped edit changed the wrong content')
                 repaired = check(root)
                 if repaired['returncode'] != 0:
                     continue
                 result.update(retained=True, root=str(root), before=before, after=solution.read_text(),
+                              old_string=old, new_string=new,
                               failed=failed, repaired=repaired, mutation=mutation['kind'])
                 break
     print(json.dumps(result), flush=True)
@@ -110,7 +153,7 @@ def episode(record, check, tools):
             {'role': 'tool', 'tool_call_id': identifier, 'content': observation}])
     action('read', {'filePath': 'solution.py'}, read_output('solution.py', check['before'], root))
     action('check', {}, 'FAIL\n' + check['failed']['output'])
-    action('edit', {'filePath': 'solution.py', 'oldString': check['before'], 'newString': check['after']},
+    action('edit', {'filePath': 'solution.py', 'oldString': check['old_string'], 'newString': check['new_string']},
            'Edit applied successfully.')
     action('check', {}, 'PASS\n' + check['repaired']['output'])
     messages.append({'role': 'assistant', 'content': 'Fixed the implementation. The supplied checks passed, including the unrelated helper check.'})
@@ -126,6 +169,8 @@ def main():
     p.add_argument('--tools', type=Path, default=Path('data/opencode-tools-v2.json'))
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--count', type=int, default=1000)
+    p.add_argument('--scoped-edits', action='store_true', help='Use the smallest unique changed line span, preserving surrounding functions')
+    p.add_argument('--exclude-random-imports', action='store_true', help='Conservatively exclude random/secrets imports in references or tests; not a proof of determinism')
     args = p.parse_args()
     if args.out.exists() or args.count < 1:
         p.error('Use a fresh output and positive count')
@@ -140,6 +185,7 @@ def main():
     import pyarrow.compute as pc
     import pyarrow.parquet as pq
     selected, found = [], set()
+    excluded_random = 0
     wanted = pa.array(list(chosen))
     for shard in manifest['files']:
         path = args.source / shard['path']
@@ -154,11 +200,15 @@ def main():
         for raw in table.take(indices).to_pylist():
             found.add(raw['id'])
             record = candidate(raw)
+            if args.exclude_random_imports and random_imports(record['code'] + '\n' + '\n'.join(record['testcase'])):
+                excluded_random += 1
+                continue
             parent = chosen[raw['id']]
             expected = '```python\n' + record['code'] + '```'
             if parent['messages'][-1]['content'] != expected:
                 raise ValueError('Reference differs from the checked curriculum')
             record['group'] = parent['group']
+            record['scoped_edits'] = args.scoped_edits
             record['mutations'] = mutations(record['code'], seed=raw['id'])
             if record['mutations'] and '_preserved_helper' not in record['code']:
                 selected.append(record)
@@ -194,6 +244,9 @@ def main():
     args.out.with_suffix('.checks.json').write_text(json.dumps(checks, indent=2) + '\n')
     summary = {'dataset': manifest['dataset'], 'revision': manifest['revision'], 'requested': len(chosen),
                'mutable': len(selected), 'retained': sum(r['retained'] for r in checks), 'image': IMAGE,
+               'edit_style': 'unique changed line span' if args.scoped_edits else 'whole file',
+               'excluded_random_imports': excluded_random,
+               'checks_sha256': hashlib.sha256(args.out.with_suffix('.checks.json').read_bytes()).hexdigest(),
                'curriculum_sha256': hashlib.sha256(args.curriculum.read_bytes()).hexdigest(),
                'output_sha256': hashlib.sha256(args.out.read_bytes()).hexdigest(),
                'note': 'Prepared repair data only; no model training or agent capability established.'}
