@@ -154,3 +154,37 @@ Recovery command (already launched; do not duplicate while running):
 
 Recovery launch output: `runs/capacity-pilot-resume.log`. The CUDA timeout's underlying
 system cause has not been established; a successful retry would not diagnose it.
+
+
+## Completed outcome and next instruction experiment
+
+The recovered run completed 1,000,005,632 exposures. Candidate validation loss
+improved from the control's 2.5781 to 2.3020, but raw execution was only 1/100
+(control 2/100). Identical 5,000-update instruction adapters scored 0/100 control
+and 1/100 candidate. The predefined capacity gain threshold was not met. The
+runner correctly recorded `no_meaningful_capacity_gain`; this experiment does
+not justify promoting the model or claiming that capacity alone fixes the task.
+
+The next intervention targets observed interface errors: wrong function names,
+signatures and output format. `scripts/prepare_interface_curriculum.py` derives
+28,592 code-only instruction records from 3,574 of the previously checked public
+references, varying the requested function name with AST renaming. Nested scopes,
+classes, decorators and local rebinding of the function name are excluded. Related
+variants retain their original group. No evaluation references are imported.
+Original references were checked; transformed variants are not independently
+executed, and reflective code remains a limitation of this text transformation.
+
+Prepared data has 27,163 training and 1,384 validation episodes. This is a small
+instruction intervention, not a new foundation corpus. It changes the response
+format and name diversity together; any improvement cannot be attributed to
+renaming alone without a separate ablation. General conversation/tool retention
+is not established by a direct-code gain.
+
+`scripts/train_interface.sh` starts from the candidate's short instruction adapter
+with a new optimizer, LR 3e-5 and the fixed new curriculum. The bounded controller
+evaluates the unchanged 100-task development set at 5K, 10K and 20K updates, within
+a two-hour continuation budget (plus the first 1K bootstrap updates). Direct-only
+mode cannot mark agent gates passed. Acceptance remains untouched by model runs.
+Status: `runs/interface-continuation-v1/status.json`; bootstrap log:
+`runs/interface-launch.log`. Failure to improve is retained as a negative result,
+not grounds for extending the same training indefinitely.

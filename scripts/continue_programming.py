@@ -41,6 +41,8 @@ def main():
     p.add_argument('--milestones', type=int, nargs='+', default=[48000, 80000, 120000, 160000])
     p.add_argument('--hours', type=float, default=4)
     p.add_argument('--port', type=int, default=8021)
+    p.add_argument('--tasks-file', type=Path, help='Frozen broader evaluation set')
+    p.add_argument('--direct-only', action='store_true', help='Diagnose instruction training without claiming agent readiness')
     args = p.parse_args()
     if args.hours <= 0 or args.milestones != sorted(set(args.milestones)):
         p.error('Positive hours and strictly increasing milestones are required')
@@ -104,7 +106,8 @@ def main():
                             break
                         except OSError: time.sleep(1)
                     else: raise RuntimeError('Evaluation server did not start')
-                    checks = [('direct', 'scripts/eval_programming.py', ['--mode', 'direct'])]
+                    evaluation_flags = ['--tasks-file', str(args.tasks_file), '--limit', '100'] if args.tasks_file else []
+                    checks = [('direct', 'scripts/eval_programming.py', ['--mode', 'direct', *evaluation_flags])]
                     passed = True; checked = set()
                     for name, script, flags in checks:
                         execute([sys.executable, script, *flags, '--url', url + '/v1', '--out', str(destination / name)], destination / f'{name}.log', 1800)
@@ -120,9 +123,9 @@ def main():
                         if name == 'direct':
                             if score > best: best, stalled = score, 0
                             else: stalled += 1
-                            if score:
-                                checks.append(('agent', 'scripts/eval_programming.py', ['--mode', 'agent']))
-                            if score == len(result['tasks']):
+                            if score and not args.direct_only:
+                                checks.append(('agent', 'scripts/eval_programming.py', ['--mode', 'agent', *evaluation_flags]))
+                            if score == len(result['tasks']) and not args.direct_only:
                                 checks += [('basic', 'scripts/eval_opencode.py', ['--suite', 'basic', '--effort', 'none', '--label', str(frozen)]),
                                            ('horizon', 'scripts/eval_horizon.py', ['--rounds', '32', '--seed', '20261004', '--effort', 'none', '--label', str(frozen)])]
                         save()

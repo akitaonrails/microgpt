@@ -1,0 +1,111 @@
+{
+  "status": "no_meaningful_capacity_gain",
+  "pid": 882915,
+  "started": "2026-10-06T02:42:49.501486+00:00",
+  "stages": [
+    {
+      "step": 30518,
+      "status": "evaluated",
+      "metrics": {
+        "step": 30518,
+        "train_loss": 3.0294606685638428,
+        "val_loss": 2.7905498147010803,
+        "tokens_per_second": 29366.69295098856,
+        "peak_vram_gb": 11.170553856,
+        "tokens_seen_this_stage": 250003456,
+        "budget_reached": true
+      },
+      "checkpoint": "runs/capacity-pilot-v1/foundation/checkpoint-30518.pt",
+      "control_metric": {
+        "step": 30500,
+        "train_loss": 2.859957456588745,
+        "val_loss": 2.857044368982315,
+        "tokens_per_second": 54943.278131019266,
+        "peak_vram_gb": 7.767476736,
+        "tokens_seen_this_stage": 249856000,
+        "budget_reached": false
+      },
+      "raw_passed": 0
+    },
+    {
+      "step": 61036,
+      "status": "evaluated",
+      "metrics": {
+        "step": 61036,
+        "train_loss": 2.7388868033885956,
+        "val_loss": 2.534282349050045,
+        "tokens_per_second": 31808.871704617188,
+        "peak_vram_gb": 11.167362048,
+        "tokens_seen_this_stage": 500006912,
+        "budget_reached": true
+      },
+      "checkpoint": "runs/capacity-pilot-v1/foundation/checkpoint-61036.pt",
+      "control_metric": {
+        "step": 61000,
+        "train_loss": 3.13865864276886,
+        "val_loss": 2.686046153306961,
+        "tokens_per_second": 56971.13263847715,
+        "peak_vram_gb": 7.767476736,
+        "tokens_seen_this_stage": 499712000,
+        "budget_reached": false
+      },
+      "raw_passed": 0
+    },
+    {
+      "step": 122071,
+      "status": "evaluated",
+      "metrics": {
+        "step": 122071,
+        "train_loss": 2.534433662891388,
+        "val_loss": 2.3019561246037483,
+        "tokens_per_second": 25321.29523306464,
+        "peak_vram_gb": 11.167362048,
+        "tokens_seen_this_stage": 1000005632,
+        "budget_reached": true
+      },
+      "checkpoint": "runs/capacity-pilot-v1/foundation/checkpoint-122071.pt",
+      "control_metric": {
+        "step": 122071,
+        "train_loss": 2.839754641056061,
+        "val_loss": 2.5780621469020844,
+        "tokens_per_second": 55674.81768696349,
+        "peak_vram_gb": 7.767476736,
+        "tokens_seen_this_stage": 1000005632,
+        "budget_reached": false
+      },
+      "raw_passed": 1
+    }
+  ],
+  "hypothesis": "Increasing transformer capacity at fixed corpus/token budget improves executable code.",
+  "control": "runs/coding-v1/foundation/last.pt",
+  "control_sha256": "ed51650d4ed9f13ec8e4fa82b7649029b2501548e113634b42e7d359dad7a9d7",
+  "config_sha256": "a430fd9de48800e62a8da4a28799580ac84d54beeacd5a1853f6d65abadc504c",
+  "tasks_sha256": "54d4a93508f0d24f96136e86056d24c2d476552be80c9795fa3093f9e49d5ac2",
+  "data_manifest_sha256": "839fc121afa565b8dde1b57c5fd343f997e7c99948786cff3c65ec4dce67387b",
+  "git_commit": "c08c80949ca076d2777f6239eba8fb3d1f69cc42",
+  "training_hours_limit": 12.0,
+  "automatic_promotion": false,
+  "acceptance_set_used": false,
+  "stopping_rule": "Reject nonfinite validation or loss > matched-step control + 0.2; no expansion past 1B exposures.",
+  "updated": "2026-10-06T16:10:38.169846+00:00",
+  "phase": "matched_instruction_adapters",
+  "control_raw": 2,
+  "training_seconds": 34072.64962360787,
+  "recovered_budget_accounting": {
+    "estimated_failed_stage_seconds": 13705.785130942008,
+    "note": "Elapsed inferred from last metric throughput since step 61036, plus 300 seconds for uncheckpointed work and overhead; original runner failed to account failed commands."
+  },
+  "recoveries": [
+    {
+      "previous_error": "Command exited 1; inspect runs/capacity-pilot-v1/pretraining.log",
+      "at": "2026-10-06T14:56:23.486465+00:00",
+      "implementation_commit": "1984d9e58cb40691aae73c2879280bcee1dfbe4d"
+    }
+  ],
+  "adapter_scores": {
+    "control": 0,
+    "candidate": 1
+  },
+  "gain_percentage_points": 1,
+  "direct_gate_passed": false
+}
