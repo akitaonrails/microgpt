@@ -1,5 +1,13 @@
 # Programming model reset: evidence and gated plan
 
+**Current work (October 6):** the [controlled experiment notebook](capacity-pilot.md)
+supersedes the status snapshot below. The scratch candidate is now 238,568,448
+parameters; its best broader direct-code score is 24/100. Programming correctness
+remains the bottleneck. Checked public-code adaptation, an ancestry control,
+expanded foundation data, and executed scoped-repair lessons address distinct
+questions; no new candidate has passed the OpenCode readiness gates. The original
+acceptance criteria below remain in force.
+
 Audit date: 2026-10-05. This plan supersedes the next-run recommendations in
 `next-run.md` and the automatic continuation recommendations in
 `programming-improvement.md`. Those files remain experiment history.

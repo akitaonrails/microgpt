@@ -772,3 +772,13 @@ their setting, whereas [NVIDIA's continuation study](https://arxiv.org/abs/2407.
 favored no warmup for their well-trained 15B model. Neither establishes the best
 schedule for our undertrained 239M model. A short batch-two throughput/memory check
 must precede the long run. No additional foundation training has begun at this entry.
+
+The bounded launcher is `scripts/train_expanded_foundation.py --out runs/expanded-foundation-pilot-v1`.
+It requires the clean control's three completed evaluations, records immutable
+experiment identities, stops pretraining at 30,518 updates (250,003,456 new tokens)
+or four training hours, then runs the same 250-update bootstrap and 500/1K/2K
+adapter evaluations. Five additional direct passes over the best clean-control
+checkpoint are required even to consider another tranche. That is a continuation
+criterion, not readiness; the best prior recipe's 24/100 is also recorded for
+comparison. Failed processes preserve their command and phase in `status.json`.
+The full 54-test suite passed after the resume changes.
