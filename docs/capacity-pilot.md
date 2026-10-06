@@ -294,3 +294,42 @@ a broader-selection experiment at matched update counts, not an isolated proof
 about any one filtering choice or equal token exposure. Extension requires at
 least 20/100 direct passes, 70/100 parameter-name matches, and passes in five
 families. Those are research progression criteria, not OpenCode readiness gates.
+
+The corrected renamed check passed 20,969/20,974 references. Filtering also removed
+two assertion-free cases, leaving **20,967 source programs / 167,736 variants**.
+The five execution failures included assertions that had been hidden after a
+return, missing `TreeNode`/`PriorityHeap` dependencies, a set-to-list ordering
+assumption, and random password properties not guaranteed by the implementation.
+A successful single execution cannot exclude flaky tests; this remains a data
+quality limitation rather than a claim of complete reference correctness.
+
+Historical raw selection was prepared with `prepare_programming_tools.py` as in
+commit `220ed20`. The corrected current preparer can select different subsequent
+rows because it rejects malformed/assertion-free tests earlier. The exact run
+is identified by hashes rather than by assuming row counts reproduce across
+preparer versions. Relevant artifacts:
+
+- `data/educational-tools-diverse-v1.source.json`: initial source selection.
+- `runs/interface-diverse-reference-checks.json`: all renamed execution outcomes.
+- `runs/interface-diverse-test-audit.json`: assertion/indentation audit.
+- `runs/interface-diverse-filtered-checks.json`: retained IDs and parent report hash.
+- `data/programming-interface-diverse-sft-v2/manifest.json`: actual training split.
+
+The filtered curriculum preserves the checked identifiers:
+
+```sh
+source scripts/dataset-env.sh
+.venv/bin/python scripts/filter_interface_curriculum.py \
+  --input data/programming-interface-diverse-v1.jsonl \
+  --checks runs/interface-diverse-reference-checks.json \
+  --source "$MICROGPT_DATA_ROOT/raw/opencoder-educational/educational_instruct/train-00000-of-00001.parquet" \
+  --out data/programming-interface-diverse-checked-v1.jsonl \
+  --out-checks runs/interface-diverse-filtered-checks.json
+.venv/bin/python -m microgpt.trajectories \
+  --input data/programming-interface-diverse-checked-v1.jsonl \
+  --out data/programming-interface-diverse-sft-v2 --tokenizer data/large-v1 \
+  --max-length 8192 --limit 200000 --pack-episodes --canonical-tool-ids
+bash scripts/train_interface_diversity.sh
+```
+
+These commands refuse existing outputs. Do not rerun them over the recorded run.
