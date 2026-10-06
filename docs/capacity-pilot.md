@@ -782,3 +782,48 @@ checkpoint are required even to consider another tranche. That is a continuation
 criterion, not readiness; the best prior recipe's 24/100 is also recorded for
 comparison. Failed processes preserve their command and phase in `status.json`.
 The full 54-test suite passed after the resume changes.
+
+### Clean ancestry control and the first expanded-data tranche
+
+The clean foundation-to-public-SFT control finished at **7/100, 5/100 and 12/100**
+for 500/1K/2K updates. Its final validation loss was 0.5203, below the chained
+parent's 0.5704, but executable correctness was worse. Removing the earlier SFT
+ancestry therefore did not improve this tested adapter recipe. The frozen result
+is [clean-foundation-adapter-outcome.json](clean-foundation-adapter-outcome.json).
+It does not establish that every longer clean-SFT run would fail.
+
+A disposable batch-two profile completed 100 pretraining updates at 31,771 tokens/s
+and 18.01 GB peak allocation. The actual continuation starts again from the original
+scratch foundation; profile updates are not part of its ancestry. The bounded
+250M-token trial is now running in `runs/expanded-foundation-pilot-v1`; its initial
+validation loss on the expanded mixture is 2.2571. The matched-adapter baseline is
+12/100, so at least 17/100 is needed to consider more pretraining. The earlier
+chained recipe's 24/100 remains the stronger existing programming result.
+
+### Public cumulative sessions and context overflow
+
+`prepare_public_horizon.py` constructs cumulative sessions from checked public
+programs, keeping every source in its original train/validation partition. It
+rejects conflicting top-level bindings and ordinary random/secrets imports, and
+limits code/prompt lengths. Each append uses a unique scoped edit, preserves the
+entire earlier file, and must change a failing cumulative check into a passing
+one inside restricted Docker. All prior task tests run after every addition in
+fresh per-task namespaces. These are reference-policy demonstrations with generated
+OpenCode-format observations and requirements state, not model/OpenCode rollouts.
+
+The first ten sessions passed all 32 additions: 320 checked edits. A fixed handoff
+every four turns nevertheless yielded episodes from 6,171 to **47,572 tokens**;
+only 50 of 80 fit 32K. Long histories repeatedly include growing requirements and
+source files. Silently dropping oversized episodes would have removed many late
+session examples—the exact behavior we need to teach.
+
+Preparation now inserts additional handoffs between complete user turns when the
+serving-template token count exceeds the limit. It refuses a single oversized
+turn instead of truncating it. The fitted pilot retains **all 320 user turns** in
+110 episodes (99 train/11 validation), with zero overlength drops. Unit tests cover
+source split preservation, binding collisions, handoff requirements without answer
+leakage, and lossless context splitting. Evidence is in
+[public-horizon-pilot.json](public-horizon-pilot.json). A 200-session expansion is
+being prepared; no model has trained on these lessons yet. Handoff training and
+external requirements state do not establish uninterrupted learned recall or
+model-written summaries. The real uninterrupted OpenCode evaluation remains required.

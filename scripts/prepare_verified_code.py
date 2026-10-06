@@ -61,6 +61,44 @@ def candidate(row):
             'prompt': row['input'], 'signature': f'{fn.name}({ast.unparse(fn.args)})'}
 
 
+def checked_references(directory, curriculum, count):
+    """Recover tests for checked answers without executing downloaded Python."""
+    import pyarrow as pa
+    import pyarrow.compute as pc
+    import pyarrow.parquet as pq
+    chosen = {}
+    with curriculum.open() as stream:
+        for line in stream:
+            record = json.loads(line)
+            chosen[record['upstream_id']] = record
+            if len(chosen) == count:
+                break
+    manifest = json.loads((directory / 'manifest.json').read_text())
+    wanted, found = pa.array(list(chosen)), set()
+    for shard in manifest['files']:
+        path = directory / shard['path']
+        with path.open('rb') as stream:
+            if hashlib.file_digest(stream, 'sha256').hexdigest() != shard['sha256']:
+                raise ValueError('Source hash mismatch')
+        parquet = pq.ParquetFile(path)
+        indices = pc.indices_nonzero(pc.is_in(parquet.read(columns=['id'])['id'], value_set=wanted))
+        if not len(indices):
+            continue
+        table = parquet.read(columns=['id', 'input', 'output', 'unit_tests', 'average_test_score'])
+        for raw in table.take(indices).to_pylist():
+            found.add(raw['id'])
+            record = candidate(raw)
+            parent = chosen[raw['id']]
+            if parent['messages'][-1]['content'] != '```python\n' + record['code'] + '```':
+                raise ValueError('Reference differs from the checked curriculum')
+            yield {**record, 'group': parent['group']}
+        del table
+        if len(found) == len(chosen):
+            break
+    if found != set(chosen):
+        raise ValueError('Some selected source IDs are missing')
+
+
 def split_groups(items):
     """Link identical prompts and function-name-normalized ASTs transitively."""
     parents, code_groups = {}, {}

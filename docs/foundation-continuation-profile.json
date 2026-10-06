@@ -1,0 +1,10 @@
+{
+  "step": 100,
+  "train_loss": 2.0570801496505737,
+  "val_loss": 2.2533156275749207,
+  "tokens_per_second": 31771.48109049881,
+  "peak_vram_gb": 18.007303168,
+  "tokens_seen_this_stage": 819200,
+  "budget_reached": false,
+  "note": "Disposable 100-update throughput check, not a quality result or guarantee of long-run stability. Full trial reinitializes from the original scratch foundation."
+}

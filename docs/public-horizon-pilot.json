@@ -1,0 +1,62 @@
+{
+  "input_sha256": "881e7f3ea23e6b669f8a3a5cd8ec5c30a06a2f81c7284c0d39bb8e5a627c8c81",
+  "output_sha256": "48433bc5273efd17c3059df782be793897eced730f797ee0f6f7afd572c5d37e",
+  "episodes": 110,
+  "user_turns": 320,
+  "context_limit": 32768,
+  "note": "Additional complete-turn handoffs; same executed edits and cumulative tests. No model evaluation.",
+  "sandbox_summary": {
+    "sessions_requested": 10,
+    "sessions_retained": 10,
+    "episodes_by_split": {
+      "train": 72,
+      "val": 8
+    },
+    "rounds": 32,
+    "handoff_every": 4,
+    "eligible_source_programs": 8017,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "curriculum_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "output_sha256": "881e7f3ea23e6b669f8a3a5cd8ec5c30a06a2f81c7284c0d39bb8e5a627c8c81",
+    "checks_sha256": "be4b00e293989154fb7e8383d9c441bd78558e1fcbae13687c9191a83546c8a2",
+    "note": "Prepared data only. No learned long-horizon capability established. Exact split preservation does not prove semantic decontamination."
+  },
+  "prepared_manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 32768,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/executed-public-horizon-fitted-pilot-v1.jsonl",
+        "sha256": "48433bc5273efd17c3059df782be793897eced730f797ee0f6f7afd572c5d37e"
+      }
+    ],
+    "counts": {
+      "scanned": 110,
+      "train_episodes": 99,
+      "val_episodes": 11
+    },
+    "splits": {
+      "train": {
+        "examples": 99,
+        "assistant_tokens": 72041,
+        "groups": 9,
+        "examples_by_source": {
+          "executed-public-horizon": 99
+        },
+        "sha256": "c621ee33a93cc810402c6bc8465a44f942e2b17c66e8d0621fcc42f2dcc96b23"
+      },
+      "val": {
+        "examples": 11,
+        "assistant_tokens": 7944,
+        "groups": 1,
+        "examples_by_source": {
+          "executed-public-horizon": 11
+        },
+        "sha256": "2445d052261ba44a1950e01148cf616881dfe9a5802f6d97449363ede92b928a"
+      }
+    }
+  }
+}

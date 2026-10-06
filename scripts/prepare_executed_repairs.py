@@ -18,7 +18,7 @@ import uuid
 from microgpt.opencode_format import read_output, system_prompt
 from microgpt.programming_data import GENERAL_PROMPT
 from microgpt.protocol import reasoning_instruction
-from prepare_verified_code import candidate
+from prepare_verified_code import checked_references
 from eval_opencode import IMAGE
 
 
@@ -174,49 +174,18 @@ def main():
     args = p.parse_args()
     if args.out.exists() or args.count < 1:
         p.error('Use a fresh output and positive count')
-    chosen = {}
-    for line in args.curriculum.open():
-        record = json.loads(line)
-        chosen[record['upstream_id']] = record
-        if len(chosen) == args.count:
-            break
     manifest = json.loads((args.source / 'manifest.json').read_text())
-    import pyarrow as pa
-    import pyarrow.compute as pc
-    import pyarrow.parquet as pq
-    selected, found = [], set()
-    excluded_random = 0
-    wanted = pa.array(list(chosen))
-    for shard in manifest['files']:
-        path = args.source / shard['path']
-        with path.open('rb') as stream:
-            if hashlib.file_digest(stream, 'sha256').hexdigest() != shard['sha256']:
-                raise ValueError('Source hash mismatch')
-        parquet = pq.ParquetFile(path)
-        indices = pc.indices_nonzero(pc.is_in(parquet.read(columns=['id'])['id'], value_set=wanted))
-        if not len(indices):
+    selected = []
+    requested = excluded_random = 0
+    for record in checked_references(args.source, args.curriculum, args.count):
+        requested += 1
+        if args.exclude_random_imports and random_imports(record['code'] + '\n' + '\n'.join(record['testcase'])):
+            excluded_random += 1
             continue
-        table = parquet.read(columns=['id', 'input', 'output', 'unit_tests', 'average_test_score'])
-        for raw in table.take(indices).to_pylist():
-            found.add(raw['id'])
-            record = candidate(raw)
-            if args.exclude_random_imports and random_imports(record['code'] + '\n' + '\n'.join(record['testcase'])):
-                excluded_random += 1
-                continue
-            parent = chosen[raw['id']]
-            expected = '```python\n' + record['code'] + '```'
-            if parent['messages'][-1]['content'] != expected:
-                raise ValueError('Reference differs from the checked curriculum')
-            record['group'] = parent['group']
-            record['scoped_edits'] = args.scoped_edits
-            record['mutations'] = mutations(record['code'], seed=raw['id'])
-            if record['mutations'] and '_preserved_helper' not in record['code']:
-                selected.append(record)
-        del table
-        if len(found) == len(chosen):
-            break
-    if found != set(chosen):
-        raise ValueError('Some selected source IDs are missing')
+        record['scoped_edits'] = args.scoped_edits
+        record['mutations'] = mutations(record['code'], seed=record['seq_id'])
+        if record['mutations'] and '_preserved_helper' not in record['code']:
+            selected.append(record)
     with tempfile.TemporaryDirectory(prefix='microgpt-repair-') as directory:
         base = Path(directory); base.chmod(0o755)
         source = base / 'input.jsonl'; source.write_text(''.join(json.dumps(r) + '\n' for r in selected)); source.chmod(0o644)
@@ -242,7 +211,7 @@ def main():
             if check['retained']:
                 output.write(json.dumps(episode(record, check, tools)) + '\n')
     args.out.with_suffix('.checks.json').write_text(json.dumps(checks, indent=2) + '\n')
-    summary = {'dataset': manifest['dataset'], 'revision': manifest['revision'], 'requested': len(chosen),
+    summary = {'dataset': manifest['dataset'], 'revision': manifest['revision'], 'requested': requested,
                'mutable': len(selected), 'retained': sum(r['retained'] for r in checks), 'image': IMAGE,
                'edit_style': 'unique changed line span' if args.scoped_edits else 'whole file',
                'excluded_random_imports': excluded_random,

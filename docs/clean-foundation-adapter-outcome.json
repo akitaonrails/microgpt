@@ -1,0 +1,117 @@
+{
+  "experiment": {
+    "parent": "runs/capacity-pilot-v1/foundation/last.pt",
+    "parent_sha256": "77315ecd671a1350bf72b8c50cb50060cd0ef3e6e0da3bbd84c571220bf03ced",
+    "hypothesis": "Earlier narrow SFT ancestry may limit the broader-data adaptation; establish a direct foundation-to-SFT baseline before extending pretraining.",
+    "data_manifest_sha256": "b6cc4efbfc0362551654fc5cc4e56f5d4d3abbe2227d335bd7953981cdcf9cae",
+    "learning_rate": 1e-05,
+    "microbatch": 4,
+    "accumulation": 8,
+    "seed": 20261006,
+    "validation_seed": 20261007,
+    "eval_examples": 256,
+    "evaluation_milestones": [
+      500,
+      1000,
+      2000
+    ],
+    "extension_criterion": "At least 29/100 direct passes, 75/100 parameter interfaces, 90/100 valid Python outputs, and passes in five families. No automatic extension or serving promotion.",
+    "baseline_best_direct": 24,
+    "comparison": "Same checked data and adaptation settings as the prior pilot; only prior SFT ancestry differs. Total lifetime training exposure is not equal.",
+    "git_commit": "b932c1d95f0234d4e571ea0fc4cc34690ae7f18a",
+    "acceptance_used": false
+  },
+  "stages": [
+    {
+      "target": 500,
+      "status": "evaluated",
+      "metrics": {
+        "step": 500,
+        "train_loss": 0.4675772599875927,
+        "val_loss": 0.628567746354002,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.628567746354002
+        },
+        "assistant_tokens_seen": 2454569,
+        "seconds": 165.8,
+        "budget_reached": false,
+        "peak_memory_gb": 6.538980352
+      },
+      "checkpoint": "runs/clean-foundation-adapter-v1/checkpoint-500.pt",
+      "direct": {
+        "passed": 7,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 7,
+        "syntax_valid": 100,
+        "requested_function_present": 69,
+        "parameter_names_match": 69,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 1000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 1000,
+        "train_loss": 0.4271632246673107,
+        "val_loss": 0.5727214249316004,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.5727214249316004
+        },
+        "assistant_tokens_seen": 4925989,
+        "seconds": 327.9,
+        "budget_reached": false,
+        "peak_memory_gb": 8.118715904
+      },
+      "checkpoint": "runs/clean-foundation-adapter-v1/checkpoint-1000.pt",
+      "direct": {
+        "passed": 5,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 5,
+        "syntax_valid": 100,
+        "requested_function_present": 72,
+        "parameter_names_match": 72,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 2000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 2000,
+        "train_loss": 0.4217122495174408,
+        "val_loss": 0.5203448214408017,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.5203448214408017
+        },
+        "assistant_tokens_seen": 9852956,
+        "seconds": 646.7,
+        "budget_reached": false,
+        "peak_memory_gb": 8.112856576
+      },
+      "checkpoint": "runs/clean-foundation-adapter-v1/checkpoint-2000.pt",
+      "direct": {
+        "passed": 12,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 12,
+        "syntax_valid": 99,
+        "requested_function_present": 69,
+        "parameter_names_match": 69,
+        "total": 100
+      },
+      "passed_gates": false
+    }
+  ],
+  "best_direct": 12,
+  "previous_chained_best": 24,
+  "status_sha256": "41b0f3c283eef6aba755ea47c870d5985c89abde4322c832ae2d7208b817ead3",
+  "conclusion": "Removing the earlier SFT ancestry did not improve the tested short adapter. Lower validation loss did not imply better executable programming. No extension or promotion."
+}
