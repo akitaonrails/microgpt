@@ -127,3 +127,30 @@ Training logs are in `pretraining.log`; intermediate results are in `raw-STEP`.
 
 This is a capability experiment, not a completed agent. The existing port-8000
 service continues to serve the previously documented narrow checkpoint.
+
+
+## CUDA interruption and recovery
+
+The first controller failed after the durable step-114000 checkpoint (933,888,000
+exposures): PyTorch reported a CUDA launch timeout, not a nonfinite loss or a
+capability rejection. The 250M and 500M evaluations had each scored 0/100 raw;
+validation loss improved relative to the matched-step control. Neither result
+establishes agent competence. The final instruction comparison had not run.
+
+The controller now supports `--resume` for a failed/interrupted pretraining phase,
+verifies the control/config/data/evaluation identities, and skips completed stages.
+It accounts failed-command wall time and permits one checkpoint-based retry per
+stage for this specific CUDA timeout. It does not retry other errors blindly.
+The historical failure budget was reconstructed from recorded throughput plus a
+300-second allowance, conservatively recording about 8.36 hours already used.
+The exact failure-time snapshot remains in `failure-before-recovery.json`.
+
+Recovery command (already launched; do not duplicate while running):
+
+```sh
+.venv/bin/python scripts/run_capacity_pilot.py \
+  --out runs/capacity-pilot-v1 --hours 12 --resume
+```
+
+Recovery launch output: `runs/capacity-pilot-resume.log`. The CUDA timeout's underlying
+system cause has not been established; a successful retry would not diagnose it.
