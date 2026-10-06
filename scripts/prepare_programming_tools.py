@@ -4,6 +4,7 @@ References and source tests execute only inside a restricted networkless contain
 The resulting traces are simulated demonstrations, not rollouts of our model.
 """
 import argparse
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -37,15 +38,26 @@ def main():
     p.add_argument('--tools', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--count', type=int, default=4000)
+    p.add_argument('--deduplicate-code', action='store_true',
+                   help='Keep only the first occurrence of each Python AST before checking references')
     args = p.parse_args()
     if args.out.exists():
         p.error('Use a fresh output')
     selected = []
+    seen = set()
     for r in rows(args.input):
         if not r.get('testcase') or len(r['code']) > 2500 or len(r['instruction']) > 1500:
             continue
         if len(r['testcase']) > 20 or sum(map(len, r['testcase'])) > 4000:
             continue
+        if args.deduplicate_code:
+            try:
+                fingerprint = hashlib.sha256(ast.dump(ast.parse(r['code'])).encode()).hexdigest()
+            except SyntaxError:
+                continue
+            if fingerprint in seen:
+                continue
+            seen.add(fingerprint)
         selected.append(r)
         if len(selected) >= args.count:
             break
@@ -91,7 +103,10 @@ def main():
             stream.write(json.dumps(record) + '\n'); count += 1
     args.out.with_suffix('.source.json').write_text(json.dumps({'selected': len(selected), 'passed': count, 'image': IMAGE,
         'input_sha256': hashlib.sha256(args.input.read_bytes()).hexdigest(), 'dataset': 'OpenCoder-LLM/opc-sft-stage2',
-        'revision': '7d28f40d579edd7c24402d17d0c7639f991e6f8d', 'output_sha256': hashlib.sha256(args.out.read_bytes()).hexdigest()}, indent=2)+'\n')
+        'revision': '7d28f40d579edd7c24402d17d0c7639f991e6f8d',
+        'deduplicate_code': args.deduplicate_code,
+        'selection': 'First eligible references in source order; not a representative random sample.',
+        'output_sha256': hashlib.sha256(args.out.read_bytes()).hexdigest()}, indent=2)+'\n')
     print(f'Reference tests passed: {count}/{len(selected)}', flush=True)
 
 

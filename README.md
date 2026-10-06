@@ -1,9 +1,11 @@
 # MicroGPT Lab — train our own model from scratch
 
-**Current experiment:** broader programming remains weak (2/100 development variants).
-The [controlled capacity pilot](docs/capacity-pilot.md) follows diagnostic comparisons and tests a fresh
-239M student against our original scratch foundation. The served 91M artifact below
-remains a narrow arithmetic lesson.
+**Current experiment:** the [controlled capacity pilot](docs/capacity-pilot.md)
+finished without a meaningful programming gain. A subsequent focused instruction
+curriculum improved the scratch 239M candidate from 1/100 to **8/100** development
+variants at 5K updates. This is still far below useful programming competence;
+later checkpoints are being evaluated. The served 91M artifact below remains a
+narrow arithmetic lesson.
 
 
 An independently written PyTorch GPT inspired by

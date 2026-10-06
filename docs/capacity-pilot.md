@@ -171,8 +171,9 @@ signatures and output format. `scripts/prepare_interface_curriculum.py` derives
 references, varying the requested function name with AST renaming. Nested scopes,
 classes, decorators and local rebinding of the function name are excluded. Related
 variants retain their original group. No evaluation references are imported.
-Original references were checked; transformed variants are not independently
-executed, and reflective code remains a limitation of this text transformation.
+Original references were checked; one renamed variant per source was subsequently
+executed against upstream tests, as recorded below. Reflective code remains a
+limitation of this text transformation.
 
 Prepared data has 27,163 training and 1,384 validation episodes. This is a small
 instruction intervention, not a new foundation corpus. It changes the response
@@ -210,3 +211,46 @@ stability experiment, not proof that Flash caused the timeout. Inference continu
 to use Flash. PyTorch documents explicit backend selection and possible numerical
 differences in its [SDPA reference](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html).
 No GPU watchdog, driver or desktop settings were changed.
+
+### First interface checkpoint: better structure, weak semantics
+
+The math-backend continuation is recorded in
+`runs/interface-math-continuation-v1/status.json`. At 5,000 updates it has consumed
+792,422 assistant target tokens. The same 100 development variants give:
+
+| Measurement | Parent short adapter | Interface 5K |
+| --- | ---: | ---: |
+| Pass source-independent execution tests | 1/100 | 8/100 |
+| Parse as Python | 34/100 | 92/100 |
+| Define requested function | 10/100 | 50/100 |
+| Match requested parameter names | 8/100 | 50/100 |
+
+Passing variants cover four of twenty families: negatives 1/5, product 2/5,
+longest 1/5, and is_sorted 4/5. None of the twenty families passes all five
+variants. These are correlated name/wording variants, not 100 independent
+programming problems. A rotation request returns elementwise multiplication;
+another answer recurses without a base case. Syntax improvements therefore do
+not establish programming competence or readiness for tool training.
+
+Artifacts: `runs/interface-math-continuation-v1/eval-5000/direct/results.json`
+and `analysis.json`; analysis command is `scripts/analyze_programming.py`.
+The unchanged 10K/20K checkpoint comparisons continue before selecting a next
+training branch. There have been no further observed watchdog errors through
+this checkpoint, which does not establish a root cause or a permanent fix.
+
+### Preparing a broader checked selection
+
+An AST-only audit of the complete local OpenCoder educational shard found
+118,278 rows, 118,117 meeting the existing short-example filters, and 107,465
+distinct parsed ASTs among those rows. Names remain significant in that count;
+it is not semantic deduplication. The interface experiment uses just 3,574 source
+records with renamed variants (2,732 ASTs after normalizing the function name).
+
+The next data preparation checks the first 24,000 distinct eligible ASTs from
+the same pinned shard in restricted Docker, using `prepare_programming_tools.py
+--deduplicate-code`. This reuses existing public data rather than downloading
+more bytes. Source order is a sampling limitation. Passing upstream tests means
+only that those supplied tests passed, not that a reference fully satisfies its
+natural-language specification. These intermediate tool traces are simulated;
+their code-only extraction is intended for a subsequent direct-code experiment.
+No development or acceptance solutions are added to training.
