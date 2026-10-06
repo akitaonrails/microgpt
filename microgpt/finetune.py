@@ -83,7 +83,7 @@ def main():
     parser.add_argument('--eval-examples', type=int, default=30)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cuda')
-    parser.add_argument('--attention', choices=['flash', 'sdpa'], default='flash')
+    parser.add_argument('--attention', choices=['flash', 'sdpa', 'math'], default='flash')
     parser.add_argument('--max-length', type=int, default=32768, help='Curriculum stage: exclude whole episodes exceeding this length')
     parser.add_argument('--min-tool-calls', type=int, default=0, help='Select complete longer-horizon episodes for a dedicated stage')
     parser.add_argument('--source-weight', action='append', default=[], metavar='SOURCE:WEIGHT',
@@ -93,6 +93,8 @@ def main():
     parser.add_argument('--short-replay', type=float, default=0, help='Fraction of updates sampled from the general <=8K curriculum to reduce forgetting')
     parser.add_argument('--sources', nargs='+', help='Restrict the main curriculum to these source names; replay still uses all sources')
     parser.add_argument('--max-seconds', type=float, help='Save and stop after this wall-clock training budget')
+    parser.add_argument('--allow-attention-change', action='store_true',
+                        help='Explicitly resume optimizer/RNG with a different attention backend; record the change in lineage')
     args = parser.parse_args()
     if min(args.steps, args.accumulation, args.eval_every, args.eval_examples) < 1 or args.lr <= 0:
         parser.error('Training settings must be positive')
@@ -128,6 +130,9 @@ def main():
     previous_settings = dict(saved['settings'])
     for key, default in [('max_length', 32768), ('min_tool_calls', 0), ('balanced_sources', False), ('balanced_lengths', False), ('short_replay', 0), ('sources', None), ('source_weights', {})]:
         previous_settings.setdefault(key, default)
+    backend_changed = bool(args.resume and args.allow_attention_change and previous_settings['attention'] != settings['attention'])
+    if backend_changed:
+        previous_settings['attention'] = settings['attention']
     if args.resume and previous_settings != settings:
         raise ValueError('Resume requires identical SFT data/settings')
     torch.set_num_threads(4)
@@ -142,6 +147,9 @@ def main():
     tokens_seen = saved.get('assistant_tokens_seen', 0) if args.resume else 0
     best_loss = saved.get('best_val_loss', float('inf')) if args.resume else float('inf')
     origin = saved.get('origin', {'initialization': 'random'})
+    if backend_changed:
+        origin.setdefault('attention_changes', []).append({'from': saved['settings']['attention'],
+            'to': settings['attention'], 'step': saved['step'], 'reason': 'Explicit resume backend override'})
     if args.checkpoint:
         parent_stage = saved.get('settings', {}).get('stage', 'pretraining')
         origin = {**origin, 'parent_checkpoint': str(path), 'parent_step': saved['step'], 'parent_stage': parent_stage}

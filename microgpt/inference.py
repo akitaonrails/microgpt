@@ -14,6 +14,8 @@ from .protocol import prompt_ids, VERSION, tokenizer_identity
 
 
 def attention_context(mode):
+    if mode == "math":
+        return sdpa_kernel(SDPBackend.MATH)
     return sdpa_kernel(SDPBackend.FLASH_ATTENTION) if mode == "flash" else nullcontext()
 
 

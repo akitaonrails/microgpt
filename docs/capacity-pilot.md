@@ -188,3 +188,25 @@ mode cannot mark agent gates passed. Acceptance remains untouched by model runs.
 Status: `runs/interface-continuation-v1/status.json`; bootstrap log:
 `runs/interface-launch.log`. Failure to improve is retained as a negative result,
 not grounds for extending the same training indefinitely.
+
+### Interface data validation and second CUDA interruption
+
+All 3,574 first-renamed variants passed their upstream tests in restricted Docker;
+`scripts/check_interface_references.py` renames test function references too, without
+adding compatibility aliases. This tests one transformed variant per source, not
+every random identifier or independent specification completeness. Results are in
+`runs/interface-reference-checks.json`.
+
+The interface run saved step 2,000 and then hit another CUDA launch timeout.
+Kernel logs recorded NVIDIA Xid 8 and a seven-second RC watchdog timeout for the
+trainer PID. The underlying driver/kernel cause is not established. Repeatedly
+restarting the same path is insufficient diagnosis.
+
+Training is being resumed with explicit math SDPA, retaining optimizer and RNG.
+`--allow-attention-change` permits only this explicit resume-setting difference and
+records it in `origin.attention_changes`; other resume identity checks remain strict.
+This changes numerical execution, not the dataset or optimizer schedule. It is a
+stability experiment, not proof that Flash caused the timeout. Inference continues
+to use Flash. PyTorch documents explicit backend selection and possible numerical
+differences in its [SDPA reference](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html).
+No GPU watchdog, driver or desktop settings were changed.
