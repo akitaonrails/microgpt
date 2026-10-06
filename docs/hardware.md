@@ -54,6 +54,19 @@ No H100 price or speedup is assumed here.
 
 ## Run on one Runpod H100 80 GB
 
+GPU training now defaults to a **75% soft duty cycle** so a local display GPU has
+breathing room for the browser/compositor. Both pretraining and SFT wait for their
+queued CUDA work to complete and yield between microbatches, optimizer updates and
+validation examples. This changes wall time, not the batch, optimizer or token
+schedule. It does not reserve a fixed share of GPU cores or VRAM, and a single long
+kernel can still cause a latency spike.
+
+Use `MICROGPT_GPU_DUTY_CYCLE=0.6` for more desktop headroom. On a dedicated headless
+GPU, explicitly use `MICROGPT_GPU_DUTY_CYCLE=1` for unrestricted training. The
+environment is inherited by multi-stage runners; `nice -n 10` can additionally
+lower their CPU priority. The selected duty cycle is printed and logged with
+training metrics. Changing it when resuming preserves optimizer/RNG state.
+
 1. Create a GPU Pod with one H100 and a CUDA-capable PyTorch image. Attach a network
    volume at creation if you want it to survive Pod termination. Check the live
    hourly rate and storage charges in Runpod's console.
@@ -67,7 +80,7 @@ cd /workspace/microgpt
 uv venv --python 3.12
 uv pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 uv pip install -e '.[data]'
-.venv/bin/python -m microgpt.train \
+MICROGPT_GPU_DUTY_CYCLE=1 .venv/bin/python -m microgpt.train \
   --config configs/h100.toml --data data/code --out runs/h100 --stop-at-step 100
 ```
 
@@ -75,7 +88,7 @@ This stops after 100 updates while preserving the config's full 10,000-update
 schedule. To continue, keep that same schedule and checkpoint:
 
 ```sh
-.venv/bin/python -m microgpt.train \
+MICROGPT_GPU_DUTY_CYCLE=1 .venv/bin/python -m microgpt.train \
   --config configs/h100.toml --data data/code --out runs/h100 \
   --resume runs/h100/last.pt --steps 10000
 ```

@@ -1,0 +1,10 @@
+{
+  "samples": 30,
+  "last_samples_mean_gpu_utilization": 56.03333333333333,
+  "min": 0.0,
+  "max": 93.0,
+  "duty_cycle_target": 0.75,
+  "nice": 10,
+  "checkpoint_step_resumed": 4528,
+  "note": "Aggregate GPU samples include desktop activity. Soft cooperative yielding, not a hard GPU partition or a guarantee of UI latency."
+}

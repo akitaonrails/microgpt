@@ -864,3 +864,22 @@ reports two trillion pretraining tokens yet only 1.4 on its listed five-shot GSM
 metric. This is a different benchmark/model and not a required token budget for
 our narrow tasks. It does underline why a small parameter count, thinking tags or
 large context allocation cannot be presented as demonstrated deep reasoning.
+
+### Sharing the RTX with the desktop
+
+The user reported Brave and other desktop apps hanging during GPU training. We
+stopped at the next safe checkpoint, step 4,528 (37,093,376 new tokens), then resumed
+the identical optimizer/RNG/schedule with cooperative GPU pacing and CPU nice 10.
+The displayed GPU had free VRAM but sustained approximately 99% utilization; free
+memory alone had not preserved responsiveness.
+
+`microgpt.pacing.GpuPacer` now defaults both pretraining and SFT to a 0.75 soft duty
+cycle. It synchronizes queued CUDA work before sleeping between small batches,
+optimizer updates and validation examples. `MICROGPT_GPU_DUTY_CYCLE` overrides it;
+1 disables pacing for a dedicated GPU. This is not a hardware partition or a UI
+latency guarantee. Initial observations are in
+[gpu-pacing-observation.json](gpu-pacing-observation.json); perceived browser
+responsiveness still requires user feedback. Sixty regression tests passed,
+including pacing order and unchanged interrupted/resumed training weights.
+The continuation runner now supports recovery of interrupted pretraining while
+retaining experiment hashes and subtracting the earlier segment's wall time.

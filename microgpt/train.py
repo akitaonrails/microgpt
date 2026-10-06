@@ -15,6 +15,7 @@ from torch.nn.attention import SDPBackend, sdpa_kernel
 from .data import TokenStream, MixtureStream
 from .model import GPT, ModelConfig
 from .tokenizer import Tokenizer
+from .pacing import GpuPacer
 
 
 def precision(device):
@@ -38,7 +39,7 @@ def validate_resume_settings(previous, current, context, allow_attention_change=
 
 
 @torch.no_grad()
-def evaluate(model, stream, batch_size, batches, device, loss_chunk=128):
+def evaluate(model, stream, batch_size, batches, device, loss_chunk=128, pacer=None):
     model.eval()
     generator = torch.Generator().manual_seed(1234)
     losses = []
@@ -47,6 +48,8 @@ def evaluate(model, stream, batch_size, batches, device, loss_chunk=128):
         with precision(device):
             _, loss = model(x, y, loss_chunk=loss_chunk if model.config.vocab_size > 32000 else 0)
         losses.append(loss.item())
+        if pacer is not None:
+            pacer.wait()
     model.train()
     return sum(losses) / len(losses)
 
@@ -157,7 +160,9 @@ def run_training(args, parser):
     loss_chunk = settings.get("loss_chunk", 128)
     tokens_per_step = settings["batch_size"] * sequence_length * settings["accumulation"]
     print(f"{sum(p.numel() for p in model.parameters()):,} parameters | {device} | {tokens_per_step:,} tokens/step", flush=True)
-    initial = evaluate(model, val, settings["batch_size"], settings["eval_batches"], device, loss_chunk)
+    pacer = GpuPacer(device)
+    print(json.dumps({'gpu_duty_cycle': pacer.fraction, 'pacing': 'soft microbatch yields; no reserved GPU partition'}), flush=True)
+    initial = evaluate(model, val, settings["batch_size"], settings["eval_batches"], device, loss_chunk, pacer)
     print(f"step {start}: validation loss {initial:.4f}", flush=True)
     started = time.monotonic()
     stopping = []
@@ -181,16 +186,19 @@ def run_training(args, parser):
                 raise RuntimeError("Non-finite loss; inspect data and learning rate")
             train_loss += loss.item()
             loss.backward()
+            pacer.wait()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
+        pacer.wait()
         budget_reached = bool(stopping) or (args.stop_at_step is not None and step + 1 >= args.stop_at_step) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)
         if (step + 1) % settings["eval_every"] == 0 or step + 1 == settings["steps"] or budget_reached:
-            val_loss = evaluate(model, val, settings["batch_size"], settings["eval_batches"], device, loss_chunk)
+            val_loss = evaluate(model, val, settings["batch_size"], settings["eval_batches"], device, loss_chunk, pacer)
             elapsed = time.monotonic() - started
             record = {"step": step + 1, "train_loss": train_loss, "val_loss": val_loss,
                       "tokens_per_second": (step + 1 - start) * tokens_per_step / elapsed,
                       "peak_vram_gb": torch.cuda.max_memory_allocated() / 1e9 if device.type == "cuda" else 0,
-                      "tokens_seen_this_stage": (step + 1) * tokens_per_step, "budget_reached": budget_reached}
+                      "tokens_seen_this_stage": (step + 1) * tokens_per_step, "budget_reached": budget_reached,
+                      "gpu_duty_cycle": pacer.fraction}
             print(json.dumps(record), flush=True)
             with (args.out / "metrics.jsonl").open("a") as log:
                 log.write(json.dumps(record) + "\n")

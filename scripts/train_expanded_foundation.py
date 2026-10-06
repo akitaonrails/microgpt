@@ -28,6 +28,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--port', type=int, default=8031)
+    parser.add_argument('--resume', action='store_true', help='Resume an interrupted pretraining segment with the same experiment identity')
     args = parser.parse_args()
     baseline_path = Path('runs/clean-foundation-adapter-pilot-v1/status.json')
     baseline = json.loads(baseline_path.read_text())
@@ -43,7 +44,7 @@ def main():
     audit = json.loads(Path('docs/expanded-foundation-corpus.json').read_text())
     if sha(data / 'meta.json') != audit['manifest_sha256']:
         parser.error('Expanded data differs from the verified corpus')
-    args.out.mkdir(parents=True, exist_ok=False)
+    args.out.mkdir(parents=True, exist_ok=args.resume)
     best_baseline = max(s['direct']['passed'] for s in baseline['stages'])
     state = {
         'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
@@ -60,6 +61,18 @@ def main():
         'automatic_promotion': False, 'acceptance_used': False, 'commands': [],
         'limitations': 'A new data/optimizer stage, not an isolated causal test of dataset size. No capability inferred from validation loss.',
     }
+    if args.resume:
+        previous = json.loads((args.out / 'status.json').read_text())
+        if previous['status'] not in ('failed', 'interrupted', 'training_budget_exhausted') or previous['phase'] != 'pretraining':
+            parser.error('Resume currently requires an interrupted pretraining phase')
+        for key in ('parent_sha256', 'config_sha256', 'data_manifest_sha256', 'adapter_manifest_sha256',
+                    'tasks_sha256', 'control_status_sha256', 'training_seconds_limit'):
+            if previous[key] != state[key]:
+                parser.error(f'Resume identity changed: {key}')
+        previous.setdefault('recoveries', []).append({'at': state['started'], 'commit': state['git_commit'],
+            'previous_status': previous['status'], 'gpu_duty_cycle': os.environ.get('MICROGPT_GPU_DUTY_CYCLE', '0.75')})
+        previous.update(status='running', pid=os.getpid())
+        state = previous
     child = None
     stopping = False
 
@@ -95,7 +108,7 @@ def main():
                     child.kill(); child.wait()
                 raise
         child = None
-        state[phase + '_seconds'] = time.monotonic() - started
+        state[phase + '_seconds'] = state.get(phase + '_seconds', 0) + time.monotonic() - started
         save()
         if stopping or code:
             raise RuntimeError(f'{phase} stopped with exit {code}; inspect its log')
@@ -106,10 +119,15 @@ def main():
     adapter = args.out / 'adapter'
     save()
     try:
+        remaining = state['training_seconds_limit'] - state.get('pretraining_seconds', 0)
+        if remaining <= 0:
+            state['status'] = 'training_budget_exhausted'
+            return
         run('pretraining', [sys.executable, '-m', 'microgpt.train', '--config', str(config),
-            '--data', str(data), '--init-from', str(parent), '--out', str(foundation),
+            '--data', str(data), '--resume' if args.resume else '--init-from',
+            str(foundation / 'last.pt') if args.resume else str(parent), '--out', str(foundation),
             '--device', 'cuda', '--attention', 'flash', '--sequence-length', '2048',
-            '--stop-at-step', '30518', '--max-seconds', '14400'], 14700)
+            '--stop-at-step', '30518', '--max-seconds', str(remaining)], remaining + 300)
         metric = json.loads((foundation / 'metrics.jsonl').read_text().splitlines()[-1])
         state['pretraining_metric'] = metric
         initial = float(re.search(r'step 0: validation loss ([\d.]+)',

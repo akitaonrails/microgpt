@@ -17,6 +17,7 @@ from .tokenizer import Tokenizer
 from .protocol import digest, tokenizer_identity, VERSION
 from .train import precision
 from .inference import attention_context
+from .pacing import GpuPacer
 from .episodes import Episodes
 
 
@@ -65,7 +66,7 @@ def loss_for_batch(model, examples, device):
 
 
 @torch.no_grad()
-def evaluate(model, examples, device, attention, by_source=False):
+def evaluate(model, examples, device, attention, by_source=False, pacer=None):
     model.eval()
     total = tokens = 0
     sources = {}
@@ -77,6 +78,8 @@ def evaluate(model, examples, device, attention, by_source=False):
             source = example.get('source', 'unknown')
             subtotal, subcount = sources.get(source, (0, 0))
             sources[source] = (subtotal + loss.item() * count, subcount + count)
+            if pacer is not None:
+                pacer.wait()
     model.train()
     overall = total / tokens
     return (overall, {key: value / count for key, (value, count) in sources.items()}) if by_source else overall
@@ -221,7 +224,9 @@ def main():
     print(json.dumps({'training_by_source': {k: len(v) for k, v in train_buckets.items()},
                       'validation_by_source': {k: len(v) for k, v in val_buckets.items()},
                       'max_length': args.max_length, 'min_tool_calls': args.min_tool_calls, 'short_replay': args.short_replay}), flush=True)
-    print(json.dumps({'step': step, 'val_loss': evaluate(model, validation, device, args.attention),
+    pacer = GpuPacer(device)
+    print(json.dumps({'gpu_duty_cycle': pacer.fraction}), flush=True)
+    print(json.dumps({'step': step, 'val_loss': evaluate(model, validation, device, args.attention, pacer=pacer),
                       'parameters': sum(p.numel() for p in model.parameters())}), flush=True)
     started = time.monotonic()
     stopping = []
@@ -243,15 +248,17 @@ def main():
                 tokens_seen += count
                 total += loss.item() / args.accumulation
                 (loss / args.accumulation).backward()
+                pacer.wait()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
         optimizer.step()
+        pacer.wait()
         step += 1
         budget_reached = bool(stopping) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)
         if step % args.eval_every and step != args.steps and not budget_reached:
             continue
-        val_loss, val_sources = evaluate(model, validation, device, args.attention, by_source=True)
+        val_loss, val_sources = evaluate(model, validation, device, args.attention, by_source=True, pacer=pacer)
         metrics = {'step': step, 'train_loss': total, 'val_loss': val_loss, 'val_loss_by_source': val_sources,
-                   'assistant_tokens_seen': tokens_seen,
+                   'assistant_tokens_seen': tokens_seen, 'gpu_duty_cycle': pacer.fraction,
                    'seconds': round(time.monotonic() - started, 1), 'budget_reached': budget_reached,
                    'peak_memory_gb': torch.cuda.max_memory_allocated() / 1e9 if device.type == 'cuda' else 0}
         improved = metrics['val_loss'] < best_loss
