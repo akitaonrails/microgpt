@@ -1,0 +1,23 @@
+{
+  "dataset": "nvidia/OpenCodeInstruct",
+  "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+  "source_manifest_sha256": "b1c52db5f7037eb18892a2254b811902ded0ac1a99a676df3be794cd5e03a298",
+  "counts": {
+    "scanned": 10000,
+    "rejected_upstream_score": 6743,
+    "eligible": 1455,
+    "rejected_module_shape": 1792,
+    "rejected_length_or_blocks": 5,
+    "duplicate_ast": 5
+  },
+  "selected": 1000,
+  "retained": 992,
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "seed": 20261007,
+  "selection": "Reservoir among unique exact ASTs in first 200 rows per downloaded shard; not a uniform sample of the entire dataset.",
+  "output_sha256": "c6a043e8121ba197c0ea787ec84ef557c76671d80ed87fd60808c2eb58f4b1d5",
+  "checks_sha256": "3bbeb6cbb9f848b6a5ee37eb9e974a1d5d3322a3e5747d2ab08c9218eb074049",
+  "negative_controls": "992 positive references passed and all 992 corresponding NotImplementedError controls failed; 8 positive references failed.",
+  "used_for_training": false,
+  "note": "Pilot predates normalized-AST split grouping; inspection only. Larger selection uses transitive prompt/code groups."
+}

@@ -1,0 +1,40 @@
+{
+  "random_validation_count": 80,
+  "seed": 20261007,
+  "data": "data/programming-format-variety-sft-v1",
+  "curriculum": "data/programming-format-variety-v1.jsonl",
+  "diagnostic_script_sha256": "81e0a7b75381d56ed9555b776d0c867a7a7a9df0a889ac7f930d4e234155cf14",
+  "results": {
+    "parent": {
+      "checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+      "mean_episode_loss": {
+        "original": 0.342131074774079,
+        "signature_only": 0.4768690537661314,
+        "flash": 0.34214511880418286
+      },
+      "max_math_flash_loss_difference": 0.004015743732452393,
+      "note": "Random 80 SFT validation episodes, teacher-forced reference loss. Signature-only keeps possibly informative function names; this is not a proof of semantic understanding or execution correctness. Exact prepared input/label identity checked for every original."
+    },
+    "batched": {
+      "checkpoint": "runs/batched-learning-v1/checkpoint-2000.pt",
+      "mean_episode_loss": {
+        "original": 0.25334104233188554,
+        "signature_only": 0.4166120962239802,
+        "flash": 0.2533103649620898
+      },
+      "max_math_flash_loss_difference": 0.004332244396209717,
+      "note": "Random 80 SFT validation episodes, teacher-forced reference loss. Signature-only keeps possibly informative function names; this is not a proof of semantic understanding or execution correctness. Exact prepared input/label identity checked for every original."
+    }
+  },
+  "batched_execution_probes": {
+    "seen_train": {
+      "passed": 11,
+      "total": 20
+    },
+    "validation": {
+      "passed": 11,
+      "total": 20
+    }
+  },
+  "limitations": "Teacher-forced likelihood and small in-distribution probes do not establish general programming. Signature-only prompts still contain informative names. Validation was split against this curriculum, not all earlier pretraining."
+}

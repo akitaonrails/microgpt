@@ -498,3 +498,63 @@ Manifest: `runs/batched-learning-experiment-v1.json`. Initial status:
 `runs/batched-learning-pilot-decision.json`; conditional longer-run status:
 `runs/batched-learning-continuation-v1/status.json`. Actual token exposures are
 recorded at every checkpoint; the estimate above is not substituted for them.
+
+The pilot finished at **15/100 direct passes**, with 93/100 syntactically valid
+outputs, 81/100 matching parameter names, and passes in six families. It failed
+the correctness gate, so the 5K/10K/20K continuation was **not launched**.
+The 17/100 parent remains selected. See [batched-learning-outcome.json](batched-learning-outcome.json).
+
+Actual exposure was 5,350,924 assistant tokens across 64,000 sampled episodes:
+52,741 distinct episode indices and 19,093 source-program IDs, out of 19,915
+available training source IDs. These counts reconstruct the fixed sampler and
+match checkpoint token totals. They are not counts of independent semantic tasks.
+Validation loss fell to 0.10185 while executable correctness remained weak.
+For example, a requested product became `max(values)` and a requested sum of
+negative numbers selected nonnegative numbers instead. Better interface copying
+has not supplied the missing semantic reliability. This ends this optimization
+recipe, not the overall project.
+
+### Conditioning and inference diagnostic
+
+A new fixed random sample of 80 validation episodes gave mean episode loss
+0.34213 for the retained 17/100 parent and 0.25334 for the batched candidate.
+Removing the problem statement but retaining the function signature raised those
+losses to 0.47687 and 0.41661. Thus the request affects prediction, but this is not
+proof of correctly understanding it. Function names remain informative, and
+teacher forcing supplies earlier reference-answer tokens.
+
+Math-versus-Flash loss differences were at most 0.00434 across these samples.
+Reconstructing each original prepared input and label sequence matched exactly.
+These checks found no substantial backend-loss discrepancy or preparation mismatch
+in this sample; they do not prove every inference path correct.
+
+The batched candidate passed 11/20 seen-training and 11/20 validation execution
+probes from the existing frozen curriculum diagnostic. Together with 15/100 on
+the broader task set, this indicates both imperfect curriculum learning and weak
+transfer. The random-sample loss also differs substantially from the trainer's
+small fixed validation sample. [conditioning-diagnostics.json](conditioning-diagnostics.json)
+preserves the comparison. No acceptance tasks were used.
+
+### Broader independently checked public code
+
+The next data intervention uses the already-downloaded, pinned
+[nvidia/OpenCodeInstruct](https://huggingface.co/datasets/nvidia/OpenCodeInstruct)
+source. Its upstream scores are insufficient: in a 1,000-reference pilot, eight
+answers failed our independent restricted-container run despite perfect upstream
+scores. The other 992 passed, and all corresponding empty implementations failed.
+[verified-code-pilot.json](verified-code-pilot.json) records the result.
+
+`scripts/prepare_verified_code.py` decodes the source's occasionally doubled JSON
+escaping exactly once, preserving Python string literals. It selects single-function
+modules with supplied assertions, checks both original and NotImplementedError
+implementations in networkless Docker, and retains only positive-pass/negative-fail
+pairs. Identical prompts and function-name-normalized code ASTs are transitively
+grouped for splitting. This is not semantic deduplication or independent verification
+of the complete specification. It neither executes downloaded code on the host nor
+imports development/acceptance answers into training.
+
+The larger bounded selection scans the first 20,000 rows of each of 50 downloaded
+shards (one million rows), retaining a reservoir of at most 100,000 distinct exact
+ASTs before execution. New datasets and checks stay under the authorized NAS dataset
+path. This increases source-program diversity instead of counting eight renamed
+copies as eight new problems. The preparation pilot is inspection-only.

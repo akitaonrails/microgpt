@@ -1,0 +1,57 @@
+{
+  "experiment": {
+    "parent": "runs/interface-diverse-v2/checkpoint-10000.pt",
+    "parent_sha256": "41904377acb109c6171bd7898217e6f7bfb4d0e29e7851afedbab2454fef5d36",
+    "baseline_direct": 17,
+    "data_manifest_sha256": "fb0bbaf5e6ff0c1c5b6cfdb627addea7382cbfe4c11dcb61d95356037c314068",
+    "hypothesis": "A lower learning rate and larger effective batch can improve executable code with broader answer exposure while retaining existing skills.",
+    "microbatch": 8,
+    "accumulation": 4,
+    "learning_rate": 1e-05,
+    "seed": 20261006,
+    "initial_updates": 2000,
+    "estimated_initial_assistant_tokens": 5400000,
+    "progression": "At least 22/100 direct passes, 75/100 parameter-name matches, 90/100 valid Python outputs, and passes in at least five families.",
+    "continuation_if_passed": "Evaluate at 5K, 10K and 20K total updates, with a three-hour continuation ceiling.",
+    "limitations": "Batch size, learning rate and sampling seed change together. This tests an optimization recipe, not an isolated causal effect of one setting. Request formats were selected for interface robustness, not proven code accuracy.",
+    "sampling": "A new fixed seed avoids replaying exactly the first examples already sampled by the parent and the matched short continuations.",
+    "git_commit": "0f2f032f37a8475827efdca491e94ac667fb9278",
+    "acceptance_used": false,
+    "automatic_promotion": false
+  },
+  "decision": {
+    "extend": false,
+    "counts": {
+      "passed": 15,
+      "syntax_valid": 93,
+      "requested_function_present": 81,
+      "parameter_names_match": 81,
+      "total": 100
+    },
+    "families_with_passes": 6,
+    "reason": "Stop this optimization recipe: progression gate unmet"
+  },
+  "metrics": {
+    "step": 2000,
+    "train_loss": 0.1217327881604433,
+    "val_loss": 0.10185189016525596,
+    "val_loss_by_source": {
+      "programming-interface": 0.10185189016525596
+    },
+    "assistant_tokens_seen": 5350924,
+    "seconds": 524.2,
+    "budget_reached": false,
+    "peak_memory_gb": 7.22337536
+  },
+  "checkpoint": "runs/batched-learning-v1/checkpoint-2000.pt",
+  "selected_checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+  "selected_direct_score": 17,
+  "automatic_promotion": false,
+  "goal_met": false,
+  "actual_sampling_coverage": {
+    "sampled_episodes": 64000,
+    "unique_episode_indices": 52741,
+    "unique_source_programs": 19093,
+    "assistant_tokens": 5350924
+  }
+}
