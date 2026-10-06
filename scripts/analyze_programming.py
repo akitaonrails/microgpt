@@ -11,7 +11,7 @@ def analyze(results, tasks):
     report={'counts':Counter(),'families':{},'tasks':[]}
     for result in results['tasks']:
         task=definitions[result['id']]
-        expected=ast.parse(task['reference']).body[0]
+        expected=next(node for node in ast.parse(task['reference']).body if isinstance(node, ast.FunctionDef))
         row={'id':result['id'],'passed':result['passed'],'syntax_valid':False,
              'requested_function_present':False,'parameter_names_match':False}
         try:

@@ -358,3 +358,20 @@ The corrected branch restarts from the same original parent, not from the
 interrupted run. Evidence: `runs/interface-diverse-v2-diversity.json`; interrupted
 run: `runs/interface-diverse-continuation-v1/status.json`. This split correction
 was made before observing a capability score for the broader-data branch.
+
+### Training-distribution generation diagnostic
+
+`prepare_curriculum_probe.py` freezes 20 early examples sampled by the actual
+seed-42 unweighted training sequence and 20 examples from the corrected validation
+split. `data/interface-diverse-probe-v1.jsonl` is a diagnostic of learning and
+format transfer, explicitly not independent capability evidence. An example seen
+once is not an overfitting test, and validation examples may have earlier foundation
+exposure. The source-provided tests have the limitations discussed above.
+
+All 40 reference solutions passed and all empty implementations failed in Docker
+(`runs/interface-diverse-probe-controls-v2.json`). Some public references print
+values at module scope; the control checker now suppresses that output while
+executing code so it cannot be parsed as checker JSON. The initial noisy report
+is retained separately. The direct evaluator's optional `--exact-prompt` preserves
+these original curriculum requests; default development evaluation is unchanged.
+No diagnostic answers are added to training.

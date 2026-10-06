@@ -7,15 +7,16 @@ import tempfile
 import uuid
 from eval_opencode import IMAGE
 
-WORKER = '''import json, types
+WORKER = '''import contextlib, json, os, types
 for line in open('/cases.jsonl'):
     row = json.loads(line)
     result = {'id': row['id']}
     for label, code in [('reference', row['reference']), ('empty', '')]:
         s = types.ModuleType('solution')
         try:
-            exec(code, s.__dict__)
-            exec(row['tests'], {'s': s})
+            with open(os.devnull, 'w') as sink, contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
+                exec(code, s.__dict__)
+                exec(row['tests'], {'s': s})
             result[label] = True
         except Exception as error:
             result[label] = False

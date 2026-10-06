@@ -56,6 +56,7 @@ def main():
     p.add_argument('--mode', choices=['direct', 'agent', 'fresh', 'oracle'], default='direct')
     p.add_argument('--limit', type=int, default=len(TASKS))
     p.add_argument('--tasks-file', type=Path, help='Frozen JSONL task set; references are used only in assisted controls')
+    p.add_argument('--exact-prompt', action='store_true', help='Diagnostic: do not append the direct-code formatting instruction')
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     records = [json.loads(line) for line in args.tasks_file.open()] if args.tasks_file else None
@@ -65,7 +66,7 @@ def main():
     families = {r['id']: r['family'] for r in records} if records else {}
     health = httpx.get(args.url.removesuffix('/v1') + '/health', timeout=10)
     health.raise_for_status()
-    summary = {'server': health.json(), 'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
+    summary = {'server': health.json(), 'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'mode': args.mode, 'exact_prompt': args.exact_prompt, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
     with tempfile.TemporaryDirectory(prefix='microgpt-programming-') as folder:
         base = Path(folder); work = base / 'work'; work.mkdir(mode=0o755)
         subprocess.run(['git', 'init', '-q', str(work)], check=True)
@@ -83,7 +84,7 @@ def main():
             completed, checked, errors = False, False, []
             if args.mode == 'direct':
                 response = httpx.post(args.url + '/chat/completions', json={'model': 'microgpt', 'messages': [
-                    {'role': 'system', 'content': GENERAL_PROMPT}, {'role': 'user', 'content': prompt + ' Return only the Python code in a fenced block.'}],
+                    {'role': 'system', 'content': GENERAL_PROMPT}, {'role': 'user', 'content': prompt if args.exact_prompt else prompt + ' Return only the Python code in a fenced block.'}],
                     'max_tokens': 768, 'temperature': 0, 'reasoning_effort': 'none'}, timeout=90)
                 raw = response.text
                 solution.write_text('')
