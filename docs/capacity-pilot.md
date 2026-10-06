@@ -14,6 +14,7 @@ fresh sessions and explicitly assisted reference-code controls.
 | Programming v2 80K, fresh independent OpenCode session per task | 3/8 |
 | Same checkpoint, correct reference code supplied to OpenCode | 5/8 |
 | Same checkpoint, broader direct-code development set | 2/100 |
+| Original foundation, broader raw-completion development set | 2/100 |
 
 The 100-task set has **20 families with five name/wording variants each**. These
 are correlated variants, not 100 independent task families. Another 20 families
@@ -30,6 +31,10 @@ Post-SFT checkpoints scored 0/8 in the raw completion format. Many generated clo
 Markdown fences despite being prompted with plain source code; do not interpret
 this as proof that SFT erased all code knowledge. It demonstrates format sensitivity.
 Raw and chat results are separate measurements, not interchangeable scores.
+On the 100-variant set, the SFT model had 58 invalid-Python outputs; the foundation
+had 18. Both passed only two, with other failures including wrong results and
+incorrect interfaces. This supports both a code-semantics bottleneck and a format/
+instruction bottleneck; merely changing JSON constraints cannot solve them.
 
 These results support weak code generation and unreliable instruction/copying as
 bottlenecks, rather than a cumulative-session-only bug. Assisted 5/8 is not unassisted
