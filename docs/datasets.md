@@ -110,3 +110,24 @@ The tiny training sample does not guarantee equal language representation. Use
 explicit language labels/quotas and per-language evaluations before claiming
 balanced multilingual quality. Rejecting unfinished conversations preserves whole
 assistant answers; it does not certify factual correctness of the teacher text.
+
+To reproduce the bounded checked-source selection (use fresh output paths):
+
+```sh
+source scripts/dataset-env.sh
+.venv/bin/python scripts/prepare_verified_code.py \
+  --source "$MICROGPT_DATA_ROOT/raw/opencodeinstruct" \
+  --out data/verified-opencodeinstruct-v1.jsonl \
+  --count 100000 --per-shard-scan 20000
+.venv/bin/python -m microgpt.trajectories \
+  --input data/verified-opencodeinstruct-v1.jsonl \
+  --out data/verified-opencodeinstruct-sft-v1 \
+  --tokenizer runs/interface-diverse-v2 --max-length 8192 \
+  --limit 100000 --pack-episodes --canonical-tool-ids
+bash scripts/train_verified_code.sh
+```
+
+The launcher requires the recorded parent checkpoint and source report. It uses
+an explicit bounded experiment and execution-based extension gate; it is not a
+promise that these commands produce a useful coding agent. See the experiment
+history before choosing a recipe for a new run.
