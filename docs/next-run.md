@@ -1,3 +1,5 @@
+> Current assessment and next steps: [October 5 revised programming plan](revised-programming-plan.md). Earlier run recommendations below are historical.
+
 # Correcting the first full run
 
 **Completed follow-up (2026-10-04):** a single focused SFT stage directly from our

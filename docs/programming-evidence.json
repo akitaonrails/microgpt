@@ -2735,5 +2735,170 @@
     ],
     "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
     "updated": "2026-10-05T00:03:17.426631+00:00"
+  },
+  "recovery_continuation_outcome": {
+    "status": "stopped_no_improvement",
+    "pid": 604449,
+    "started": "2026-10-05T03:12:21.214900+00:00",
+    "initial_step": 1000,
+    "milestones": [
+      5000,
+      10000,
+      20000,
+      40000
+    ],
+    "hours": 4.0,
+    "stages": [
+      {
+        "target": 5000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 5000,
+          "train_loss": 0.6635494292713702,
+          "val_loss": 0.26959148192062987,
+          "val_loss_by_source": {
+            "code-feedback": 1.815975187101158,
+            "conversation-replay": 3.7781199714616207,
+            "educational-tools": 0.07021909311277888,
+            "horizon-handoff": 0.00828511286277636,
+            "horizon-session": 0.012559480436659208,
+            "magicoder": 1.2426090619034693,
+            "opencodeinstruct": 0.6051272341661286,
+            "opencoder-educational": 0.07854670533061733,
+            "programming-direct": 9.923099431108138e-05,
+            "programming-recovery": 0.04927151078122397,
+            "programming-switch": 0.07619862196533901,
+            "programming-tools": 0.00011238850350344342
+          },
+          "assistant_tokens_seen": 4734468,
+          "seconds": 269.8,
+          "budget_reached": false,
+          "peak_memory_gb": 2.879638528
+        },
+        "checkpoint": "runs/programming-v3/checkpoint-5000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 10000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 10000,
+          "train_loss": 0.004348971608123975,
+          "val_loss": 0.2693251487508666,
+          "val_loss_by_source": {
+            "code-feedback": 1.864048953341394,
+            "conversation-replay": 3.7259521940489395,
+            "educational-tools": 0.06037130414790416,
+            "horizon-handoff": 0.00920017615783066,
+            "horizon-session": 0.011761709123070709,
+            "magicoder": 1.2191437272524874,
+            "opencodeinstruct": 0.6139153567740792,
+            "opencoder-educational": 0.06317115504537109,
+            "programming-direct": 6.747021351004904e-05,
+            "programming-recovery": 0.03909304667910188,
+            "programming-switch": 0.07338682957837916,
+            "programming-tools": 8.950593077208265e-05
+          },
+          "assistant_tokens_seen": 9507407,
+          "seconds": 327.4,
+          "budget_reached": false,
+          "peak_memory_gb": 2.87671296
+        },
+        "checkpoint": "runs/programming-v3/checkpoint-10000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 20000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 20000,
+          "train_loss": 0.011572731949854642,
+          "val_loss": 0.2638269443819571,
+          "val_loss_by_source": {
+            "code-feedback": 1.7891287263644868,
+            "conversation-replay": 3.7228539650158217,
+            "educational-tools": 0.05692384130082715,
+            "horizon-handoff": 0.006925946709785375,
+            "horizon-session": 0.011079917221824779,
+            "magicoder": 1.2111372577343873,
+            "opencodeinstruct": 0.5686969071626663,
+            "opencoder-educational": 0.05693380048965091,
+            "programming-direct": 7.890503937490238e-05,
+            "programming-recovery": 0.042442650325795875,
+            "programming-switch": 0.08018841765909789,
+            "programming-tools": 5.968233021935262e-05
+          },
+          "assistant_tokens_seen": 19058856,
+          "seconds": 712.3,
+          "budget_reached": false,
+          "peak_memory_gb": 2.878989312
+        },
+        "checkpoint": "runs/programming-v3/checkpoint-20000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 40000,
+        "status": "evaluated",
+        "metrics": {
+          "step": 40000,
+          "train_loss": 0.047815830301260576,
+          "val_loss": 0.266587331170826,
+          "val_loss_by_source": {
+            "code-feedback": 1.8331262734442857,
+            "conversation-replay": 3.7639154431854096,
+            "educational-tools": 0.04946455699717201,
+            "horizon-handoff": 0.005200322579693042,
+            "horizon-session": 0.010635585985323909,
+            "magicoder": 1.17584860581334,
+            "opencodeinstruct": 0.5876449580569016,
+            "opencoder-educational": 0.059479159069719637,
+            "programming-direct": 6.119053256098238e-05,
+            "programming-recovery": 0.044362454350041734,
+            "programming-switch": 0.08084322672732952,
+            "programming-tools": 3.398711863765935e-05
+          },
+          "assistant_tokens_seen": 37940173,
+          "seconds": 1330.6,
+          "budget_reached": false,
+          "peak_memory_gb": 2.877481984
+        },
+        "checkpoint": "runs/programming-v3/checkpoint-40000.pt",
+        "direct": {
+          "passed": 2,
+          "total": 8
+        },
+        "agent": {
+          "passed": 0,
+          "total": 8
+        },
+        "passed_gates": false
+      }
+    ],
+    "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
+    "updated": "2026-10-05T04:08:42.587286+00:00"
   }
 }

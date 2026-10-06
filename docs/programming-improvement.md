@@ -1,3 +1,5 @@
+> Current assessment and next steps: [October 5 revised programming plan](revised-programming-plan.md). Earlier run recommendations below are historical.
+
 # Programming improvement experiment — 2026-10-04
 
 The target is varied programming requests, not replaying or repairing one user's
