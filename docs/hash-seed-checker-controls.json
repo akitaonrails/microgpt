@@ -1,0 +1,60 @@
+{
+  "authored_controls": [
+    {
+      "id": "correct",
+      "retained": true,
+      "seeds": [
+        {
+          "seed": 1,
+          "reference_exit": 73,
+          "empty_exit": 1
+        },
+        {
+          "seed": 2,
+          "reference_exit": 73,
+          "empty_exit": 1
+        },
+        {
+          "seed": 3,
+          "reference_exit": 73,
+          "empty_exit": 1
+        }
+      ]
+    },
+    {
+      "id": "early_exit",
+      "retained": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "reference_exit": 0,
+          "empty_exit": null
+        }
+      ],
+      "reason": "Reference or empty control failed"
+    },
+    {
+      "id": "seed_sensitive",
+      "retained": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "reference_exit": 73,
+          "empty_exit": 1
+        },
+        {
+          "seed": 2,
+          "reference_exit": 73,
+          "empty_exit": 1
+        },
+        {
+          "seed": 3,
+          "reference_exit": 1,
+          "empty_exit": null
+        }
+      ],
+      "reason": "Reference or empty control failed"
+    }
+  ],
+  "public_code_executed_on_host": false
+}

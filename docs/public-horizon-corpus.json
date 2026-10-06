@@ -1,0 +1,72 @@
+{
+  "source": {
+    "dataset": "nvidia/OpenCodeInstruct",
+    "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+    "sessions_requested": 200,
+    "sessions_retained": 187,
+    "episodes_by_split": {
+      "train": 1974,
+      "val": 66
+    },
+    "rounds": 32,
+    "handoff_every": 4,
+    "context_limit": 32768,
+    "additional_context_handoffs": true,
+    "eligible_source_programs": 8017,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "tools_sha256": "1994f7353899576756d92a0b6895658ea611e208d681b476334820c8fb49efc7",
+    "curriculum_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "output_sha256": "c4b03fad59991edcf24b82693f54f1b23e1f10d3123eae3016fe5f803f514a84",
+    "checks_sha256": "608c503a8e00e6b25c867c101e1c5f32e46d7ccde1e1ca17072e2bb0712c20d1",
+    "note": "Prepared data only. No learned long-horizon capability established. Exact split preservation does not prove semantic decontamination."
+  },
+  "prepared": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 32768,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/executed-public-horizon-v1.jsonl",
+        "sha256": "c4b03fad59991edcf24b82693f54f1b23e1f10d3123eae3016fe5f803f514a84"
+      }
+    ],
+    "counts": {
+      "scanned": 2040,
+      "train_episodes": 1974,
+      "val_episodes": 66
+    },
+    "splits": {
+      "train": {
+        "examples": 1974,
+        "assistant_tokens": 1454529,
+        "groups": 181,
+        "examples_by_source": {
+          "executed-public-horizon": 1974
+        },
+        "sha256": "0d1a959cf5d2bd8fa5ac4cae1a48b77c69c8f4e544e9df7202b819431ebbdb35"
+      },
+      "val": {
+        "examples": 66,
+        "assistant_tokens": 48203,
+        "groups": 6,
+        "examples_by_source": {
+          "executed-public-horizon": 66
+        },
+        "sha256": "1313534ba23e7a8eebdec6c62c2402ed0c6c66cc17cde5a7cd147ac7af801e43"
+      }
+    }
+  },
+  "audit": {
+    "sessions": 187,
+    "retained_user_turns": 5984,
+    "unique_upstream_ids_by_split": {
+      "train": 4000,
+      "val": 150
+    },
+    "source_id_overlap": 0,
+    "exact_edits_and_cumulative_checks": true
+  },
+  "limitations": "Reference-policy append-only sessions with generated requirements state and context handoffs. No model training, learned retrieval, arbitrary repository edits or on-policy recovery established."
+}

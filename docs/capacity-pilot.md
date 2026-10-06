@@ -883,3 +883,29 @@ responsiveness still requires user feedback. Sixty regression tests passed,
 including pacing order and unchanged interrupted/resumed training weights.
 The continuation runner now supports recovery of interrupted pretraining while
 retaining experiment hashes and subtracting the earlier segment's wall time.
+
+The 200-session cumulative pass retained **187 complete sessions / 5,984 user
+turns**, covering 4,000 distinct training source IDs and 150 validation source IDs.
+After complete-turn context splitting, all 1,974 train and 66 validation episodes
+fit 32K; no late turns were dropped. They store 1,454,529 and 48,203 assistant
+supervision tokens respectively. [public-horizon-corpus.json](public-horizon-corpus.json)
+records the exact-edit, cumulative-check and split audits. This remains append-only
+reference-policy data; follow-up revisions, learned memory and real model rollouts
+are separate capabilities.
+
+Thirteen compositions failed. Three traces showed a newly defined `sum(a, b)`
+shadowing the built-in used by other functions. Several others failed ordered-list
+assertions for set-based intersections/duplicates: excluding random imports is
+insufficient to ensure stable behavior across Python processes. A broader recheck
+is now running through `scripts/recheck_public_code.py`, using hash seeds 1, 2 and 3.
+It preserves the old curricula for the active controlled comparison and writes a
+new filtered set instead of altering data under a running experiment.
+
+The rechecker requires the program to reach a completion marker after its tests,
+rather than accepting every zero exit status. Authored Docker controls show that a
+correct function passes, premature `SystemExit(0)` is rejected, and a seed-sensitive
+example fails on its bad seed; see
+[hash-seed-checker-controls.json](hash-seed-checker-controls.json). Python `-I` ignores
+`PYTHONHASHSEED`, so the sandboxed child uses `-s -P -B` with a minimal explicit
+environment. Docker restrictions remain in force. Multiple seeds still do not prove
+full correctness, complete test coverage, absence of hidden state or determinism.
