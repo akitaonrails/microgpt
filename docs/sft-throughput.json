@@ -1,0 +1,88 @@
+{
+  "2": {
+    "checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+    "git_commit": "e2ee928f13fa2adf36239282bc2ec7409b045719",
+    "effective_batch": 2,
+    "attention": "math",
+    "steps": 32,
+    "warmup": 2,
+    "results": [
+      {
+        "microbatch": 1,
+        "accumulation": 2,
+        "seconds": 2.917049584677443,
+        "assistant_tokens": 5779,
+        "target_tokens_per_second": 1981.1113360416264,
+        "peak_allocated_gb": 5.080681472
+      },
+      {
+        "microbatch": 2,
+        "accumulation": 1,
+        "seconds": 1.6996234231628478,
+        "assistant_tokens": 5779,
+        "target_tokens_per_second": 3400.1649549203057,
+        "peak_allocated_gb": 4.81460224
+      }
+    ],
+    "note": "Same examples and episode-mean objective; floating-point execution can differ. Data preloaded for profiling; real training also pays random-access I/O."
+  },
+  "32": {
+    "checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+    "git_commit": "e2ee928f13fa2adf36239282bc2ec7409b045719",
+    "effective_batch": 32,
+    "attention": "math",
+    "steps": 16,
+    "warmup": 2,
+    "results": [
+      {
+        "microbatch": 1,
+        "accumulation": 32,
+        "seconds": 20.325879020034336,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 2138.800489619689,
+        "peak_allocated_gb": 5.081014272
+      },
+      {
+        "microbatch": 2,
+        "accumulation": 16,
+        "seconds": 10.416659523034468,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 4173.4108620779725,
+        "peak_allocated_gb": 5.134322176
+      },
+      {
+        "microbatch": 4,
+        "accumulation": 8,
+        "seconds": 6.260206006234512,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 6944.340163359709,
+        "peak_allocated_gb": 5.806636544
+      },
+      {
+        "microbatch": 8,
+        "accumulation": 4,
+        "seconds": 5.493710917187855,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 7913.230356549804,
+        "peak_allocated_gb": 7.156179456
+      },
+      {
+        "microbatch": 16,
+        "accumulation": 2,
+        "seconds": 5.928459276095964,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 7332.933899923495,
+        "peak_allocated_gb": 9.843810816
+      },
+      {
+        "microbatch": 32,
+        "accumulation": 1,
+        "seconds": 6.047280150698498,
+        "assistant_tokens": 43473,
+        "target_tokens_per_second": 7188.851668295639,
+        "peak_allocated_gb": 14.259662848
+      }
+    ],
+    "note": "Same examples and episode-mean objective; floating-point execution can differ. Data preloaded for profiling; real training also pays random-access I/O."
+  }
+}

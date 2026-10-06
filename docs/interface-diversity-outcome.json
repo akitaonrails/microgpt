@@ -1,0 +1,104 @@
+{
+  "status": "milestones_exhausted",
+  "pid": 1794168,
+  "started": "2026-10-06T17:53:28.499732+00:00",
+  "initial_step": 1000,
+  "milestones": [
+    5000,
+    10000,
+    20000
+  ],
+  "hours": 2.0,
+  "stages": [
+    {
+      "target": 5000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 5000,
+        "train_loss": 0.08797818794846535,
+        "val_loss": 0.18524789205391257,
+        "val_loss_by_source": {
+          "programming-interface": 0.18524789205391257
+        },
+        "assistant_tokens_seen": 840346,
+        "seconds": 397.6,
+        "budget_reached": false,
+        "peak_memory_gb": 5.084880384
+      },
+      "checkpoint": "runs/interface-diverse-v2/checkpoint-5000.pt",
+      "direct": {
+        "passed": 10,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 10,
+        "syntax_valid": 92,
+        "requested_function_present": 47,
+        "parameter_names_match": 47,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 10000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 10000,
+        "train_loss": 0.2844405546784401,
+        "val_loss": 0.15940094083510822,
+        "val_loss_by_source": {
+          "programming-interface": 0.15940094083510822
+        },
+        "assistant_tokens_seen": 1687233,
+        "seconds": 499.3,
+        "budget_reached": false,
+        "peak_memory_gb": 5.085236736
+      },
+      "checkpoint": "runs/interface-diverse-v2/checkpoint-10000.pt",
+      "direct": {
+        "passed": 17,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 17,
+        "syntax_valid": 96,
+        "requested_function_present": 66,
+        "parameter_names_match": 65,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 20000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 20000,
+        "train_loss": 0.0948031023144722,
+        "val_loss": 0.11763918919689999,
+        "val_loss_by_source": {
+          "programming-interface": 0.11763918919689999
+        },
+        "assistant_tokens_seen": 3357401,
+        "seconds": 974.8,
+        "budget_reached": false,
+        "peak_memory_gb": 5.085350912
+      },
+      "checkpoint": "runs/interface-diverse-v2/checkpoint-20000.pt",
+      "direct": {
+        "passed": 14,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 14,
+        "syntax_valid": 92,
+        "requested_function_present": 63,
+        "parameter_names_match": 63,
+        "total": 100
+      },
+      "passed_gates": false
+    }
+  ],
+  "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
+  "updated": "2026-10-06T18:28:43.083835+00:00",
+  "conclusion": "Broader checked data improved the best development score to 17/100 at 10K; 20K regressed to 14/100. No agent-ready candidate."
+}

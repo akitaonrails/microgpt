@@ -422,3 +422,44 @@ The GPU profiles run after the capability experiment finishes. Their token rate
 counts assistant targets, not all input tokens; it cannot be compared directly
 with the foundation's all-token throughput. Larger effective batches are a
 separate optimization choice, not an automatic model-quality improvement.
+
+The broader comparison completed with 10/100, 17/100 and 14/100 at 5K, 10K and
+20K. The final checkpoint had 63/100 matching parameter lists despite validation
+loss falling to 0.1176. Its 10K checkpoint remains preferable on development
+execution. [interface-diversity-outcome.json](interface-diversity-outcome.json)
+preserves the complete result; the capability goal remains unmet.
+
+Measured math-SDPA throughput on the 5090 (preloaded examples; short profiling runs):
+
+| Effective batch | Microbatch | Accumulation | Assistant targets/s | Peak allocated GB |
+| ---: | ---: | ---: | ---: | ---: |
+| 2 | 1 | 2 | 1,981 | 5.08 |
+| 2 | 2 | 1 | 3,400 | 4.81 |
+| 32 | 1 | 32 | 2,139 | 5.08 |
+| 32 | 4 | 8 | 6,944 | 5.81 |
+| 32 | 8 | 4 | 7,913 | 7.16 |
+| 32 | 16 | 2 | 7,333 | 9.84 |
+| 32 | 32 | 1 | 7,189 | 14.26 |
+
+Thus larger microbatches were not always faster. The matched format comparison
+uses microbatch two / accumulation one, preserving the effective batch of two.
+The real control bootstrap consumed the same 167,311 target tokens in 58.6 seconds,
+versus 99.5 seconds in the earlier unbatched bootstrap; model starting weights
+differ, so that timing is supporting operational evidence rather than the matched
+profile itself. Full measurements are in [sft-throughput.json](sft-throughput.json).
+
+### Matched request-format continuation
+
+`scripts/compare_request_formats.py --out runs/format-comparison-v1` starts both
+arms from the broader run's frozen 10K checkpoint (17/100). Each gets 5,000 updates,
+a fresh AdamW optimizer, LR 3e-5, seed 42, effective batch two and math SDPA. Source
+programs, split groups and ordered target answers are unchanged; only user-request
+formatting differs. The two arms run sequentially on the GPU. This separates a
+format benefit from simply adding more training.
+
+The predefined format criterion requires no reduction in direct passes versus
+the matched control and an improvement of at least five parameter-name matches
+out of 100. Meeting it does not meet the project's programming or agent-readiness
+gates. Status and lineage are recorded in `runs/format-comparison-v1/status.json`.
+Both training and evaluation artifacts are retained; no candidate replaces the
+existing service automatically.
