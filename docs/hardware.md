@@ -68,17 +68,22 @@ uv venv --python 3.12
 uv pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 uv pip install -e '.[data]'
 .venv/bin/python -m microgpt.train \
-  --config configs/h100.toml --data data/code --out runs/h100 --steps 100
+  --config configs/h100.toml --data data/code --out runs/h100 --stop-at-step 100
 ```
 
-For a fresh full run, use a new output directory and omit `--steps 100`. To
-continue the pilot, use the matching checkpoint and a larger total target:
+This stops after 100 updates while preserving the config's full 10,000-update
+schedule. To continue, keep that same schedule and checkpoint:
 
 ```sh
 .venv/bin/python -m microgpt.train \
   --config configs/h100.toml --data data/code --out runs/h100 \
   --resume runs/h100/last.pt --steps 10000
 ```
+
+For a fresh full run, use a new output directory and omit `--stop-at-step 100`.
+A run created with `--steps 100` has a different schedule and cannot be resumed
+as the same experiment with 10,000 steps. Use `--init-from` and a fresh output
+directory if intentionally starting a new optimizer/schedule stage from its weights.
 
 Run in a persistent terminal such as `tmux` if disconnecting SSH. Download the
 whole run directory, configs, prepared metadata, and source manifest before

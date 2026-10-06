@@ -90,6 +90,11 @@ Resume an interrupted stage with identical config/data/window:
 The total `--steps` also determines the cosine schedule. Extending a finished
 100-step pilot to 10,000 is therefore not identical to an uninterrupted planned
 10,000-step run. Checkpoints restore model, optimizer and random states.
+Resume now rejects changes to training settings or the recorded attention backend.
+Use `--stop-at-step 100` with the full planned schedule for a resumable initial
+segment. Use `--init-from` for an intentional new data/optimizer stage, and
+`--allow-attention-change` only when explicitly changing a resume backend or
+opening a legacy checkpoint whose backend was not recorded.
 
 ## 4. Train assistant behavior and tool syntax
 

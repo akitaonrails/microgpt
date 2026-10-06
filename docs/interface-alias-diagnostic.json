@@ -1,0 +1,236 @@
+{
+  "kind": "assisted-interface-diagnostic",
+  "original_direct_passed": 24,
+  "source_results_sha256": "74992ffa31c693394307fb80d66fde1b3a14312e65e03b764be91a1ad68f2945",
+  "intervention": "For missing requested names only, alias the sole generated top-level function to the requested name. Preserve the generated algorithm and parameter names. Never train or serve these corrected outputs.",
+  "tasks": [
+    {
+      "id": "suffix_2",
+      "generated_function": "remove_punctuation",
+      "requested_function": "suffix_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.suffix_2('ababa','ba') == 'aba'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "4e22373213c2fa7b8b5d1ad43dce6b2434ded2aa13c75cf8044844b3d1f8fdee"
+    },
+    {
+      "id": "negatives_2",
+      "generated_function": "negative_2",
+      "requested_function": "negatives_2",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "67c7bd72582741827c1432e913e9003c5c5ff5097e55f72e6abb332ec9a29d86"
+    },
+    {
+      "id": "negatives_3",
+      "generated_function": "negative_3",
+      "requested_function": "negatives_3",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "48508d25bc18d5fb69ec94793aa8f7a95946020c85106063f3155e7fcdd112fd"
+    },
+    {
+      "id": "frequencies_0",
+      "generated_function": "frequency_0",
+      "requested_function": "frequencies_0",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "c560429940f27ea2e5f89fab07a7f2528baccd0fc2a00076f251f258dd088618"
+    },
+    {
+      "id": "frequencies_2",
+      "generated_function": "count_frequent_values",
+      "requested_function": "frequencies_2",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "4f5490ae884cd39012c9fb003afac484a9407671297760dbf9eff2ca7bf1b6cd"
+    },
+    {
+      "id": "frequencies_3",
+      "generated_function": "count_frequent_values",
+      "requested_function": "frequencies_3",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "4f5490ae884cd39012c9fb003afac484a9407671297760dbf9eff2ca7bf1b6cd"
+    },
+    {
+      "id": "frequencies_4",
+      "generated_function": "frequency_4",
+      "requested_function": "frequencies_4",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "e7314b6923d61e680b3f1b7dee8252210dd91dfc190fa5bc6134f7ce33507ef4"
+    },
+    {
+      "id": "between_0",
+      "generated_function": "low_max",
+      "requested_function": "between_0",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_0([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "f98f8fb8ae442291107d062efb171ddbd6a8f6de0fc911289ca749fd74443ae9"
+    },
+    {
+      "id": "between_1",
+      "generated_function": "numeric_list",
+      "requested_function": "between_1",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_1([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: numeric_list() takes 0 positional arguments but 3 were given\n",
+      "generated_sha256": "ecd3225da9767268d8c8d8cee8a74b5d20289215009f56d7631fe300b3f766dc"
+    },
+    {
+      "id": "between_2",
+      "generated_function": "_2",
+      "requested_function": "between_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_2([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "d1636d90218352819cc7eb41b9637293af7789ab2ab4e510e2c630b956e8ecb3"
+    },
+    {
+      "id": "between_3",
+      "generated_function": "calculate_3",
+      "requested_function": "between_3",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_3([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "a580537ee4d1950e88b35a1b959314e629e97073dd51669ca2416e38ec4f50b8"
+    },
+    {
+      "id": "between_4",
+      "generated_function": "calculate_4",
+      "requested_function": "between_4",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.between_4([0,1,3,5],1,3) == [1,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "9ea787da06f2e871df42fe8ad2fa73371988742637c3829cae0c11d9b0ce33d5"
+    },
+    {
+      "id": "alternating_2",
+      "generated_function": "handle_2",
+      "requested_function": "alternating_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_2([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "754f5fd841de2687b0e7746ef7f32e0024e96c917372003aa15f5ce0dff423f6"
+    },
+    {
+      "id": "chunks_2",
+      "generated_function": "partition_by_size",
+      "requested_function": "chunks_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks_2([1,2,3,4,5],2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "60766b92d6369505e446214151bd16f6620a6c85ea8ad5c8ee2e87474d51c2d3"
+    },
+    {
+      "id": "chunks_3",
+      "generated_function": "partition_by_size",
+      "requested_function": "chunks_3",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks_3([1,2,3,4,5],2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: partition_by_size() missing 1 required positional argument: 'max_size'\n",
+      "generated_sha256": "ab9ad0c9a4b8dba17abf57ff38c1a5c740bb64bc928981b2bb42a14e7b314920"
+    },
+    {
+      "id": "safe_divide_2",
+      "generated_function": "gcd",
+      "requested_function": "safe_divide_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.safe_divide_2(3,2) == 1.5\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 6, in gcd\n    return gcd(numerator, denominator - 1)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 6, in gcd\n    return gcd(numerator, denominator - 1)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 6, in gcd\n    return gcd(numerator, denominator - 1)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 5, in gcd\n    return -quotient\n            ^^^^^^^^\nNameError: name 'quotient' is not defined\n",
+      "generated_sha256": "1c7042659e445b6cf75263ded2b50b01f7090a5f7ed2ab6e4751fcffa3f837e1"
+    },
+    {
+      "id": "difference_2",
+      "generated_function": "consecutive_difference",
+      "requested_function": "difference_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_2([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "c1077aa5a8bb48d22f487d0e7b68b253d2d40a066e62f1626650fcb6a71d59c6"
+    },
+    {
+      "id": "difference_4",
+      "generated_function": "find_consecutive_difference",
+      "requested_function": "difference_4",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_4([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "3c96cfbb5bd54ea15fedf7d04e3ee95dfe201829e70ba5f1102d3be03fcd5886"
+    },
+    {
+      "id": "nonempty_0",
+      "generated_function": "non_empty_0",
+      "requested_function": "nonempty_0",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_0([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "b46c25c94d0e6dfee674728bc85e8a1afe452511da782a280391e2235f66632b"
+    },
+    {
+      "id": "nonempty_1",
+      "generated_function": "non_empty_1",
+      "requested_function": "nonempty_1",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_1([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "379991527539835e66c75eec3810508742a6143c1df768704399fa1f762c79b0"
+    },
+    {
+      "id": "nonempty_2",
+      "generated_function": "remove_2",
+      "requested_function": "nonempty_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_2([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "68e52d7db257dadf0635c55332042c4c706c83e40d6284141428e72f99bba50f"
+    },
+    {
+      "id": "nonempty_3",
+      "generated_function": "remove_3",
+      "requested_function": "nonempty_3",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_3([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "0921f26724ec8be93c286205c38eceb6361e209d6f2c0d9016678439857f77be"
+    },
+    {
+      "id": "nonempty_4",
+      "generated_function": "remove_4",
+      "requested_function": "nonempty_4",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_4([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "dbd78603ca644d4ffcc0d819ad13ffeb82d3d3a14223bd274ad4827beb6ec119"
+    },
+    {
+      "id": "extension_2",
+      "generated_function": "path_to_path",
+      "requested_function": "extension_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_2('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  [Previous line repeated 996 more times]\nRecursionError: maximum recursion depth exceeded\n",
+      "generated_sha256": "b22644bda800407ae53f28b48e77cc19a83b80cd1ea2800f7d141fd3fe291b87"
+    },
+    {
+      "id": "extension_3",
+      "generated_function": "create_ext",
+      "requested_function": "extension_3",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_3('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_ext() takes 0 positional arguments but 1 was given\n",
+      "generated_sha256": "0e15cecb190f7f6aadffdf90357cfe347bddef550118bb42643efca348356175"
+    },
+    {
+      "id": "extension_4",
+      "generated_function": "path_to_path",
+      "requested_function": "extension_4",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_4('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 4, in path_to_path\n    return path_to_path(path)\n           ^^^^^^^^^^^^^^^^^^\n  [Previous line repeated 996 more times]\nRecursionError: maximum recursion depth exceeded\n",
+      "generated_sha256": "b22644bda800407ae53f28b48e77cc19a83b80cd1ea2800f7d141fd3fe291b87"
+    },
+    {
+      "id": "title_words_2",
+      "generated_function": "split_words_2",
+      "requested_function": "title_words_2",
+      "assisted_passed": false,
+      "output": "Traceback (most recent call last):\n  File \"/grader.py\", line 4, in <module>\n    assert s.title_words_2('  hELLo WORLD ') == ['Hello','World']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "generated_sha256": "ed00415f0985b912f6d2a0d1aedbe70e5718828e531f879657eb893b483678d1"
+    },
+    {
+      "id": "is_sorted_2",
+      "generated_function": "is_increasing_order",
+      "requested_function": "is_sorted_2",
+      "assisted_passed": true,
+      "output": "PASS\n",
+      "generated_sha256": "1184190b89ee490121cef7211b8fca32a871b690c743aefa970ecb4f7a1e3dc5"
+    }
+  ],
+  "additional_assisted_passes": 7,
+  "tested_aliases": 28,
+  "note": "This is not an ordinary-prompt model score. It changes the submitted program after generation, using only its requested function name; wrong algorithms and parameter semantics remain unchanged.",
+  "assisted_total": 31
+}

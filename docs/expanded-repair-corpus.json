@@ -1,0 +1,60 @@
+{
+  "source": {
+    "dataset": "nvidia/OpenCodeInstruct",
+    "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+    "requested": 20000,
+    "mutable": 15208,
+    "retained": 14770,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "edit_style": "unique changed line span",
+    "excluded_random_imports": 267,
+    "checks_sha256": "f004395374985c1262f0bc0e0fef3f051369b645002c0c66557a0e1975d9877a",
+    "curriculum_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "output_sha256": "b4d391802830ff84d309561f48b6a3cbf60824e7a94b0419043cfc4ce4f6e4e3",
+    "note": "Prepared repair data only; no model training or agent capability established."
+  },
+  "prepared": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/executed-public-repairs-expanded-v1.jsonl",
+        "sha256": "b4d391802830ff84d309561f48b6a3cbf60824e7a94b0419043cfc4ce4f6e4e3"
+      }
+    ],
+    "counts": {
+      "scanned": 14770,
+      "train_episodes": 14061,
+      "val_episodes": 709
+    },
+    "splits": {
+      "train": {
+        "examples": 14061,
+        "assistant_tokens": 1989548,
+        "groups": 13607,
+        "examples_by_source": {
+          "executed-public-repair": 14061
+        },
+        "sha256": "77496f3ed9993d90ec707492ae3535fac015c972ab23a1ce4e942b796dbc7544"
+      },
+      "val": {
+        "examples": 709,
+        "assistant_tokens": 100126,
+        "groups": 694,
+        "examples_by_source": {
+          "executed-public-repair": 709
+        },
+        "sha256": "6d4ad66dc0ab4a7637b1160e9bc3b3163ebabf39895209fc0ff316e0ef4a769b"
+      }
+    }
+  },
+  "audit": {
+    "retained_rows": 14770,
+    "unique_upstream_ids": 14770,
+    "all_exact_edits_and_fail_to_pass_checks": true
+  },
+  "limitation": "One checked mutation per retained source; not complete specifications, semantic deduplication, model-generated repairs, or a proof of determinism."
+}

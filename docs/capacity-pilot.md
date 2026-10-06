@@ -827,3 +827,23 @@ leakage, and lossless context splitting. Evidence is in
 being prepared; no model has trained on these lessons yet. Handoff training and
 external requirements state do not establish uninterrupted learned recall or
 model-written summaries. The real uninterrupted OpenCode evaluation remains required.
+
+The expanded repair pass selected 15,208 mutable programs from 20,000 checked
+source problems, excluding 267 references/tests importing random/secrets. It
+retained **14,770** executed fail→scoped-edit→pass lessons. Tokenization retained
+all of them: 14,061 train / 709 validation episodes, with 1,989,548 / 100,126 stored
+assistant targets. Scoped edits substantially reduce copied answer tokens compared
+with the earlier whole-file lessons. The audit rechecked unique IDs, exact
+replacement reconstruction and every recorded failure/success code; see
+[expanded-repair-corpus.json](expanded-repair-corpus.json). These are prepared
+lessons, not training exposures or evidence of learned repair skill.
+
+An additional CPU-only diagnostic reused the selected 24/100 model's saved code.
+For 28 cases missing the requested function name, with exactly one generated
+function, it added an alias from that function to the requested name and reran the
+sandbox tests. **Seven** additional cases passed (assisted 31/100). It did not
+rewrite algorithm text or parameters, and none of these corrected outputs entered
+training or serving. [interface-alias-diagnostic.json](interface-alias-diagnostic.json)
+records the interventions and code hashes. This supports fixing interface copying
+as part of the eventual agent, but does not explain most failures or change the
+ordinary-prompt score of 24/100.

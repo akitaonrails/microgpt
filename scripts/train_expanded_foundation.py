@@ -2,7 +2,8 @@
 
 Uses only our scratch-origin weights. A one-billion-token schedule is fixed, but
 there is no automatic extension or promotion. Inspect status.json after failures;
-pretraining can be resumed with the exact recorded command and --resume.
+pretraining can be resumed by replacing --init-from in the recorded command with
+--resume pointing to foundation/last.pt, and reducing the remaining time budget.
 """
 import argparse
 from datetime import datetime, timezone
