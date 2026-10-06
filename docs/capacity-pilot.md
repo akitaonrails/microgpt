@@ -649,3 +649,10 @@ Preparing repairs from the first 1,000 entries of this completed corpus found
 760 mutable programs and retained **737 executed failure→repair demonstrations**.
 They preserve the parent's split groups. They are ready for later curriculum work,
 but are not included in this direct-code pilot and have not trained an agent.
+
+All 737 retained repair records matched their executed before/after file contents
+and nonzero→zero check results, and preserved their source split groups.
+Preparation kept 699 training episodes (334,601 assistant tokens) and 38 validation
+episodes (18,796 assistant tokens), with no overlength drops at 8K. The full check
+artifact hash and prepared manifest are in [executed-repair-corpus.json](executed-repair-corpus.json).
+These data are prepared, not yet used for training.

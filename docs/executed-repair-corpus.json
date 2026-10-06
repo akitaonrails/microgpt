@@ -1,0 +1,46 @@
+{
+  "records": 737,
+  "all_source_groups_preserved": true,
+  "all_edits_match_executed_files": true,
+  "all_checks_fail_then_pass": true,
+  "checks_sha256": "7628cb0165d109ef5a067b24f00e920983d7c6b5cd34a7188ef0db94c2c321b1",
+  "manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/executed-public-repairs-v1.jsonl",
+        "sha256": "d7bac041883d677891c93f2dca5cb05d6c6a68a2b683acea0faa7fc87e179fa5"
+      }
+    ],
+    "counts": {
+      "scanned": 737,
+      "train_episodes": 699,
+      "val_episodes": 38
+    },
+    "splits": {
+      "train": {
+        "examples": 699,
+        "assistant_tokens": 334601,
+        "groups": 698,
+        "examples_by_source": {
+          "executed-public-repair": 699
+        },
+        "sha256": "45c0dc78555073f1567e79d5510d4a44e4e8811b47d5679e768ae721bd71f716"
+      },
+      "val": {
+        "examples": 38,
+        "assistant_tokens": 18796,
+        "groups": 38,
+        "examples_by_source": {
+          "executed-public-repair": 38
+        },
+        "sha256": "0e7bfed900c928acc042ee4065571f8f03e736b5cdd856a326c6c7f3bc2d72e4"
+      }
+    }
+  },
+  "trained": false
+}

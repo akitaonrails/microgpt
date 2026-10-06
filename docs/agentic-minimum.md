@@ -1,9 +1,8 @@
 # The minimum agentic model: experiment notebook
 
-**Current experiment:** broader programming remains weak (2/100 development variants).
-The [controlled capacity pilot](capacity-pilot.md) follows diagnostic comparisons and tests a fresh
-239M student against our original scratch foundation. The served 91M artifact below
-remains a narrow arithmetic lesson.
+**Current broader work:** [the controlled experiment history](capacity-pilot.md)
+records the latest scratch 239M programming results and unmet gates. The served
+91M artifact below remains a historical narrow arithmetic lesson.
 
 
 The target is a small, scratch-trained model that can keep a real OpenCode session
