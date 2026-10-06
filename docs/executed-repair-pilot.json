@@ -1,0 +1,17 @@
+{
+  "dataset": "nvidia/OpenCodeInstruct",
+  "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+  "requested": 20,
+  "mutable": 19,
+  "retained": 18,
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "curriculum_sha256": "c6a043e8121ba197c0ea787ec84ef557c76671d80ed87fd60808c2eb58f4b1d5",
+  "output_sha256": "3f7be3c691609a6928462af53414d45fcdee519e87253a5f90257f01067f1249",
+  "note": "Prepared repair data only; no model training or agent capability established.",
+  "protocol_checks": {
+    "episodes": 18,
+    "min_tokens": 2401,
+    "max_tokens": 3263
+  },
+  "trained": false
+}

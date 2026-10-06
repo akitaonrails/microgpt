@@ -606,3 +606,27 @@ without calling the implementation on this machine. Both original and empty
 implementations therefore appeared to pass. Such rows are excluded. Merely finding
 an `assert` AST node is insufficient; the test must distinguish an implementation
 from an absent one. Even that is weaker than complete specification verification.
+
+### Executed repair-data preparation
+
+`scripts/prepare_executed_repairs.py` now supplies the missing evidence path for
+future tool training. It changes one arithmetic/comparison operation or integer
+literal in checked public code, executes the supplied tests, retains a mutation
+only when a check actually fails, applies an exact-string correction, and reruns
+the checks. An unrelated helper is present and checked before the supplied tests.
+File contents and failure/success observations come from restricted Docker.
+
+These are reference-policy demonstrations formatted for the existing OpenCode
+fixture, **not model rollouts or runs of OpenCode itself**. The generator does not
+claim the model discovered the correction or reasoned through it. Initial files
+contain the bug; teaching recovery from the model's own failed action remains a
+separate later extension. The source tests still do not prove full specification
+correctness, and the context header remains a teaching fixture.
+
+The preparation pilot requested 20 public examples: 19 supported these mutations,
+and 18 yielded a verified failing mutation followed by a passing repair. All 18
+passed protocol normalization and tokenization (2,401–3,263 tokens). Two authored
+unit checks cover a boundary mutation and preservation of function interfaces and
+docstrings. [executed-repair-pilot.json](executed-repair-pilot.json) records this
+**data-preparation result only**. No tool SFT or agent-readiness gain is claimed;
+that training still follows the direct-programming gate.
