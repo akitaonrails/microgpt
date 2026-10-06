@@ -1,0 +1,94 @@
+{
+  "path": "data/foundation-expanded-v1",
+  "training_started": false,
+  "sources": [
+    {
+      "path": "codeparrot",
+      "weight": 0.6,
+      "splits": {
+        "train": {
+          "tokens": 2677067460,
+          "documents": 1767534,
+          "sha256": "467dd34aea214301b0235f03129a194e0ce40f53b1754bc5d045838e78112036"
+        },
+        "val": {
+          "tokens": 148380036,
+          "documents": 95373,
+          "sha256": "e7792984a0ef5ab5b77eb6b204cb02be31d98e42fb76cbe79a3c52b11c45865c"
+        }
+      }
+    },
+    {
+      "path": "opencoder",
+      "weight": 0.16,
+      "splits": {
+        "train": {
+          "tokens": 151911977,
+          "documents": 250663,
+          "sha256": "593077e7bc2f86aa0a79b475bdc65d855638ab3bda383bdf4fd569f0c730fbc2"
+        },
+        "val": {
+          "tokens": 8103242,
+          "documents": 13274,
+          "sha256": "d9facd5a5d8578282a33620e1ca54edbbd3f0886fb0cf3ff80ae6ee1562d7d6c"
+        }
+      }
+    },
+    {
+      "path": "cosmopedia-v2",
+      "weight": 0.12,
+      "splits": {
+        "train": {
+          "tokens": 114162009,
+          "documents": 165764,
+          "sha256": "88b5605fac7f64714d6a5ab875ff523755f40dd59900591da52d0b0993eaf755"
+        },
+        "val": {
+          "tokens": 5975710,
+          "documents": 8735,
+          "sha256": "d4441e5d54b426b8a8226fa8cfc8733d168df9fd51fc6e4980c008f94c13034b"
+        }
+      }
+    },
+    {
+      "path": "smoltalk",
+      "weight": 0.08,
+      "splits": {
+        "train": {
+          "tokens": 76113200,
+          "documents": 89693,
+          "sha256": "217d34dc4bf32b2bdc5e23bef5b77af456135851aaad33f4d997c66d1e31fbe4"
+        },
+        "val": {
+          "tokens": 3899338,
+          "documents": 4501,
+          "sha256": "6a9045af74741d69bec3535d7fa2915c0ced1055db2d9cd583a777b0593bb12a"
+        }
+      }
+    },
+    {
+      "path": "multilingual",
+      "weight": 0.04,
+      "splits": {
+        "train": {
+          "tokens": 38005974,
+          "documents": 75856,
+          "sha256": "26d75c5934ca750073d6d22eb90bca7e58065bcce07d27b0fdfe594fde6ca0bf"
+        },
+        "val": {
+          "tokens": 2021645,
+          "documents": 4009,
+          "sha256": "59e266749e234f65d105d73ca42b9e04074ffc323ce2b594dc13cc9361b6327e"
+        }
+      }
+    }
+  ],
+  "deduplication": "Exact text within each prepared source; no cross-source semantic or evaluation decontamination claimed.",
+  "previous_codeparrot_is_prefix": {
+    "train": true,
+    "val": true
+  },
+  "train_tokens": 3057260620,
+  "val_tokens": 168379971,
+  "manifest_sha256": "2821305cec19cec77ea24bfaaa7cc45ca560cc6efc44efa2a6e053dfd747a030"
+}

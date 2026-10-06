@@ -106,6 +106,20 @@ class TrainingTests(unittest.TestCase):
         self.assertEqual([x for x in packed['labels'] if x != -100], expected_targets)
         self.assertEqual(assistant_examples(record, tokenizer, 5, pack=True), [])
 
+    def test_pretraining_resume_rejects_changed_experiment(self):
+        from microgpt.train import validate_resume_settings
+        settings = dict(steps=100, learning_rate=0.001, batch_size=2,
+                        accumulation=4, sequence_length=32, attention='sdpa')
+        validate_resume_settings(settings, settings, 32)
+        for field, value in [('steps', 200), ('learning_rate', 0.002),
+                             ('batch_size', 4), ('accumulation', 8)]:
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'identical training settings'):
+                validate_resume_settings(settings, {**settings, field: value}, 32, True)
+        for previous in [settings, {k: v for k, v in settings.items() if k != 'attention'}]:
+            with self.assertRaisesRegex(ValueError, 'attention'):
+                validate_resume_settings(previous, {**settings, 'attention': 'math'}, 32)
+            validate_resume_settings(previous, {**settings, 'attention': 'math'}, 32, True)
+
     def test_staged_pretraining_preserves_schedule_and_weights(self):
         import subprocess
         import sys
@@ -120,12 +134,17 @@ class TrainingTests(unittest.TestCase):
                               '[train]\nsteps=4\nbatch_size=1\naccumulation=1\n'
                               'learning_rate=0.001\nwarmup=1\neval_every=2\neval_batches=1\nseed=42\n')
             command = [sys.executable, '-m', 'microgpt.train', '--config', str(config),
-                       '--data', str(base / 'data'), '--device', 'cpu']
+                       '--data', str(base / 'data'), '--device', 'cpu', '--attention', 'math']
             subprocess.run(command + ['--out', str(base / 'full')], check=True, capture_output=True)
             subprocess.run(command + ['--out', str(base / 'staged'), '--stop-at-step', '2'], check=True, capture_output=True)
             midpoint = torch.load(base / 'staged/last.pt', weights_only=True)
             self.assertEqual(midpoint['step'], 2)
             self.assertEqual(midpoint['settings']['steps'], 4)
+            rejected = subprocess.run(command + ['--out', str(base / 'staged'),
+                '--resume', str(base / 'staged/last.pt'), '--steps', '8'], capture_output=True, text=True)
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertIn('identical training settings', rejected.stderr)
+            self.assertEqual(torch.load(base / 'staged/last.pt', weights_only=True)['step'], 2)
             subprocess.run(command + ['--out', str(base / 'staged'), '--resume', str(base / 'staged/last.pt')], check=True, capture_output=True)
             full = torch.load(base / 'full/last.pt', weights_only=True)
             staged = torch.load(base / 'staged/last.pt', weights_only=True)

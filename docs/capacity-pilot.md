@@ -742,3 +742,33 @@ records both evidence hashes. This is not a proof of determinism or complete tes
 coverage. The generator's new `--exclude-random-imports` option conservatively checks
 ordinary random/secrets imports in both references and tests for future runs.
 The older corpora remain experiment history; no repair corpus has trained a model.
+
+### Expanded foundation data and resume identity
+
+The GitHub preparation exhausted its pinned 32 shards at **2,825,447,496 tokens**,
+below the requested three-billion ceiling: 2,677,067,460 train and 148,380,036
+validation tokens. `data/foundation-expanded-v1` combines that stream with the
+original other four streams at unchanged 60/16/12/8/4 sampling weights. Its
+3,057,260,620 training tokens are stored data, not new training exposure. Source
+files are hardlinked on the NAS to avoid duplicate storage and must remain immutable.
+Hash and old-prefix checks are recorded in `expanded-foundation-corpus.json`.
+
+Pretraining now records its attention backend and rejects resume-time changes to
+training settings, including the total cosine horizon, learning rate and batch
+shape. `--init-from` intentionally begins a new optimizer/data stage. For a backend
+change, or legacy checkpoints with no recorded backend, use the explicit
+`--allow-attention-change` switch; this does not bypass schedule/data checks.
+`--attention math` provides an explicit fallback. Twelve training tests pass,
+including bitwise equality between interrupted/resumed and uninterrupted CPU
+training with math attention, plus rejection of changed experiment settings.
+
+A proposed expanded-data continuation keeps the 239M architecture and tokenizer.
+Its configuration freezes a one-billion-token cosine horizon but the first run
+will stop after 250M additional tokens. LR 3e-5 starts near the preceding run's
+terminal rate; a short 200-update warmup accommodates the fresh optimizer. This
+is a declared experiment, not a universally established continuation recipe:
+[Ibrahim et al.](https://arxiv.org/abs/2403.08763) found rewarming/redecay useful in
+their setting, whereas [NVIDIA's continuation study](https://arxiv.org/abs/2407.07263)
+favored no warmup for their well-trained 15B model. Neither establishes the best
+schedule for our undertrained 239M model. A short batch-two throughput/memory check
+must precede the long run. No additional foundation training has begun at this entry.

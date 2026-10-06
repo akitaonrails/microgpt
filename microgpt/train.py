@@ -21,6 +21,22 @@ def precision(device):
     return torch.autocast("cuda", dtype=torch.bfloat16) if device.type == "cuda" else nullcontext()
 
 
+def validate_resume_settings(previous, current, context, allow_attention_change=False):
+    """A resumed run keeps its schedule; a new stage uses --init-from."""
+    previous = dict(previous)
+    previous.setdefault("sequence_length", context)
+    # Older checkpoints did not record the selected attention backend.
+    recorded_attention = previous.pop("attention", None)
+    current = dict(current)
+    attention = current.pop("attention")
+    if previous != current:
+        changed = sorted(k for k in previous.keys() | current.keys()
+                         if previous.get(k) != current.get(k))
+        raise ValueError(f"Resume requires identical training settings: {changed}; use --init-from for a new stage")
+    if recorded_attention != attention and not allow_attention_change:
+        raise ValueError("Resume attention differs or was not recorded; explicitly use --allow-attention-change")
+
+
 @torch.no_grad()
 def evaluate(model, stream, batch_size, batches, device, loss_chunk=128):
     model.eval()
@@ -59,10 +75,12 @@ def main():
     source.add_argument("--resume", type=Path)
     source.add_argument("--init-from", type=Path, help="Continue our weights with a new data/window stage and fresh optimizer")
     parser.add_argument("--sequence-length", type=int, help="Training window, bounded by model context; part of resume identity")
-    parser.add_argument("--attention", choices=["sdpa", "flash"], default="sdpa")
+    parser.add_argument("--attention", choices=["sdpa", "flash", "math"], default="sdpa")
+    parser.add_argument("--allow-attention-change", action="store_true", help="Explicitly permit a different or previously unrecorded resume backend")
     parser.add_argument("--max-seconds", type=float, help="Save and stop after this wall-clock training budget")
     args = parser.parse_args()
-    with sdpa_kernel(SDPBackend.FLASH_ATTENTION) if args.attention == "flash" else nullcontext():
+    backend = {"flash": SDPBackend.FLASH_ATTENTION, "math": SDPBackend.MATH}
+    with sdpa_kernel(backend[args.attention]) if args.attention in backend else nullcontext():
         run_training(args, parser)
 
 
@@ -86,6 +104,7 @@ def run_training(args, parser):
     if not 1 <= sequence_length <= model_config.context:
         parser.error("sequence-length must fit model context")
     settings["sequence_length"] = sequence_length
+    settings["attention"] = args.attention
     model = GPT(model_config).to(device)
     model.gradient_checkpointing = settings.get("gradient_checkpointing", False)
     if args.attention == "flash" and device.type != "cuda":
@@ -111,6 +130,8 @@ def run_training(args, parser):
             raise ValueError("Resume requires identical model configuration and prepared data")
         if checkpoint["settings"].get("sequence_length", model_config.context) != sequence_length:
             raise ValueError("Resume requires identical sequence-length")
+        validate_resume_settings(checkpoint["settings"], settings, model_config.context,
+                                 args.allow_attention_change)
         model.load_state_dict(checkpoint["model"])
         optimizer.load_state_dict(checkpoint["optimizer"])
         generator.set_state(checkpoint["batch_rng"])

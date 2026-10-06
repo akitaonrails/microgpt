@@ -1,0 +1,19 @@
+# New data stage from our random-origin 1B foundation, with a fresh optimizer.
+# Freeze the full 1B-token cosine horizon even when stopping at +250M tokens.
+[model]
+context = 32768
+layers = 12
+heads = 12
+width = 768
+
+[train]
+steps = 122071
+batch_size = 2
+accumulation = 2
+learning_rate = 0.00003
+warmup = 200
+eval_every = 1000
+eval_batches = 16
+gradient_checkpointing = false
+loss_chunk = 0
+seed = 20261008
