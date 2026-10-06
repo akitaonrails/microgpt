@@ -156,6 +156,8 @@ def main():
         print(json.dumps({'shard': shard['path'], 'counts': counts}), flush=True)
     if not selected:
         raise ValueError('No eligible records')
+    if len({item['seq_id'] for item in selected}) != len(selected):
+        raise ValueError('Duplicate source IDs would make sandbox result association ambiguous')
     args.out.parent.mkdir(parents=True, exist_ok=True)
     checks_path = args.out.with_suffix('.checks.jsonl')
     with tempfile.TemporaryDirectory(prefix='microgpt-verified-') as directory:

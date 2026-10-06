@@ -1,0 +1,90 @@
+{
+  "selection": {
+    "dataset": "nvidia/OpenCodeInstruct",
+    "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+    "source_manifest_sha256": "b1c52db5f7037eb18892a2254b811902ded0ac1a99a676df3be794cd5e03a298",
+    "counts": {
+      "scanned": 1000000,
+      "rejected_upstream_score": 668460,
+      "eligible": 133395,
+      "rejected_module_shape": 185446,
+      "duplicate_ast": 12063,
+      "rejected_length_or_blocks": 634,
+      "rejected_SyntaxError": 1,
+      "rejected_JSONDecodeError": 1
+    },
+    "selected": 100000,
+    "retained": 98694,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "seed": 20261007,
+    "selection": "Reservoir among unique exact ASTs in first 20000 rows per downloaded shard; not a uniform sample of the entire dataset.",
+    "split_grouping": "Transitive union of identical original prompts and function-name-normalized ASTs; not semantic deduplication.",
+    "output_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "checks_sha256": "c6f8c767c8ae5a1538e0ac4fcf05a8c4f5a7dccab31685c7def1746313ca0438"
+  },
+  "audit": {
+    "records": 98694,
+    "unique_source_ids": 98694,
+    "splits": {
+      "train": 93742,
+      "val": 4952
+    },
+    "normalized_code_asts": 97233,
+    "distinct_original_prompts": 98065,
+    "cross_split_normalized_ast_overlap": 0,
+    "cross_split_exact_prompt_overlap": 0,
+    "positive_failures": 1297,
+    "empty_controls_inappropriately_passing": 9,
+    "input_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "note": "Exact/normalized AST audit, not semantic deduplication or decontamination against earlier foundation training."
+  },
+  "prepared": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/verified-opencodeinstruct-v1.jsonl",
+        "sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038"
+      }
+    ],
+    "counts": {
+      "scanned": 98694,
+      "train_episodes": 93742,
+      "val_episodes": 4952
+    },
+    "splits": {
+      "train": {
+        "examples": 93742,
+        "assistant_tokens": 14417356,
+        "groups": 91736,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 93742
+        },
+        "sha256": "90d2732314972224b91f5302cb3f4e2d0c564df3cd10876de77e2132ccfd9b1d"
+      },
+      "val": {
+        "examples": 4952,
+        "assistant_tokens": 766576,
+        "groups": 4878,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 4952
+        },
+        "sha256": "ca75f8a0ea0515995d9ff1f9c37a663a4a9aedfa1e092ccec1749d0c4937ab7e"
+      }
+    }
+  },
+  "repairs": {
+    "dataset": "nvidia/OpenCodeInstruct",
+    "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+    "requested": 1000,
+    "mutable": 760,
+    "retained": 737,
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "curriculum_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "output_sha256": "d7bac041883d677891c93f2dca5cb05d6c6a68a2b683acea0faa7fc87e179fa5",
+    "note": "Prepared repair data only; no model training or agent capability established."
+  }
+}

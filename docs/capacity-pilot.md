@@ -630,3 +630,22 @@ unit checks cover a boundary mutation and preservation of function interfaces an
 docstrings. [executed-repair-pilot.json](executed-repair-pilot.json) records this
 **data-preparation result only**. No tool SFT or agent-readiness gain is claimed;
 that training still follows the direct-programming gate.
+
+The larger corpus completed with **98,694 retained source programs**. Of 100,000
+candidates, 1,297 reference implementations failed their checks and nine had tests
+that also accepted the empty implementation. The retained data has 97,233 distinct
+function-name-normalized ASTs and 98,065 original problem texts. Independent audit
+found zero exact-prompt or normalized-AST overlap across its train/validation split;
+this is not semantic or earlier-pretraining decontamination.
+
+Tokenization retained every record: **93,742 training episodes / 14,417,356 stored
+assistant tokens**, and **4,952 validation episodes / 766,576 assistant tokens**.
+Stored tokens are not completed training exposures. Unlike the earlier curriculum,
+there is one episode per source program, without eightfold name expansion.
+The actual checked-source lineage and prepared hashes are frozen in
+[verified-code-corpus.json](verified-code-corpus.json).
+
+Preparing repairs from the first 1,000 entries of this completed corpus found
+760 mutable programs and retained **737 executed failure→repair demonstrations**.
+They preserve the parent's split groups. They are ready for later curriculum work,
+but are not included in this direct-code pilot and have not trained an agent.
