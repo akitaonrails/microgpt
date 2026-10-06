@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import uuid
 
-from microgpt.curate import rows
+from microgpt.curate import rows, normalize_reference_tests
 from microgpt.opencode_format import system_prompt, read_output
 from microgpt.programming_data import GENERAL_PROMPT
 from microgpt.protocol import reasoning_instruction
@@ -47,6 +47,12 @@ def main():
     seen = set()
     for r in rows(args.input):
         if not r.get('testcase') or len(r['code']) > 2500 or len(r['instruction']) > 1500:
+            continue
+        # Tests must start at module scope, not accidentally become an unreachable
+        # continuation of the reference function's body.
+        try:
+            r = {**r, 'testcase': normalize_reference_tests(r['testcase'])}
+        except (SyntaxError, ValueError):
             continue
         if len(r['testcase']) > 20 or sum(map(len, r['testcase'])) > 4000:
             continue

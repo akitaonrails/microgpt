@@ -7,8 +7,18 @@ import hashlib
 import json
 from pathlib import Path
 import random
+import textwrap
 
 PERMISSIVE = {"mit", "apache-2.0", "bsd-2-clause", "bsd-3-clause", "isc", "cc0-1.0", "unlicense"}
+
+
+def normalize_reference_tests(testcases):
+    """Place supplied assert-style tests at module scope without executing them."""
+    tests = [textwrap.dedent(test).strip() for test in testcases]
+    tree = ast.parse('\n'.join(tests))
+    if not any(isinstance(node, ast.Assert) for node in ast.walk(tree)):
+        raise ValueError('No assertions in supplied tests')
+    return tests
 
 
 def rows(path):

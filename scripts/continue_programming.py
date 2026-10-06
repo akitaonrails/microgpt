@@ -121,6 +121,13 @@ def main():
                             stage[name] = {'passed': score, 'total': len(result['tasks'])}
                             passed = passed and score == len(result['tasks'])
                         if name == 'direct':
+                            if args.tasks_file:
+                                analysis_path = destination / name / 'analysis.json'
+                                execute([sys.executable, 'scripts/analyze_programming.py',
+                                         '--results', str(destination / name / 'results.json'),
+                                         '--tasks-file', str(args.tasks_file), '--out', str(analysis_path)],
+                                        destination / 'analysis.log', 60)
+                                stage['code_diagnostics'] = json.loads(analysis_path.read_text())['counts']
                             if score > best: best, stalled = score, 0
                             else: stalled += 1
                             if score and not args.direct_only:

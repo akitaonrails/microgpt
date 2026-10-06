@@ -5,12 +5,13 @@ source, not every generated identifier or full problem-spec correctness.
 """
 import argparse
 import ast
+import hashlib
 import json
 from pathlib import Path
 import subprocess
 import tempfile
 import uuid
-from microgpt.curate import rows
+from microgpt.curate import rows, normalize_reference_tests
 from prepare_programming_tools import WORKER
 from prepare_interface_curriculum import rename
 from eval_opencode import IMAGE
@@ -35,15 +36,20 @@ def main():
     if not selected or any(record is None for record in selected.values()):
         raise ValueError('Expected an original and a renamed variant for every source ID')
     checked=[]
+    preparation_failures=[]
     for row in rows(args.source):
         record=selected.get(row['seq_id'])
         if record is None:continue
         code=record['messages'][-1]['content'].removeprefix('```python\n').removesuffix('```')
         old=next(n.name for n in ast.parse(row['code']).body if isinstance(n,ast.FunctionDef))
         new=next(n.name for n in ast.parse(code).body if isinstance(n,ast.FunctionDef))
-        tests=rename(ast.parse('\n'.join(row['testcase'])),old,new)
+        try:
+            tests=rename(ast.parse('\n'.join(normalize_reference_tests(row['testcase']))),old,new)
+        except (SyntaxError, ValueError) as error:
+            preparation_failures.append({'id':row['seq_id'], 'passed':False, 'error':str(error)})
+            continue
         checked.append({'seq_id':row['seq_id'],'code':code,'testcase':[tests]})
-    if len(checked) != len(selected):
+    if len(checked) + len(preparation_failures) != len(selected):
         raise ValueError('Some curriculum source IDs are missing from the upstream shard')
     with tempfile.TemporaryDirectory(prefix='microgpt-interface-check-') as directory:
         base=Path(directory);base.chmod(0o755)
@@ -56,12 +62,15 @@ def main():
             '--mount',f'type=bind,src={worker},dst=/worker.py,readonly',IMAGE,'python','-I','-B','/worker.py']
         try: result=subprocess.run(command,capture_output=True,text=True,check=True,timeout=max(7200, len(checked)*2))
         finally:subprocess.run(['docker','rm','-f',name],capture_output=True)
-    results=[json.loads(line) for line in result.stdout.splitlines()]
-    summary={'image':IMAGE,'selected':len(checked),'results':results,'passed':sum(r['passed'] for r in results),
+    results=preparation_failures+[json.loads(line) for line in result.stdout.splitlines()]
+    summary={'image':IMAGE,'selected':len(selected),'results':results,'passed':sum(r['passed'] for r in results),
         'note':'One renamed variant per upstream id; original upstream tests, not independent specification verification.'}
+    for key, path in [('input_sha256', args.input), ('source_sha256', args.source)]:
+        with path.open('rb') as stream:
+            summary[key] = hashlib.file_digest(stream, 'sha256').hexdigest()
     args.out.write_text(json.dumps(summary,indent=2)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k!='results'}))
-    if len(results)!=len(checked) or not all(r['passed'] for r in results):raise RuntimeError('Reference transformation failed; inspect result IDs')
+    if len(results)!=len(selected) or not all(r['passed'] for r in results):raise RuntimeError('Reference transformation failed; inspect result IDs')
 
 
 if __name__=='__main__':main()

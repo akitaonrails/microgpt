@@ -262,3 +262,35 @@ only that those supplied tests passed, not that a reference fully satisfies its
 natural-language specification. These intermediate tool traces are simulated;
 their code-only extraction is intended for a subsequent direct-code experiment.
 No development or acceptance solutions are added to training.
+
+The expanded source check initially reported 23,957/24,000 successful references.
+Structural filtering retained 20,974 source programs, producing 167,792 variants.
+The separate renamed-reference check then exposed a test-harness gotcha: some
+upstream assertions begin with indentation. Appending those strings directly after
+a reference can put them inside the function, including after a return, and report
+a false pass. An AST audit found nine original test texts that did not parse on
+their own and 37 selected references without usable assertions after normalization.
+None of the rejected test sets belongs to the original 3,574-program curriculum.
+
+`normalize_reference_tests` now dedents each test string while preserving relative
+indentation, parses the resulting module, and requires assertions. Authored
+regression tests verify that an indented failing assertion really fails and that
+multiline loops keep their structure. This still does not prove comprehensive
+test coverage or that every assertion executes; source tests remain fallible.
+
+The expanded renamed-reference run executes normalized tests. Its failures and
+assertion-free sources are removed by `filter_interface_curriculum.py`, preserving
+the already checked random names rather than regenerating them. The filtered
+report links back to the original sandbox report and checks both source hashes.
+Only `programming-interface-diverse-sft-v2` is eligible for training; the earlier
+unfiltered tokenization is retained as preparation history.
+
+`scripts/train_interface_diversity.sh` records parent/data/evaluation hashes before
+starting the next branch. It uses the same scratch parent, eight name variants,
+LR 3e-5, accumulation two, seed 42 and 5K/10K/20K evaluations, with a two-hour
+continuation ceiling. Math SDPA is used from the start for stability; the earlier
+branch switched at 2K. Source ordering and AST deduplication also differ. This is
+a broader-selection experiment at matched update counts, not an isolated proof
+about any one filtering choice or equal token exposure. Extension requires at
+least 20/100 direct passes, 70/100 parameter-name matches, and passes in five
+families. Those are research progression criteria, not OpenCode readiness gates.
