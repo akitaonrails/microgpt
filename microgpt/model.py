@@ -105,7 +105,10 @@ class GPT(nn.Module):
         if isinstance(module, (nn.Linear, nn.Embedding)):
             nn.init.normal_(module.weight, std=0.02)
 
-    def forward(self, tokens, targets=None, cache=None, last_only=False, positions=None, loss_chunk=0):
+    def forward(self, tokens, targets=None, cache=None, last_only=False, positions=None, loss_chunk=0,
+                loss_reduction='token_mean'):
+        if loss_reduction not in ('token_mean', 'example_mean'):
+            raise ValueError('Unknown loss reduction')
         if cache is not None and (self.training or targets is not None):
             raise ValueError("KV caching is for inference only")
         offset = cache[0]["key"].shape[-2] if cache is not None and cache[0] else 0
@@ -121,7 +124,11 @@ class GPT(nn.Module):
         if positions is not None:
             if last_only:
                 raise ValueError("positions and last_only are mutually exclusive")
-            x = x[:, positions]
+            # A batch can supervise different token positions in each example.
+            if positions.ndim == 2:
+                x = x.gather(1, positions[..., None].expand(-1, -1, x.size(-1)))
+            else:
+                x = x[:, positions]
         if last_only:
             if targets is not None:
                 raise ValueError("last_only cannot be used with training targets")
@@ -134,17 +141,30 @@ class GPT(nn.Module):
             # otherwise dominate memory even when attention uses Flash kernels.
             def head_loss(features, labels):
                 logits = F.linear(features, self.embedding.weight)
+                if loss_reduction == 'example_mean':
+                    # Keep short and long SFT episodes equally weighted.
+                    losses = F.cross_entropy(logits.float().reshape(-1, self.config.vocab_size),
+                                             labels.reshape(-1), reduction='none')
+                    return losses.view_as(labels).sum(dim=1)
                 return F.cross_entropy(logits.float().reshape(-1, self.config.vocab_size),
                                        labels.reshape(-1), reduction="sum")
-            total = x.new_zeros((), dtype=torch.float32)
+            total = x.new_zeros((x.size(0),) if loss_reduction == 'example_mean' else (), dtype=torch.float32)
             for start in range(0, x.size(1), loss_chunk):
                 features, labels = x[:, start:start + loss_chunk], targets[:, start:start + loss_chunk]
                 total = total + (checkpoint(head_loss, features, labels, use_reentrant=False)
                                  if self.training else head_loss(features, labels))
+            if loss_reduction == 'example_mean':
+                return None, (total / (targets != -100).sum(dim=1)).mean()
             return None, total / (targets != -100).sum()
         logits = F.linear(x, self.embedding.weight)
-        loss = None if targets is None else F.cross_entropy(
-            logits.float().reshape(-1, self.config.vocab_size), targets.reshape(-1))
+        loss = None
+        if targets is not None:
+            if loss_reduction == 'example_mean':
+                losses = F.cross_entropy(logits.float().reshape(-1, self.config.vocab_size),
+                                         targets.reshape(-1), reduction='none').view_as(targets)
+                loss = (losses.sum(dim=1) / (targets != -100).sum(dim=1)).mean()
+            else:
+                loss = F.cross_entropy(logits.float().reshape(-1, self.config.vocab_size), targets.reshape(-1))
         return logits, loss
 
     @torch.no_grad()

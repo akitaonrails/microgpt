@@ -42,6 +42,28 @@ def loss_for(model, example, device):
     return loss, len(positions)
 
 
+def loss_for_batch(model, examples, device):
+    """Right-pad independent sequences; preserve the mean of episode losses."""
+    if not examples:
+        raise ValueError('Empty microbatch')
+    if len(examples) == 1:
+        return loss_for(model, examples[0], device)
+    selected = [torch.tensor([i for i, label in enumerate(item['labels'][1:]) if label != -100])
+                for item in examples]
+    if any(not len(positions) for positions in selected):
+        raise ValueError('No assistant targets')
+    ids = torch.zeros((len(examples), max(len(item['input_ids']) - 1 for item in examples)), dtype=torch.long)
+    positions = torch.zeros((len(examples), max(map(len, selected))), dtype=torch.long)
+    labels = torch.full_like(positions, -100)
+    for row, (item, indices) in enumerate(zip(examples, selected)):
+        ids[row, :len(item['input_ids']) - 1] = torch.tensor(item['input_ids'][:-1])
+        positions[row, :len(indices)] = indices
+        labels[row, :len(indices)] = torch.tensor(item['labels'][1:])[indices]
+    _, loss = model(ids.to(device), targets=labels.to(device), positions=positions.to(device),
+                    loss_chunk=128, loss_reduction='example_mean')
+    return loss, sum(map(len, selected))
+
+
 @torch.no_grad()
 def evaluate(model, examples, device, attention, by_source=False):
     model.eval()
@@ -78,6 +100,7 @@ def main():
     start.add_argument('--resume', type=Path, help='Our SFT checkpoint: restore optimizer and RNG')
     parser.add_argument('--steps', type=int, default=1000)
     parser.add_argument('--accumulation', type=int, default=4)
+    parser.add_argument('--microbatch', type=int, default=1, help='Independent padded episodes per forward pass; effective batch is microbatch × accumulation')
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--eval-every', type=int, default=100)
     parser.add_argument('--eval-examples', type=int, default=30)
@@ -96,7 +119,7 @@ def main():
     parser.add_argument('--allow-attention-change', action='store_true',
                         help='Explicitly resume optimizer/RNG with a different attention backend; record the change in lineage')
     args = parser.parse_args()
-    if min(args.steps, args.accumulation, args.eval_every, args.eval_examples) < 1 or args.lr <= 0:
+    if min(args.steps, args.accumulation, args.microbatch, args.eval_every, args.eval_examples) < 1 or args.lr <= 0:
         parser.error('Training settings must be positive')
     if not 0 <= args.short_replay < 1:
         parser.error('short-replay must be in [0, 1)')
@@ -121,13 +144,14 @@ def main():
     if config.vocab_size != tokenizer.vocab_size or manifest['max_length'] > config.context:
         raise ValueError('Vocabulary/context mismatch; prepare SFT within the checkpoint context')
     settings = {'stage': 'sft', 'dataset': digest(manifest), 'lr': args.lr,
-                'accumulation': args.accumulation, 'seed': args.seed,
+                'accumulation': args.accumulation, 'microbatch': args.microbatch, 'seed': args.seed,
                 'eval_examples': args.eval_examples, 'attention': args.attention, 'device': args.device,
                 'max_length': args.max_length, 'min_tool_calls': args.min_tool_calls,
                 'balanced_sources': args.balanced_sources, 'balanced_lengths': args.balanced_lengths,
                 'short_replay': args.short_replay, 'sources': sorted(args.sources) if args.sources else None,
                 'source_weights': source_weights}
     previous_settings = dict(saved['settings'])
+    previous_settings.setdefault('microbatch', 1)
     for key, default in [('max_length', 32768), ('min_tool_calls', 0), ('balanced_sources', False), ('balanced_lengths', False), ('short_replay', 0), ('sources', None), ('source_weights', {})]:
         previous_settings.setdefault(key, default)
     backend_changed = bool(args.resume and args.allow_attention_change and previous_settings['attention'] != settings['attention'])
@@ -198,10 +222,12 @@ def main():
         total = 0
         with precision(device), attention_context(args.attention):
             for _ in range(args.accumulation):
-                buckets = replay if args.short_replay and rng.random() < args.short_replay else training
-                bucket = rng.choices(training, weights=sampling_weights, k=1)[0] if buckets is training and sampling_weights else rng.choice(buckets)
-                example = data['train'][rng.choice(bucket)]
-                loss, count = loss_for(model, example, device)
+                examples = []
+                for _ in range(args.microbatch):
+                    buckets = replay if args.short_replay and rng.random() < args.short_replay else training
+                    bucket = rng.choices(training, weights=sampling_weights, k=1)[0] if buckets is training and sampling_weights else rng.choice(buckets)
+                    examples.append(data['train'][rng.choice(bucket)])
+                loss, count = loss_for_batch(model, examples, device)
                 tokens_seen += count
                 total += loss.item() / args.accumulation
                 (loss / args.accumulation).backward()

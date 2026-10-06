@@ -12,6 +12,32 @@ except ImportError:
 
 @unittest.skipUnless(AVAILABLE, "Install .[tune] for training checks")
 class TrainingTests(unittest.TestCase):
+    def test_padded_microbatch_preserves_episode_mean_loss_and_gradients(self):
+        import torch
+        from microgpt.model import GPT, ModelConfig
+        from microgpt.finetune import loss_for, loss_for_batch
+        torch.manual_seed(19)
+        model = GPT(ModelConfig(vocab_size=32, context=256, width=32, layers=1, heads=2)).train()
+        model.gradient_checkpointing = True
+        long_ids = [i % 31 + 1 for i in range(170)]
+        examples = [
+            {'input_ids': [1, 2, 3, 4, 5], 'labels': [-100, -100, 3, 4, 5]},
+            {'input_ids': [2, 7, 9, 10, 11, 12, 13, 14], 'labels': [-100, -100, 9, -100, 11, -100, 13, 14]},
+            {'input_ids': long_ids, 'labels': [-100] * 12 + long_ids[12:]},
+        ]
+        device = torch.device('cpu')
+        losses = [loss_for(model, example, device) for example in examples]
+        expected = torch.stack([loss for loss, _ in losses]).mean()
+        expected.backward()
+        gradients = {name: parameter.grad.clone() for name, parameter in model.named_parameters()}
+        model.zero_grad(set_to_none=True)
+        observed, count = loss_for_batch(model, examples, device)
+        observed.backward()
+        self.assertEqual(count, sum(count for _, count in losses))
+        torch.testing.assert_close(observed, expected, atol=1e-6, rtol=1e-5)
+        for name, parameter in model.named_parameters():
+            torch.testing.assert_close(parameter.grad, gradients[name], atol=1e-6, rtol=1e-5)
+
     def test_selected_logits_match_full_masked_loss_and_gradients(self):
         import torch
         import torch.nn.functional as F
