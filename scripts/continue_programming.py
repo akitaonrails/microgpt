@@ -26,6 +26,8 @@ def resume_command(run, data, settings, target, seconds):
     for key in ('lr', 'accumulation', 'eval_examples', 'seed', 'device', 'attention', 'max_length', 'min_tool_calls', 'short_replay'):
         command += ['--' + key.replace('_', '-'), str(settings[key])]
     command += ['--microbatch', str(settings.get('microbatch', 1))]
+    if settings.get('validation_seed') is not None:
+        command += ['--validation-seed', str(settings['validation_seed'])]
     for key in ('balanced_sources', 'balanced_lengths'):
         if settings[key]: command.append('--' + key.replace('_', '-'))
     if settings.get('sources'): command += ['--sources', *settings['sources']]

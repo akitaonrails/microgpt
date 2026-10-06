@@ -558,3 +558,24 @@ shards (one million rows), retaining a reservoir of at most 100,000 distinct exa
 ASTs before execution. New datasets and checks stay under the authorized NAS dataset
 path. This increases source-program diversity instead of counting eight renamed
 copies as eight new problems. The preparation pilot is inspection-only.
+
+For the next data pilot, `scripts/train_verified_code.sh` retains the 17/100
+parent, LR 1e-5, effective batch 32 and training seed 20261006. Microbatch four /
+accumulation eight gives more memory headroom for longer public answers; a small
+profile used 5.89 GB, versus 7.31 GB with eight/four. This does not establish a
+universal speed advantage. The objective's microbatch equivalence is regression-tested.
+
+The first bounded run evaluates executable code at 500, 1,000 and 2,000 updates,
+so an early capability peak is visible. The 2K extension gate remains 22 direct
+passes, 75 matching parameter lists, 90 valid Python outputs, and passes in five
+families. This is a data intervention with equal update counts, not equal tokens
+or compute; both will be recorded. A failed gate ends this data recipe rather
+than triggering an unbounded extension. It does not end the overall project.
+
+SFT now optionally accepts `--validation-seed`. This samples reproducibly within
+source buckets using a separate RNG; the training sampler is unchanged. Omitting
+it preserves legacy validation order and resume compatibility. New runs use 256
+validation episodes with seed 20261007. The continuation controller carries that
+setting through resume. Tests cover deterministic sampling, balanced sources,
+unchanged bucket contents and legacy order. Execution-based model selection remains
+necessary regardless of the reported loss.

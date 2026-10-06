@@ -12,6 +12,16 @@ except ImportError:
 
 @unittest.skipUnless(AVAILABLE, "Install .[tune] for training checks")
 class TrainingTests(unittest.TestCase):
+    def test_validation_sample_is_reproducible_and_does_not_mutate_training_buckets(self):
+        from microgpt.finetune import validation_sample
+        buckets = {'b': [10, 11, 12], 'a': [0, 1, 2, 3, 4, 5]}
+        self.assertEqual(validation_sample(buckets, 5), [0, 10, 1, 11, 2])
+        sampled = validation_sample(buckets, 6, seed=17)
+        self.assertEqual(sampled, validation_sample(buckets, 6, seed=17))
+        self.assertEqual(len(set(sampled)), 6)
+        self.assertEqual(sum(index >= 10 for index in sampled), 3)
+        self.assertEqual(buckets, {'b': [10, 11, 12], 'a': [0, 1, 2, 3, 4, 5]})
+
     def test_padded_microbatch_preserves_episode_mean_loss_and_gradients(self):
         import torch
         from microgpt.model import GPT, ModelConfig

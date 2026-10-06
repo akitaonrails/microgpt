@@ -91,6 +91,16 @@ def bucket_weights(buckets, weights):
     return [weights[key.split('@')[0]] / counts[key.split('@')[0]] for key in buckets]
 
 
+def validation_sample(buckets, count, seed=None):
+    """Round-robin sources, optionally shuffling within each without changing training."""
+    ordered = [list(buckets[source]) for source in sorted(buckets)]
+    if seed is not None:
+        rng = random.Random(seed)
+        for bucket in ordered:
+            rng.shuffle(bucket)
+    return [index for row in zip_longest(*ordered) for index in row if index is not None][:count]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', type=Path, required=True)
@@ -104,6 +114,7 @@ def main():
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--eval-every', type=int, default=100)
     parser.add_argument('--eval-examples', type=int, default=30)
+    parser.add_argument('--validation-seed', type=int, help='Fixed random sample within validation sources; omitted preserves legacy source order')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cuda')
     parser.add_argument('--attention', choices=['flash', 'sdpa', 'math'], default='flash')
@@ -145,13 +156,15 @@ def main():
         raise ValueError('Vocabulary/context mismatch; prepare SFT within the checkpoint context')
     settings = {'stage': 'sft', 'dataset': digest(manifest), 'lr': args.lr,
                 'accumulation': args.accumulation, 'microbatch': args.microbatch, 'seed': args.seed,
-                'eval_examples': args.eval_examples, 'attention': args.attention, 'device': args.device,
+                'eval_examples': args.eval_examples, 'validation_seed': args.validation_seed,
+                'attention': args.attention, 'device': args.device,
                 'max_length': args.max_length, 'min_tool_calls': args.min_tool_calls,
                 'balanced_sources': args.balanced_sources, 'balanced_lengths': args.balanced_lengths,
                 'short_replay': args.short_replay, 'sources': sorted(args.sources) if args.sources else None,
                 'source_weights': source_weights}
     previous_settings = dict(saved['settings'])
     previous_settings.setdefault('microbatch', 1)
+    previous_settings.setdefault('validation_seed', None)
     for key, default in [('max_length', 32768), ('min_tool_calls', 0), ('balanced_sources', False), ('balanced_lengths', False), ('short_replay', 0), ('sources', None), ('source_weights', {})]:
         previous_settings.setdefault(key, default)
     backend_changed = bool(args.resume and args.allow_attention_change and previous_settings['attention'] != settings['attention'])
@@ -198,8 +211,7 @@ def main():
         val_buckets = {k: v for k, v in val_buckets.items() if k.split('@')[0] in args.sources}
     if not train_buckets or not val_buckets:
         raise ValueError('Curriculum requires retained training and held-out episodes')
-    buckets = [val_buckets[source] for source in sorted(val_buckets)]
-    validation_indices = [i for row in zip_longest(*buckets) for i in row if i is not None][:args.eval_examples]
+    validation_indices = validation_sample(val_buckets, args.eval_examples, args.validation_seed)
     validation = [data['val'][i] for i in validation_indices]
     training = list(train_buckets.values()) if source_weights or args.balanced_sources or args.balanced_lengths else [[i for bucket in train_buckets.values() for i in bucket]]
     sampling_weights = bucket_weights(train_buckets, source_weights) if source_weights else None
