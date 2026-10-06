@@ -52,7 +52,7 @@ Multiply by the live rental quote, then add startup, downloads, storage, and tim
 spent idle. A pilot at one model/context/vocabulary does not predict another.
 No H100 price or speedup is assumed here.
 
-## Run on one Runpod H100 80 GB
+## Desktop headroom
 
 GPU training now defaults to a **75% soft duty cycle** so a local display GPU has
 breathing room for the browser/compositor. Both pretraining and SFT wait for their
@@ -66,6 +66,8 @@ GPU, explicitly use `MICROGPT_GPU_DUTY_CYCLE=1` for unrestricted training. The
 environment is inherited by multi-stage runners; `nice -n 10` can additionally
 lower their CPU priority. The selected duty cycle is printed and logged with
 training metrics. Changing it when resuming preserves optimizer/RNG state.
+
+## Run on one Runpod H100 80 GB
 
 1. Create a GPU Pod with one H100 and a CUDA-capable PyTorch image. Attach a network
    volume at creation if you want it to survive Pod termination. Check the live

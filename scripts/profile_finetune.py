@@ -19,6 +19,7 @@ from microgpt.model import GPT, ModelConfig
 from microgpt.protocol import tokenizer_identity
 from microgpt.tokenizer import Tokenizer
 from microgpt.train import precision
+from microgpt.pacing import GpuPacer
 
 
 def main():
@@ -60,9 +61,11 @@ def main():
         model.load_state_dict(saved['model'])
         model.gradient_checkpointing = True
         optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5, weight_decay=0.01)
+        pacer = GpuPacer(device)
         elapsed = 0
         tokens = 0
-        result = {'microbatch': size, 'accumulation': args.effective_batch // size}
+        result = {'microbatch': size, 'accumulation': args.effective_batch // size,
+                  'gpu_duty_cycle': pacer.fraction}
         try:
             for step, examples in enumerate(batches):
                 if step == args.warmup:
@@ -75,9 +78,11 @@ def main():
                     with precision(device), attention_context(args.attention):
                         loss, targets = loss_for_batch(model, examples[start:start + size], device)
                         (loss / result['accumulation']).backward()
+                    pacer.wait()
                     count += targets
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
                 optimizer.step()
+                pacer.wait()
                 torch.cuda.synchronize()
                 if step >= args.warmup:
                     elapsed += time.perf_counter() - started
