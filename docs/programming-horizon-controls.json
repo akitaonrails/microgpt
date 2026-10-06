@@ -1,0 +1,17 @@
+{
+  "label": "Authored reference controls, no model",
+  "kind": "harness-self-test",
+  "seed": 20261007,
+  "requested_rounds": 32,
+  "rounds": [],
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "effort": null,
+  "harness_sha256": "28302a8e04f9c2f54a5d7a372e929d29b0f82b680533a1ce6083fe0d799efa09",
+  "tasks_sha256": "90ae99ec32fcf53c3658c9ef92ce75cb178f59644e8ba35626e7bfbaaa59bf89",
+  "tasks_file": "evaluation/programming-v1/development.jsonl",
+  "session_handoff": "None: uninterrupted session",
+  "state_owner": "Trusted harness writes user requirements to TASK_STATE.md; no reference answers are included",
+  "tool_failure": "One transient checker failure on round 4; recovery requires another check call",
+  "reference_passed": true,
+  "note": "Harness positive/negative reference controls only. No model was tested in this run. State is harness-written; model compaction and programming-session success remain unverified."
+}

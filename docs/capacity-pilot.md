@@ -656,3 +656,38 @@ Preparation kept 699 training episodes (334,601 assistant tokens) and 38 validat
 episodes (18,796 assistant tokens), with no overlength drops at 8K. The full check
 artifact hash and prepared manifest are in [executed-repair-corpus.json](executed-repair-corpus.json).
 These data are prepared, not yet used for training.
+
+### Broader long-session verification path
+
+The existing horizon evaluator now accepts `--tasks-file` for the frozen programming
+suite and `--no-handoff` for an uninterrupted OpenCode session. It samples distinct
+named functions, rejects fixture name collisions, and cumulatively checks earlier
+requirements after every edit. The existing transient-checker failure is retained.
+Automatic OpenCode compaction stays enabled, but has not yet been shown reliable
+for this candidate. A separate run can retain the halfway handoff.
+
+The 32-task programming reference composition passed its restricted-Docker check,
+and the empty starting implementation failed. The old arithmetic self-test also
+passed. Unit checks ensure reference answers never enter user prompts or the state
+file, reject colliding task definitions, and preserve old arithmetic prompts.
+[programming-horizon-controls.json](programming-horizon-controls.json) is a **harness
+control result**, not model performance. The harness writes user requirements into
+TASK_STATE.md; this does not establish model-written memory or summarization.
+
+For a qualified candidate, the broader session command is:
+
+```sh
+.venv/bin/python scripts/eval_horizon.py \
+  --url http://127.0.0.1:8010/v1 --label 'exact candidate checkpoint' \
+  --tasks-file evaluation/programming-v1/development.jsonl \
+  --rounds 32 --seed 20261007 --no-handoff --effort none \
+  --out runs/programming-session-candidate
+```
+
+Before choosing the next training change, compare the selected public-data candidate
+on the already-frozen exact-signature diagnostic as well as the ordinary development
+prompts. This diagnostic repeats interface information from the user request; it
+does not supply answers. A gain of at least ten direct passes accompanied by at least
+90 correct parameter interfaces would support a targeted interface-augmentation
+experiment. Otherwise prioritize the remaining program-logic deficit. These are
+next-experiment criteria, not relaxed readiness gates or headline model scores.
