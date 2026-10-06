@@ -3,6 +3,7 @@
 Variants differ in identifiers; this validates a representative transformation per
 source, not every generated identifier or full problem-spec correctness.
 """
+import argparse
 import ast
 import json
 from pathlib import Path
@@ -16,17 +17,25 @@ from eval_opencode import IMAGE
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--input', type=Path, default=Path('data/programming-interface-v1.jsonl'))
+    parser.add_argument('--source', type=Path, default=Path('/mnt/gigachad/microgpt/dataset/raw/opencoder-educational/educational_instruct/train-00000-of-00001.parquet'))
+    parser.add_argument('--out', type=Path, default=Path('runs/interface-reference-checks.json'))
+    args = parser.parse_args()
+    if args.out.exists():
+        parser.error('Use a fresh output path to preserve previous evidence')
     selected={}
-    for line in Path('data/programming-interface-v1.jsonl').open():
+    for line in args.input.open():
         record=json.loads(line)
         identifier=record['upstream_id']
         # The second occurrence is the first renamed variant.
         if identifier in selected and selected[identifier] is not None: continue
         if identifier not in selected: selected[identifier]=None;continue
         selected[identifier]=record
+    if not selected or any(record is None for record in selected.values()):
+        raise ValueError('Expected an original and a renamed variant for every source ID')
     checked=[]
-    source=Path('/mnt/gigachad/microgpt/dataset/raw/opencoder-educational/educational_instruct/train-00000-of-00001.parquet')
-    for row in rows(source):
+    for row in rows(args.source):
         record=selected.get(row['seq_id'])
         if record is None:continue
         code=record['messages'][-1]['content'].removeprefix('```python\n').removesuffix('```')
@@ -34,6 +43,8 @@ def main():
         new=next(n.name for n in ast.parse(code).body if isinstance(n,ast.FunctionDef))
         tests=rename(ast.parse('\n'.join(row['testcase'])),old,new)
         checked.append({'seq_id':row['seq_id'],'code':code,'testcase':[tests]})
+    if len(checked) != len(selected):
+        raise ValueError('Some curriculum source IDs are missing from the upstream shard')
     with tempfile.TemporaryDirectory(prefix='microgpt-interface-check-') as directory:
         base=Path(directory);base.chmod(0o755)
         source=base/'input.jsonl';source.write_text(''.join(json.dumps(r)+'\n' for r in checked));source.chmod(0o644)
@@ -43,12 +54,12 @@ def main():
             '--security-opt','no-new-privileges','--pids-limit','64','--memory','512m','--cpus','2','--user','65534:65534',
             '--tmpfs','/tmp:rw,noexec,size=16m','--mount',f'type=bind,src={source},dst=/input.jsonl,readonly',
             '--mount',f'type=bind,src={worker},dst=/worker.py,readonly',IMAGE,'python','-I','-B','/worker.py']
-        try: result=subprocess.run(command,capture_output=True,text=True,check=True,timeout=7200)
+        try: result=subprocess.run(command,capture_output=True,text=True,check=True,timeout=max(7200, len(checked)*2))
         finally:subprocess.run(['docker','rm','-f',name],capture_output=True)
     results=[json.loads(line) for line in result.stdout.splitlines()]
     summary={'image':IMAGE,'selected':len(checked),'results':results,'passed':sum(r['passed'] for r in results),
         'note':'One renamed variant per upstream id; original upstream tests, not independent specification verification.'}
-    Path('runs/interface-reference-checks.json').write_text(json.dumps(summary,indent=2)+'\n')
+    args.out.write_text(json.dumps(summary,indent=2)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k!='results'}))
     if len(results)!=len(checked) or not all(r['passed'] for r in results):raise RuntimeError('Reference transformation failed; inspect result IDs')
 

@@ -225,6 +225,14 @@ The math-backend continuation is recorded in
 | Define requested function | 10/100 | 50/100 |
 | Match requested parameter names | 8/100 | 50/100 |
 
+At 10K updates, execution regressed to 1/100, syntax to 85/100, and both requested
+function and parameter-name matches to 37/100. Assistant target exposures reached
+1,584,702. Validation loss also worsened (0.1947 at 5K to 0.2275), although the
+sampled training loss was just 0.0072. The 5K checkpoint remains preferable on
+development execution; additional training is not monotonic improvement. The
+predeclared final 20K comparison remains bounded and is not permission for an
+indefinite extension of this branch.
+
 Passing variants cover four of twenty families: negatives 1/5, product 2/5,
 longest 1/5, and is_sorted 4/5. None of the twenty families passes all five
 variants. These are correlated name/wording variants, not 100 independent
