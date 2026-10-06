@@ -23,9 +23,10 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--hours',type=float,default=12)
     p.add_argument('--port',type=int,default=8023)
+    p.add_argument('--resume', action='store_true', help='Recover a failed pretraining stage; preserves completed evaluations and budget')
     args=p.parse_args()
     if args.hours <= 0: p.error('hours must be positive')
-    args.out.mkdir(parents=True,exist_ok=False)
+    args.out.mkdir(parents=True,exist_ok=args.resume)
     control=Path('runs/coding-v1/foundation/last.pt')
     tasks=Path('evaluation/programming-v1/development.jsonl')
     config=Path('configs/capacity-239m.toml')
@@ -38,6 +39,16 @@ def main():
            'git_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
            'training_hours_limit':args.hours,'automatic_promotion':False,
            'acceptance_set_used':False,'stopping_rule':'Reject nonfinite validation or loss > matched-step control + 0.2; no expansion past 1B exposures.'}
+    if args.resume:
+        previous=json.loads((args.out/'status.json').read_text())
+        if previous.get('status') not in ('failed', 'interrupted') or previous.get('phase') != 'pretraining':
+            p.error('Resume currently recovers failed/interrupted pretraining only')
+        for key in ('control_sha256','config_sha256','tasks_sha256','data_manifest_sha256','training_hours_limit'):
+            if previous[key] != state[key]: p.error(f'Resume identity changed: {key}')
+        previous.setdefault('recoveries',[]).append({'previous_error':previous.pop('error',None),
+            'at':state['started'],'implementation_commit':state['git_commit']})
+        previous.update(status='running',pid=os.getpid())
+        state=previous
     stopping=False; child=None
     def save():
         state['updated']=datetime.now(timezone.utc).isoformat()
@@ -89,22 +100,44 @@ def main():
                 server.terminate()
                 try:server.wait(timeout=20)
                 except subprocess.TimeoutExpired:server.kill();server.wait()
-    save();training_seconds=0
+    save();training_seconds=state.get('training_seconds',0)
     try:
-        state['phase']='control_raw';save()
-        state['control_raw']=raw(control,args.out/'control-raw');save()
+        if 'control_raw' not in state:
+            state['phase']='control_raw';save()
+            state['control_raw']=raw(control,args.out/'control-raw');save()
         # Independent schedule stops avoid changing the cosine horizon at each tranche.
         control_metrics=[json.loads(line) for line in Path('runs/coding-v1/foundation/metrics.jsonl').read_text().splitlines()]
         foundation=args.out/'foundation'
         for step in (30518,61036,122071):
+            stage=next((s for s in state['stages'] if s['step']==step),None)
+            if stage and stage['status']=='evaluated': continue
             remaining=args.hours*3600-training_seconds
             if remaining<=0: state['status']='budget_exhausted';return
-            stage={'step':step,'status':'training'};state['stages'].append(stage);state['phase']='pretraining';save()
+            if stage is None:
+                stage={'step':step};state['stages'].append(stage)
+            stage['status']='training';state['phase']='pretraining';save()
             command=[sys.executable,'-m','microgpt.train','--config',str(config),'--data','data/large-v1',
                 '--out',str(foundation),'--device','cuda','--attention','flash','--sequence-length','2048',
                 '--stop-at-step',str(step),'--max-seconds',str(remaining)]
             if (foundation/'last.pt').exists():command+=['--resume',str(foundation/'last.pt')]
-            started=time.monotonic();run(command,args.out/'pretraining.log');training_seconds+=time.monotonic()-started
+            while True:
+                started=time.monotonic()
+                try:
+                    run(command,args.out/'pretraining.log')
+                    break
+                except RuntimeError:
+                    tail=(args.out/'pretraining.log').read_text()[-6000:]
+                    recoverable='CUDA error: the launch timed out' in tail
+                    if not recoverable or stage.get('cuda_retries',0)>=1 or not (foundation/'last.pt').exists(): raise
+                    stage['cuda_retries']=stage.get('cuda_retries',0)+1
+                    if '--resume' not in command: command+=['--resume',str(foundation/'last.pt')]
+                finally:
+                    training_seconds+=time.monotonic()-started
+                    state['training_seconds']=training_seconds;save()
+                remaining=args.hours*3600-training_seconds
+                if remaining<=0: state['status']='budget_exhausted';return
+                command[command.index('--max-seconds')+1]=str(remaining)
+
             metrics=json.loads((foundation/'metrics.jsonl').read_text().splitlines()[-1]);stage['metrics']=metrics
             state['training_seconds']=training_seconds
             if metrics['step']!=step: state['status']='budget_exhausted';return
