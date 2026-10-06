@@ -590,3 +590,19 @@ seconds; these include profiler overhead and are not serving latency guarantees.
 [capacity-inference.json](capacity-inference.json) preserves the measurements.
 Synthetic filler established allocation and dispatch, not useful 32K recall,
 reasoning, or long-session programming. Those remain separate unmet gates.
+
+The conditioning diagnostic is now runnable as `scripts/diagnose_conditioning.py`
+with explicit checkpoint, prepared data and raw curriculum paths. A 32-example
+sample from the new-source preparation pilot gave the retained parent a mean
+reference loss of 1.04590 with full problems and 1.34559 with signatures only.
+The maximum math/Flash difference was 0.00388. This is a different distribution,
+including longer prose/docstrings, so the loss is not directly comparable to an
+execution score or evidence that the new training will succeed.
+
+One concrete failure caught by the larger negative-control check: a dataset answer
+implemented `find_maximum`, but every supplied assertion called Python's built-in
+`max` instead. Another used CPU-count-dependent assertions that returned `True`
+without calling the implementation on this machine. Both original and empty
+implementations therefore appeared to pass. Such rows are excluded. Merely finding
+an `assert` AST node is insufficient; the test must distinguish an implementation
+from an absent one. Even that is weaker than complete specification verification.
