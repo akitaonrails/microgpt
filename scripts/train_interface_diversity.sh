@@ -21,7 +21,8 @@ assert checked['selected'] > 0 and checked['selected'] == checked['passed']
 assert checked['input_sha256'] == manifest['sources'][0]['sha256']
 assert checked['input_sha256'] == sha('data/programming-interface-diverse-checked-v1.jsonl')
 assert not Path('runs/interface-diverse-continuation-v1').exists()
-run.mkdir(exist_ok=False)
+if run.exists():
+    raise ValueError('Use a fresh training output directory')
 experiment = {
     'hypothesis': 'Broader checked source-code diversity improves direct programming at fixed update budget.',
     'parent': parent, 'parent_sha256': sha(parent),
@@ -35,7 +36,8 @@ experiment = {
     'progression': 'At least 20/100 direct, 70/100 matching parameter names, and passes in at least 5 families before extending this branch. No automatic promotion.',
     'acceptance_set_used': False,
 }
-(run / 'experiment.json').write_text(json.dumps(experiment, indent=2) + '\n')
+with Path('runs/interface-diverse-experiment-v1.json').open('x') as output:
+    output.write(json.dumps(experiment, indent=2) + '\n')
 PY
 .venv/bin/python -m microgpt.finetune --checkpoint runs/capacity-pilot-v1/candidate-adapter/last.pt \
   --data data/programming-interface-diverse-sft-v2 --out runs/interface-diverse-v1 --steps 1000 \
