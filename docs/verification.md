@@ -1,6 +1,10 @@
-# Scratch-only verification — updated 2026-10-04
+# Scratch-only verification
 
-## Latest measured state
+Current evidence: [capacity pilot and diagnostics](capacity-pilot.md), with 35 passing
+unit tests. General programming and long-session acceptance gates remain unmet.
+The entries below preserve the earlier teaching checkpoint and experiments.
+
+## Historical served checkpoint
 
 The selected deployment is `runs/agent-ready-v1/model.pt`: 90,969,600 parameters,
 random-origin foundation followed by one focused SFT stage, selected at step 2250.

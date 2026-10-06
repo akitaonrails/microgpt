@@ -1,7 +1,9 @@
 # The minimum agentic model: experiment notebook
 
-**Programming correction in progress:** the arithmetic checkpoint failed a user task switch.
-See the [broader coding-data experiment](programming-improvement.md) for the new curriculum and behavioral gates.
+**Current experiment:** broader programming remains weak (2/100 development variants).
+The [controlled capacity pilot](capacity-pilot.md) follows diagnostic comparisons and tests a fresh
+239M student against our original scratch foundation. The served 91M artifact below
+remains a narrow arithmetic lesson.
 
 
 The target is a small, scratch-trained model that can keep a real OpenCode session

@@ -1,7 +1,9 @@
 # MicroGPT Lab — train our own model from scratch
 
-**Programming correction in progress:** the arithmetic checkpoint failed a user task switch.
-See the [broader coding-data experiment](docs/programming-improvement.md) for the new curriculum and behavioral gates.
+**Current experiment:** broader programming remains weak (2/100 development variants).
+The [controlled capacity pilot](docs/capacity-pilot.md) follows diagnostic comparisons and tests a fresh
+239M student against our original scratch foundation. The served 91M artifact below
+remains a narrow arithmetic lesson.
 
 
 An independently written PyTorch GPT inspired by

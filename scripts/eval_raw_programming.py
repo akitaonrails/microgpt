@@ -27,6 +27,7 @@ def main():
     records = [json.loads(line) for line in args.tasks_file.open()] if args.tasks_file else None
     tasks = [(r['id'], r['prompt'], r['tests']) for r in records] if records else TASKS
     references = {r['id']: r['reference'] for r in records} if records else REFERENCES
+    families = {r['id']: r['family'] for r in records} if records else {}
     torch.set_num_threads(4)
     backend = NativeBackend(args.checkpoint, device='cuda', attention='flash')
     summary = {'server': backend.source, 'mode': 'raw', 'image': IMAGE,
@@ -45,7 +46,14 @@ def main():
             outcome = grade(docker_command(work, grader, 'microgpt-raw-' + uuid.uuid4().hex))
             row = {'id': name, 'passed': outcome['passed'], 'grade': outcome['output'],
                    'finish_reason': result.finish_reason, 'completion_tokens': result.completion_tokens}
+            row['family'] = families.get(name, name)
             summary['tasks'].append(row)
+            groups = {}
+            for item in summary['tasks']:
+                group = groups.setdefault(item['family'], {'passed': 0, 'total': 0})
+                group['passed'] += int(item['passed'])
+                group['total'] += 1
+            summary['families'] = groups
             (args.out / f'{name}.py').write_text(code)
             (args.out / 'results.json').write_text(json.dumps(summary, indent=2) + '\n')
             print(json.dumps(row), flush=True)

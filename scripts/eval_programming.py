@@ -62,6 +62,7 @@ def main():
     all_tasks = [(r['id'], r['prompt'], r['tests']) for r in records] if records else TASKS
     tasks = all_tasks[:args.limit]
     references = {r['id']: r['reference'] for r in records} if records else REFERENCES
+    families = {r['id']: r['family'] for r in records} if records else {}
     health = httpx.get(args.url.removesuffix('/v1') + '/health', timeout=10)
     health.raise_for_status()
     summary = {'server': health.json(), 'harness_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'mode': args.mode, 'image': IMAGE, 'tasks_sha256': hashlib.sha256(json.dumps(tasks).encode()).hexdigest(), 'tasks': []}
@@ -124,7 +125,14 @@ def main():
                 current = grade(docker_command(work, current_grader, 'microgpt-current-' + uuid.uuid4().hex))
             row = {'id': name, 'current_task_correct': current['passed'], 'passed': result['passed'] and completed and (checked or args.mode == 'direct'),
                    'code_correct': result['passed'], 'completed': completed, 'checked': checked, 'errors': errors, 'grade': result['output']}
+            row['family'] = families.get(name, name)
             summary['tasks'].append(row)
+            groups = {}
+            for item in summary['tasks']:
+                group = groups.setdefault(item['family'], {'passed': 0, 'total': 0})
+                group['passed'] += int(item['passed'])
+                group['total'] += 1
+            summary['families'] = groups
             (args.out / (name + '.txt')).write_text(raw)
             (args.out / (name + '.py')).write_text(solution.read_text())
             (args.out / 'results.json').write_text(json.dumps(summary, indent=2) + '\n')
