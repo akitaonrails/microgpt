@@ -847,3 +847,20 @@ training or serving. [interface-alias-diagnostic.json](interface-alias-diagnosti
 records the interventions and code hashes. This supports fixing interface copying
 as part of the eventual agent, but does not explain most failures or change the
 ordinary-prompt score of 24/100.
+
+A further recipe check found that Hugging Face's published
+[small SmolLM2 SFT configuration](https://github.com/huggingface/alignment-handbook/blob/main/recipes/smollm2/sft/config_smol.yaml)
+uses two epochs, cosine decay, 10% warmup, and a listed learning rate of 1e-3.
+Our short constant-1e-5 adapters are not a reproduction of that recipe. Differences
+in prior training, data, objective and effective batch prevent importing its rate
+as a proven fix. The clean-control result only rejects this tested short adapter;
+it does not establish that the foundation cannot learn instructions. If the
+expanded-foundation comparison fails, a preregistered optimization comparison is
+more informative than another arbitrary data-format change. The active comparison
+keeps its original adapter settings so its result stays interpretable.
+
+The [135M SmolLM2 model card](https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct)
+reports two trillion pretraining tokens yet only 1.4 on its listed five-shot GSM8K
+metric. This is a different benchmark/model and not a required token budget for
+our narrow tasks. It does underline why a small parameter count, thinking tags or
+large context allocation cannot be presented as demonstrated deep reasoning.
