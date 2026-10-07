@@ -15,6 +15,31 @@ import uuid
 from microgpt.opencode_format import AGENT_PROMPT
 
 IMAGE = "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016"
+
+
+def completion_evidence(events, code_correct, returncode):
+    """A correct file alone does not establish a completed, verified agent task."""
+    last_edit = -1
+    last_check = None
+    for index, event in enumerate(events):
+        if event.get('type') != 'tool_use':
+            continue
+        part = event['part']
+        if part.get('tool') in ('edit', 'write', 'apply_patch'):
+            last_edit = index
+        elif part.get('tool') == 'check':
+            last_check = (index, part.get('state', {}))
+    checked = bool(last_check and last_check[0] > last_edit
+                   and last_check[1].get('status') == 'completed'
+                   and str(last_check[1].get('output', '')).startswith('PASS'))
+    finishes = [event['part'].get('reason') for event in events
+                if event.get('type') == 'step_finish']
+    completed = bool(returncode == 0 and finishes and finishes[-1] == 'stop'
+                     and not any(event.get('type') == 'error' for event in events))
+    return {'code_correct': code_correct, 'checked': checked, 'completed': completed,
+            'passed': code_correct and checked and completed}
+
+
 TASKS = [
     {"id": "mean", "prompt": "Fix mean(values) in solution.py. Return the arithmetic mean; raise ValueError for an empty input. Support negative numbers and floats.",
      "code": "def mean(values):\n    return sum(values) // len(values)\n",
@@ -167,7 +192,7 @@ def main():
                     pass
             calls = [e["part"] for e in events if e.get("type") == "tool_use"]
             final = grade(command)
-            row = {"id": task["id"], "passed": final["passed"], "grade": final["output"],
+            row = {"id": task["id"], **completion_evidence(events, final['passed'], returncode), "grade": final["output"],
                    "returncode": returncode, "seconds": round(time.monotonic() - started, 1),
                    "errors": [e.get('error') for e in events if e.get('type') == 'error'],
                    "tools": [{"name": c["tool"], "status": c["state"]["status"],

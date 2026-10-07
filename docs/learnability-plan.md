@@ -64,3 +64,21 @@ tokens from just 1,942 stored training target tokens; more repetition did not
 improve transfer. Full evidence is in `learnability-outcome.json`. The higher-rate
 control started after this run ended, using the original foundation, not these
 memorized weights. Its live record is `runs/optimization-lr1e4-v1/experiment.json`.
+
+The higher-rate arm scored 9/100 at 500 updates versus 7/100 in the matched
+control. It consumed exactly the same 2,454,569 assistant tokens. At 1000 updates,
+training saved successfully, but cold NAS loading exceeded the evaluation server's
+old 60-second startup allowance. `continue_programming.py --evaluate-current`
+now evaluates the already-saved first milestone without another optimizer update;
+reusing an existing checkpoint requires it to be the same hardlinked file as
+`last.pt`. The startup allowance is now 300 seconds. Recovery uses a fresh output
+directory, preserving the failed attempt, then continues to 2000 with the saved
+optimizer/RNG and identical training settings. This infrastructure failure is not
+a model accuracy result.
+
+The repair-only evaluator now requires a correct final file, the most recent
+check to pass after the last edit, and a clean final stop. Five regression tests
+cover unchecked success, recovery, errors, exhausted runs and stale checks.
+Offline regrading of eight archived OpenCode runs preserved their 7/8 score.
+The direct-code comparison is unaffected. Apply the same completion rule to the
+fresh/cumulative agent evaluators before the next agent trial.

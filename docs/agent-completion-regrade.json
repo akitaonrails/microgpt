@@ -1,0 +1,72 @@
+{
+  "source": "runs/horizon-v2-grounding",
+  "tasks": [
+    {
+      "id": "grounding-0",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-1",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-2",
+      "old_passed": false,
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false
+    },
+    {
+      "id": "grounding-3",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-4",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-5",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-6",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    },
+    {
+      "id": "grounding-7",
+      "old_passed": true,
+      "code_correct": true,
+      "checked": true,
+      "completed": true,
+      "passed": true
+    }
+  ],
+  "old_passed": 7,
+  "strict_passed": 7,
+  "note": "Offline regrading saved tool events; no model rerun or new capability claim."
+}

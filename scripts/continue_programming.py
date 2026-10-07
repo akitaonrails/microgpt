@@ -47,8 +47,10 @@ def main():
     p.add_argument('--tasks-file', type=Path, help='Frozen broader evaluation set')
     p.add_argument('--direct-only', action='store_true', help='Diagnose instruction training without claiming agent readiness')
     p.add_argument('--exact-prompt', action='store_true', help='Use the frozen task prompt without adding formatting instructions')
+    p.add_argument('--evaluate-current', action='store_true', help='First milestone must equal the saved step; evaluate it without another optimizer update')
+    p.add_argument('--server-startup-seconds', type=int, default=300, help='Allow cold NAS checkpoint loads before evaluation')
     args = p.parse_args()
-    if args.hours <= 0 or args.milestones != sorted(set(args.milestones)):
+    if args.hours <= 0 or args.server_startup_seconds < 1 or args.milestones != sorted(set(args.milestones)):
         p.error('Positive hours and strictly increasing milestones are required')
     args.out.mkdir(parents=True, exist_ok=False)
     saved = torch.load(args.run / 'last.pt', map_location='cpu', weights_only=True)
@@ -56,9 +58,13 @@ def main():
     if saved.get('origin', {}).get('initialization') != 'random':
         p.error('This runner requires our random-origin checkpoint')
     del saved; gc.collect()
-    if args.milestones[0] <= start: p.error('Milestones must exceed the saved step')
+    if args.evaluate_current:
+        if args.milestones[0] != start: p.error('Evaluation recovery must start at the saved step')
+    elif args.milestones[0] <= start:
+        p.error('Milestones must exceed the saved step')
     state = {'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
-             'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'exact_prompt': args.exact_prompt, 'stages': [],
+             'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'exact_prompt': args.exact_prompt,
+             'evaluate_current': args.evaluate_current, 'server_startup_seconds': args.server_startup_seconds, 'stages': [],
              'note': 'Continuation, not a claim of model readiness. The existing service is not replaced.'}
     child = None; stopping = False
     def save():
@@ -87,13 +93,20 @@ def main():
             remaining = args.hours * 3600 - (time.monotonic() - started)
             if remaining <= 0 or stopping: break
             stage = {'target': target, 'status': 'training'}; state['stages'].append(stage); save()
-            execute(resume_command(args.run, args.data, settings, target, remaining), args.out / 'training.log')
+            recovery = args.evaluate_current and target == start
+            if not recovery:
+                execute(resume_command(args.run, args.data, settings, target, remaining), args.out / 'training.log')
             if stopping: break
             metric = json.loads((args.run / 'metrics.jsonl').read_text().splitlines()[-1])
             stage['metrics'] = metric; step = metric['step']
+            if recovery and step != start:
+                raise RuntimeError('Saved checkpoint and training metrics disagree')
             frozen = args.run / f'checkpoint-{step}.pt'
-            if frozen.exists(): raise RuntimeError(f'Refusing to overwrite {frozen}')
-            os.link(args.run / 'last.pt', frozen)
+            if frozen.exists():
+                if not recovery or not os.path.samefile(args.run / 'last.pt', frozen):
+                    raise RuntimeError(f'Refusing to overwrite or evaluate a different checkpoint: {frozen}')
+            else:
+                os.link(args.run / 'last.pt', frozen)
             stage.update(status='evaluating', checkpoint=str(frozen)); save()
             destination = args.out / f'eval-{step}'; destination.mkdir()
             with (destination / 'server.log').open('w') as log:
@@ -101,7 +114,8 @@ def main():
                     '--device', 'cuda', '--attention', 'flash', '--constrain-tools', '--port', str(args.port)], stdout=log, stderr=subprocess.STDOUT)
                 try:
                     url = f'http://127.0.0.1:{args.port}'
-                    for _ in range(60):
+                    deadline = time.monotonic() + args.server_startup_seconds
+                    while time.monotonic() < deadline:
                         if stopping: raise InterruptedError('Interrupted')
                         if server.poll() is not None: raise RuntimeError('Evaluation server exited')
                         try:
