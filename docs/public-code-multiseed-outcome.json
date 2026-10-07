@@ -1,0 +1,56 @@
+{
+  "source": "data/verified-opencodeinstruct-v1.jsonl",
+  "source_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+  "checked": 98694,
+  "references_retained": 97074,
+  "repairs_retained": 14770,
+  "hash_seeds": [
+    1,
+    2,
+    3
+  ],
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "checks_sha256": "51f235dda5e625094b5a33f04b2b7f9989737ec36bc018f137220f3cb35b1ac6",
+  "code_sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297",
+  "note": "All references must finish their checks (exit 73) and empty controls fail (exit 1) at every seed. Original text/groups retained. Multiple runs still do not prove complete specifications or determinism.",
+  "repairs_sha256": "b4d391802830ff84d309561f48b6a3cbf60824e7a94b0419043cfc4ce4f6e4e3",
+  "prepared_manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/public-code-multiseed-v1/code.jsonl",
+        "sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297"
+      }
+    ],
+    "counts": {
+      "scanned": 97074,
+      "train_episodes": 92214,
+      "val_episodes": 4860
+    },
+    "splits": {
+      "train": {
+        "examples": 92214,
+        "assistant_tokens": 14165149,
+        "groups": 90213,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 92214
+        },
+        "sha256": "d2def26c9041a059956f8baf5d9a8115b49a5be09d568b9f8c461ed8ae623781"
+      },
+      "val": {
+        "examples": 4860,
+        "assistant_tokens": 750664,
+        "groups": 4786,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 4860
+        },
+        "sha256": "1b346de8c824dc53ebc5bcae528839cc5eea7b4bc5a0054715283911c4d1f65b"
+      }
+    }
+  },
+  "prepared_manifest_sha256": "fadc02ed8ed6673735f5791738632e19101caa53a9842c0c5e58fa64796b219d"
+}

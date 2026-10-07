@@ -48,3 +48,12 @@ local disk headroom. Public and generated Python runs only in restricted Docker.
 Verification owner: the main agent. Evidence: source/split manifests, sandbox
 reference and negative controls, actual generated-code results, existing training
 and pacing regression tests, and hashes/settings recorded before each run.
+
+Initial execution evidence: all 32 original diagnostic examples have exactly
+matching training/evaluation prompt token prefixes, with assistant-only labels.
+The existing 12 training regression tests pass. At 100 updates the diagnostic
+scores 16/16 seen, 0/16 renamed, 1/16 unseen-source. This establishes narrow
+memorization while directly showing poor transfer. The diagnostic is not a
+candidate model. NAS cold loading of its optimizer checkpoint added roughly two
+minutes to controller startup; subsequent evaluation loading was faster. Storage
+capacity and checkpoint I/O latency are separate constraints.
