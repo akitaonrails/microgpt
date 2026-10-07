@@ -68,5 +68,19 @@
     "source_id_overlap": 0,
     "exact_edits_and_cumulative_checks": true
   },
-  "limitations": "Reference-policy append-only sessions with generated requirements state and context handoffs. No model training, learned retrieval, arbitrary repository edits or on-policy recovery established."
+  "limitations": "Reference-policy append-only sessions with generated requirements state and context handoffs. No model training, learned retrieval, arbitrary repository edits or on-policy recovery established.",
+  "multiseed_source_filter": {
+    "retained_episodes": 2040,
+    "rejected_episodes": 0,
+    "retained_sessions": 187,
+    "rejected_sessions": [],
+    "upstream_ids_by_split": {
+      "train": 4000,
+      "val": 150
+    },
+    "input_sha256": "c4b03fad59991edcf24b82693f54f1b23e1f10d3123eae3016fe5f803f514a84",
+    "output_sha256": "c4b03fad59991edcf24b82693f54f1b23e1f10d3123eae3016fe5f803f514a84",
+    "checked_manifest_sha256": "2400debb19de4f43414a7479fb2334de76ac7340691c618c5245e1a2ad2b3000",
+    "note": "Source answers were rechecked across seeds; cumulative compositions retain their earlier single-run execution evidence. No new model rollouts."
+  }
 }
