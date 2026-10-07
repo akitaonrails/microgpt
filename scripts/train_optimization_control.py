@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -59,11 +60,29 @@ def main():
             raise RuntimeError(f'Unmatched control: {key}')
     def save():
         (out / 'experiment.json').write_text(json.dumps(experiment, indent=2) + '\n')
+    child = None
+    stopping = False
+    def stop(*_):
+        nonlocal stopping
+        stopping = True
+        if child is not None and child.poll() is None:
+            child.terminate()
+    for signum in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(signum, stop)
     def execute(command, log):
+        nonlocal child
+        if stopping:
+            raise InterruptedError('Interrupted before next stage')
         experiment['commands'].append(command)
         save()
         with (out / log).open('x') as output:
-            subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, check=True)
+            child = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT)
+            code = child.wait()
+        child = None
+        if stopping:
+            raise InterruptedError('Interrupted')
+        if code:
+            raise RuntimeError(f'Command failed with {code}: {out / log}')
     try:
         execute([sys.executable, '-m', 'microgpt.finetune', '--checkpoint', parent,
                  '--data', data, '--out', run, '--steps', '250', '--lr', '0.0001',

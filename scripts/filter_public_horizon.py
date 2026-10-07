@@ -20,18 +20,20 @@ def main():
     code = args.checked / 'code.jsonl'
     if sha(code) != manifest['code_sha256']:
         raise ValueError('Changed checked code data')
-    accepted = {json.loads(line)['upstream_id'] for line in code.open()}
+    with code.open() as source:
+        accepted = {json.loads(line)['upstream_id'] for line in source}
     rejected_groups = set()
     groups = set()
-    for line in args.input.open():
-        row = json.loads(line)
-        groups.add(row['group'])
-        if not set(row['upstream_ids']) <= accepted:
-            rejected_groups.add(row['group'])
+    with args.input.open() as source:
+        for line in source:
+            row = json.loads(line)
+            groups.add(row['group'])
+            if not set(row['upstream_ids']) <= accepted:
+                rejected_groups.add(row['group'])
     counts = {'retained_episodes': 0, 'rejected_episodes': 0}
     split_ids = {'train': set(), 'val': set()}
-    with args.out.open('x') as output:
-        for line in args.input.open():
+    with args.out.open('x') as output, args.input.open() as source:
+        for line in source:
             row = json.loads(line)
             if row['group'] in rejected_groups:
                 counts['rejected_episodes'] += 1
