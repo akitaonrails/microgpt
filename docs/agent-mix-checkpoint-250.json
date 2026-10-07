@@ -1,0 +1,85 @@
+{
+  "checkpoint": "data/experiments/agent-mix-v1/checkpoint-250.pt",
+  "stage": {
+    "target": 250,
+    "status": "evaluated",
+    "metrics": {
+      "step": 250,
+      "train_loss": 0.913118849042803,
+      "val_loss": 3.832050376725966,
+      "val_loss_by_source": {
+        "executed-public-repair": 0.03602312205661984,
+        "multilingual": 6.740987889638644,
+        "smoltalk": 3.5647058085143306,
+        "verified-opencodeinstruct": 0.712556994980202
+      },
+      "assistant_tokens_seen": 735049,
+      "gpu_duty_cycle": 0.75,
+      "seconds": 410.3,
+      "budget_reached": false,
+      "peak_memory_gb": 16.985954304
+    },
+    "checkpoint": "data/experiments/agent-mix-v1/checkpoint-250.pt",
+    "direct": {
+      "passed": 18,
+      "total": 100
+    },
+    "code_diagnostics": {
+      "passed": 18,
+      "syntax_valid": 79,
+      "requested_function_present": 59,
+      "parameter_names_match": 57,
+      "total": 100
+    },
+    "repair": {
+      "passed": 0,
+      "total": 4,
+      "tasks_using_tools": 4
+    },
+    "passed_gates": false
+  },
+  "repair_failures": [
+    {
+      "id": "mean",
+      "passed": false,
+      "completed": true,
+      "tools": 4,
+      "identical_edits": 1,
+      "tool_errors": [
+        "No changes to apply: oldString and newString are identical."
+      ]
+    },
+    {
+      "id": "chunks",
+      "passed": false,
+      "completed": false,
+      "tools": 6,
+      "identical_edits": 1,
+      "tool_errors": [
+        "No changes to apply: oldString and newString are identical."
+      ]
+    },
+    {
+      "id": "unique",
+      "passed": false,
+      "completed": true,
+      "tools": 5,
+      "identical_edits": 2,
+      "tool_errors": [
+        "No changes to apply: oldString and newString are identical.",
+        "No changes to apply: oldString and newString are identical."
+      ]
+    },
+    {
+      "id": "counts",
+      "passed": false,
+      "completed": true,
+      "tools": 4,
+      "identical_edits": 1,
+      "tool_errors": [
+        "No changes to apply: oldString and newString are identical."
+      ]
+    }
+  ],
+  "decision": "Continue the frozen mixed curriculum to its next checkpoint; no promotion. Tool-policy acquisition is observable, code correctness and recovery remain unmet. Low repair loss does not establish correct edits."
+}
