@@ -1,0 +1,8 @@
+{
+  "records": 32,
+  "assistant_turns": 160,
+  "packed_prefix_matches_serving": true,
+  "assistant_labels_match_targets": true,
+  "source": "data/public-code-multiseed-v1/repairs.jsonl",
+  "scope": "First 32 public repair trajectories; verifies serialization, not model capability or full corpus correctness."
+}

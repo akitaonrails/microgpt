@@ -2,6 +2,9 @@
 
 **Current capability:** the scratch 239M candidate passes **24/100** development
 variants after 500 updates on independently checked public programming answers.
+The same checkpoint passes **0/4 actual OpenCode repairs**, with no tool calls.
+A [longer mixed agent curriculum](docs/agent-mix-plan.md) now targets that gap
+using checked code, executed repair trajectories and conversational replay.
 This remains far below useful programming competence. The
 [controlled experiments](docs/capacity-pilot.md) separate code correctness,
 request-format sensitivity and training-data defects. The served 91M artifact
