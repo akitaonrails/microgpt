@@ -46,6 +46,7 @@ def main():
     p.add_argument('--port', type=int, default=8021)
     p.add_argument('--tasks-file', type=Path, help='Frozen broader evaluation set')
     p.add_argument('--direct-only', action='store_true', help='Diagnose instruction training without claiming agent readiness')
+    p.add_argument('--exact-prompt', action='store_true', help='Use the frozen task prompt without adding formatting instructions')
     args = p.parse_args()
     if args.hours <= 0 or args.milestones != sorted(set(args.milestones)):
         p.error('Positive hours and strictly increasing milestones are required')
@@ -57,7 +58,7 @@ def main():
     del saved; gc.collect()
     if args.milestones[0] <= start: p.error('Milestones must exceed the saved step')
     state = {'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
-             'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'stages': [],
+             'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'exact_prompt': args.exact_prompt, 'stages': [],
              'note': 'Continuation, not a claim of model readiness. The existing service is not replaced.'}
     child = None; stopping = False
     def save():
@@ -110,6 +111,8 @@ def main():
                         except OSError: time.sleep(1)
                     else: raise RuntimeError('Evaluation server did not start')
                     evaluation_flags = ['--tasks-file', str(args.tasks_file), '--limit', '100'] if args.tasks_file else []
+                    if args.exact_prompt:
+                        evaluation_flags.append('--exact-prompt')
                     checks = [('direct', 'scripts/eval_programming.py', ['--mode', 'direct', *evaluation_flags])]
                     passed = True; checked = set()
                     for name, script, flags in checks:
