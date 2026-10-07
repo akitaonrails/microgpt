@@ -1,0 +1,271 @@
+{
+  "started": "2026-10-07T02:19:11.609100+00:00",
+  "status": "complete",
+  "parent": "runs/capacity-pilot-v1/foundation/last.pt",
+  "parent_sha256": "77315ecd671a1350bf72b8c50cb50060cd0ef3e6e0da3bbd84c571220bf03ced",
+  "data_manifest_sha256": "b6cc4efbfc0362551654fc5cc4e56f5d4d3abbe2227d335bd7953981cdcf9cae",
+  "tasks_sha256": "54d4a93508f0d24f96136e86056d24c2d476552be80c9795fa3093f9e49d5ac2",
+  "control_sha256": "41b0f3c283eef6aba755ea47c870d5985c89abde4322c832ae2d7208b817ead3",
+  "diagnostic_sha256": "6312e1cef96cd63ad41dae8a1df079ae9274a05a3198efa29d993b6c07eb7006",
+  "plan_sha256": "c5142a80854af7e5c122d3a303ab80b4d4b51ccc4f290b0bc259e012d9c05fc1",
+  "lr": 0.0001,
+  "control_lr": 1e-05,
+  "control_best": 12,
+  "seed": 20261006,
+  "validation_seed": 20261007,
+  "microbatch": 4,
+  "accumulation": 8,
+  "milestones": [
+    500,
+    1000,
+    2000
+  ],
+  "extension_milestones": [
+    4000,
+    6000
+  ],
+  "extension_minimum_gain": 5,
+  "gpu_duty_cycle": "0.75",
+  "git_commit": "6d6f5d7e3b9b30127263c6b4f326803d9308abed",
+  "acceptance_used": false,
+  "automatic_promotion": false,
+  "commands": [
+    [
+      "/mnt/data/Projects/microgpt/.venv/bin/python",
+      "-m",
+      "microgpt.finetune",
+      "--checkpoint",
+      "runs/capacity-pilot-v1/foundation/last.pt",
+      "--data",
+      "data/verified-opencodeinstruct-sft-v1",
+      "--out",
+      "data/experiments/optimization-lr1e4-v1",
+      "--steps",
+      "250",
+      "--lr",
+      "0.0001",
+      "--seed",
+      "20261006",
+      "--microbatch",
+      "4",
+      "--accumulation",
+      "8",
+      "--eval-every",
+      "250",
+      "--eval-examples",
+      "256",
+      "--validation-seed",
+      "20261007",
+      "--max-length",
+      "8192",
+      "--device",
+      "cuda",
+      "--attention",
+      "math",
+      "--max-seconds",
+      "1200"
+    ],
+    [
+      "/mnt/data/Projects/microgpt/.venv/bin/python",
+      "scripts/continue_programming.py",
+      "--run",
+      "data/experiments/optimization-lr1e4-v1",
+      "--data",
+      "data/verified-opencodeinstruct-sft-v1",
+      "--out",
+      "runs/optimization-lr1e4-v1/pilot",
+      "--milestones",
+      "500",
+      "1000",
+      "2000",
+      "--hours",
+      "2",
+      "--port",
+      "8032",
+      "--tasks-file",
+      "evaluation/programming-v1/development.jsonl",
+      "--direct-only"
+    ]
+  ],
+  "updated": "2026-10-07T02:40:20.568359+00:00",
+  "recoveries": [
+    {
+      "reason": "Cold NAS load exceeded the original 60-second evaluation-server startup allowance",
+      "controller": "runs/optimization-lr1e4-v1/recovery/status.json",
+      "checkpoint": "data/experiments/optimization-lr1e4-v1/checkpoint-1000.pt",
+      "evaluate_current": true,
+      "milestones": [
+        1000,
+        2000
+      ],
+      "hours": 1.5,
+      "server_startup_seconds": 300,
+      "training_settings_changed": false
+    }
+  ],
+  "observed_scores": {
+    "500": 9,
+    "1000": 10
+  },
+  "pending_milestone": 2000,
+  "initial_attempt_error": "Command failed with 1: runs/optimization-lr1e4-v1/pilot.log",
+  "scores": [
+    9,
+    10,
+    7
+  ],
+  "extend": false,
+  "best_direct": 10,
+  "gain_over_control": -2,
+  "decision": "Do not extend the higher-rate raw-foundation recipe: correctness and requested interface retention deteriorated despite lower validation loss. User authorized longer beneficial runs; select a stronger starting recipe for subsequent work.",
+  "stages": [
+    {
+      "target": 500,
+      "status": "evaluated",
+      "metrics": {
+        "step": 500,
+        "train_loss": 0.3737155571579933,
+        "val_loss": 0.6072194642192851,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.6072194642192851
+        },
+        "assistant_tokens_seen": 2454569,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 230.8,
+        "budget_reached": false,
+        "peak_memory_gb": 6.538980352
+      },
+      "checkpoint": "data/experiments/optimization-lr1e4-v1/checkpoint-500.pt",
+      "direct": {
+        "passed": 9,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 9,
+        "syntax_valid": 99,
+        "requested_function_present": 74,
+        "parameter_names_match": 74,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 1000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 1000,
+        "train_loss": 0.3503463715314865,
+        "val_loss": 0.5457361431911999,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.5457361431911999
+        },
+        "assistant_tokens_seen": 4925989,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 454.8,
+        "budget_reached": false,
+        "peak_memory_gb": 8.118715904
+      },
+      "checkpoint": "data/experiments/optimization-lr1e4-v1/checkpoint-1000.pt",
+      "direct": {
+        "passed": 10,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 10,
+        "syntax_valid": 96,
+        "requested_function_present": 47,
+        "parameter_names_match": 47,
+        "total": 100
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 2000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 2000,
+        "train_loss": 0.3581900168210268,
+        "val_loss": 0.49111191261907067,
+        "val_loss_by_source": {
+          "verified-opencodeinstruct": 0.49111191261907067
+        },
+        "assistant_tokens_seen": 9852956,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 895.0,
+        "budget_reached": false,
+        "peak_memory_gb": 8.112856576
+      },
+      "checkpoint": "data/experiments/optimization-lr1e4-v1/checkpoint-2000.pt",
+      "direct": {
+        "passed": 7,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 7,
+        "syntax_valid": 94,
+        "requested_function_present": 38,
+        "parameter_names_match": 38,
+        "total": 100
+      },
+      "passed_gates": false
+    }
+  ],
+  "grader_recheck": [
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-500/direct/results.json",
+      "source_sha256": "8c181d0fcecb359faaceb8549693fe2766a2e2f47231c75a8132e32ee1c3fc43",
+      "old_passed": 7,
+      "passed": 7,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-1000/direct/results.json",
+      "source_sha256": "da2a2daaac4bd01650611e29955b48836144ef92a6cfd55a1d2680a25c1a6da5",
+      "old_passed": 5,
+      "passed": 5,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-2000/direct/results.json",
+      "source_sha256": "a4786a3fb371c1cc76b2dcc975c6df5658e11c428dc615edc80fa24ed5d47742",
+      "old_passed": 12,
+      "passed": 12,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/pilot/eval-500/direct/results.json",
+      "source_sha256": "23bbef345ef125a36d14dc330b9aefbd35e56143cfe60173ba35824feb4dfddc",
+      "old_passed": 9,
+      "passed": 9,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/recovery/eval-1000/direct/results.json",
+      "source_sha256": "55d3fae66ccff8cfbcab8dc1f41b50e719ce23d31126d25001fe7b7b7f60c66a",
+      "old_passed": 10,
+      "passed": 10,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/recovery/eval-2000/direct/results.json",
+      "source_sha256": "62b056f5eae01357b9d77d1a1076d6e0de0dd334f1b12d1368ade98935674932",
+      "old_passed": 7,
+      "passed": 7,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/verified-code-learning-pilot-v1/eval-500/direct/results.json",
+      "source_sha256": "74992ffa31c693394307fb80d66fde1b3a14312e65e03b764be91a1ad68f2945",
+      "old_passed": 24,
+      "passed": 24,
+      "total": 100,
+      "changed": []
+    }
+  ]
+}

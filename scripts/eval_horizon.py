@@ -13,7 +13,7 @@ import subprocess
 import tempfile
 import time
 
-from eval_opencode import IMAGE, configure, docker_command, grade
+from eval_opencode import IMAGE, configure, docker_command, grade, completion_evidence
 from microgpt.opencode_format import state_text, task_prompt
 
 
@@ -125,8 +125,10 @@ def main():
                 try:
                     run = subprocess.run(cli + [prompt], env=environment, capture_output=True, text=True, timeout=90)
                     stdout, stderr = run.stdout, run.stderr
+                    cli_returncode = run.returncode
                 except subprocess.TimeoutExpired as error:
                     stdout, stderr = (error.stdout or b'').decode(), 'OpenCode timed out'
+                    cli_returncode = -1
                 events = []
                 for line in stdout.splitlines():
                     try:
@@ -139,9 +141,8 @@ def main():
                 usage = [e['part']['tokens'] for e in events if e.get('type') == 'step_finish' and 'tokens' in e.get('part', {})]
                 final = grade(command)
                 check_outputs = [str(c['state'].get('output', '')) for c in calls if c.get('tool') == 'check']
-                tested = any(output.startswith('PASS') for output in check_outputs)
-                finishes = [e['part'].get('reason') for e in events if e.get('type') == 'step_finish']
-                completed = bool(finishes and finishes[-1] == 'stop') and not any(e.get('type') == 'error' for e in events)
+                evidence = completion_evidence(events, final['passed'], cli_returncode)
+                tested, completed = evidence['checked'], evidence['completed']
                 row = {'round': index + 1, 'task_id': task.get('id', task.get('name')),
                     'family': task.get('family', 'arithmetic'), 'correct': final['passed'], 'checked': tested,
                     'completed': completed, 'passed': final['passed'] and tested and completed,

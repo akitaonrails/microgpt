@@ -13,7 +13,7 @@ import tempfile
 import uuid
 
 import httpx
-from eval_opencode import configure, grade, docker_command, IMAGE
+from eval_opencode import configure, grade, docker_command, completion_evidence, IMAGE
 from microgpt.programming_data import GENERAL_PROMPT
 
 TASKS = [
@@ -106,19 +106,20 @@ def main():
                     run = subprocess.run(cli + [prompt + ' Add it to solution.py; preserve existing functions and run check.'],
                         env=env, capture_output=True, text=True, timeout=90)
                     raw = run.stdout
+                    cli_returncode = run.returncode
                 except subprocess.TimeoutExpired as error:
                     raw = (error.stdout or b'').decode(); errors.append('timeout')
+                    cli_returncode = -1
                 events = []
                 for line in raw.splitlines():
                     try: events.append(json.loads(line))
                     except json.JSONDecodeError: pass
                 session = next((e['sessionID'] for e in events if e.get('sessionID')), session)
-                finishes = [e['part'].get('reason') for e in events if e.get('type') == 'step_finish']
                 errors += [e.get('error') for e in events if e.get('type') == 'error']
-                completed = bool(finishes and finishes[-1] == 'stop') and not errors
-                checked = any(e.get('type') == 'tool_use' and e['part'].get('tool') == 'check' and
-                    str(e['part']['state'].get('output', '')).startswith('PASS') for e in events)
             result = grade(command)
+            if args.mode != 'direct':
+                evidence = completion_evidence(events, result['passed'], cli_returncode)
+                completed, checked = evidence['completed'], evidence['checked']
             current = result
             if args.mode == 'agent':
                 current_grader = base / 'current.py'

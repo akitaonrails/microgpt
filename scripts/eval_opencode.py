@@ -16,6 +16,7 @@ from microgpt.opencode_format import AGENT_PROMPT
 from microgpt.programming_data import GENERAL_PROMPT
 
 IMAGE = "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016"
+CHECK_SUCCESS = 73
 
 
 def completion_evidence(events, code_correct, returncode):
@@ -78,13 +79,15 @@ def docker_command(work, grader, name):
             "--memory", "256m", "--cpus", "1", "--user", "65534:65534", "--tmpfs", "/tmp:rw,noexec,size=16m",
             "--mount", f"type=bind,src={work},dst=/work,readonly",
             "--mount", f"type=bind,src={grader},dst=/grader.py,readonly", IMAGE,
-            "python", "-I", "-B", "/grader.py"]
+            "python", "-I", "-B", "-c",
+            "import runpy; runpy.run_path('/grader.py', run_name='__main__'); "
+            f"raise SystemExit({CHECK_SUCCESS})"]
 
 
 def grade(command):
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=20)
-        return {"passed": result.returncode == 0, "output": (result.stdout + result.stderr)[-4000:]}
+        return {"passed": result.returncode == CHECK_SUCCESS, "output": (result.stdout + result.stderr)[-4000:]}
     except subprocess.TimeoutExpired:
         return {"passed": False, "output": "Grader timed out"}
     finally:
@@ -110,12 +113,13 @@ export default tool({
     return await new Promise((resolve) => {
       execFile("docker", COMMAND, {timeout: 20000, maxBuffer: 65536}, (error, stdout, stderr) => {
         execFile("docker", ["rm", "-f", NAME], () => {});
-        resolve((error ? "FAIL\\n" : "PASS\\n") + (stdout + stderr).slice(-4000));
+        const passed = error?.code === EXPECTED_STATUS;
+        resolve((passed ? "PASS\\n" : "FAIL\\n") + (stdout + stderr).slice(-4000));
       });
     });
   }
 });
-'''.replace('COMMAND', json.dumps(command[1:])).replace('NAME', json.dumps(name)).replace('FAULT', json.dumps(str(fault)))
+'''.replace('COMMAND', json.dumps(command[1:])).replace('NAME', json.dumps(name)).replace('FAULT', json.dumps(str(fault))).replace('EXPECTED_STATUS', str(CHECK_SUCCESS))
     (tools / 'check.ts').write_text(tool)
     config = json.loads((root / 'examples/opencode/opencode.json').read_text())
     config['provider']['microgpt']['options']['baseURL'] = url

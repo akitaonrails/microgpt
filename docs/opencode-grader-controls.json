@@ -1,0 +1,20 @@
+{
+  "kind": "scripted local responses, no model or cloud inference",
+  "cases": [
+    {
+      "fixture": "correct",
+      "expected": "PASS",
+      "output": "PASS\nPASS\n"
+    },
+    {
+      "fixture": "wrong",
+      "expected": "FAIL",
+      "output": "FAIL\nTraceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.answer() == 42\n           ^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "fixture": "early_exit",
+      "expected": "FAIL",
+      "output": "FAIL\n"
+    }
+  ]
+}

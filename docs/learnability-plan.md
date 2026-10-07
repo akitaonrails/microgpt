@@ -96,3 +96,22 @@ the general assistant instruction used in the public repair curriculum and recor
 that choice. The older specialized repair-lesson prompt remains the default for
 historical reproducibility. Keep the general prompt fixed for the new before/after
 comparison; these four repairs are a smoke test, not the broader readiness gate.
+
+The higher-rate control finished at 9, 10, and 7/100 (low-rate control: 7, 5, 12).
+Its requested-parameter matches fell from 74 to 47 to 38/100. Lower validation loss
+therefore did not establish better instruction following. Do not extend this
+higher-rate raw-foundation recipe. Full evidence: `optimization-control-outcome.json`.
+The user explicitly authorized longer beneficial training on October 7. Longer
+runs remain appropriate for a stronger recipe; the short diagnostic budgets are
+not a project-wide training limit. The strongest retained checkpoint is still
+`runs/verified-code-learning-v1/checkpoint-500.pt` at 24/100.
+
+An authored sandbox control exposed another grader issue: `SystemExit(0)` during
+solution import bypassed all tests but was accepted as a pass. The Docker wrapper
+now returns status 73 only after the grader finishes; both offline grading and the
+actual OpenCode check plugin use that completion status. Correct, incorrect, and
+early-exit fixtures were tested through real OpenCode using scripted local replies
+(no model or cloud inference). This rejects accidental early exits, not deliberate
+grader manipulation. All 700 saved outputs from the six matched checkpoints and
+the selected 24/100 checkpoint were regraded; no score changed. Fresh and cumulative
+agent evaluators now share the strict last-check-after-last-edit completion rule.

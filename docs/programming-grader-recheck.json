@@ -1,0 +1,63 @@
+{
+  "success_exit": 73,
+  "tasks_sha256": "54d4a93508f0d24f96136e86056d24c2d476552be80c9795fa3093f9e49d5ac2",
+  "runs": [
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-500/direct/results.json",
+      "source_sha256": "8c181d0fcecb359faaceb8549693fe2766a2e2f47231c75a8132e32ee1c3fc43",
+      "old_passed": 7,
+      "passed": 7,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-1000/direct/results.json",
+      "source_sha256": "da2a2daaac4bd01650611e29955b48836144ef92a6cfd55a1d2680a25c1a6da5",
+      "old_passed": 5,
+      "passed": 5,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/clean-foundation-adapter-pilot-v1/eval-2000/direct/results.json",
+      "source_sha256": "a4786a3fb371c1cc76b2dcc975c6df5658e11c428dc615edc80fa24ed5d47742",
+      "old_passed": 12,
+      "passed": 12,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/pilot/eval-500/direct/results.json",
+      "source_sha256": "23bbef345ef125a36d14dc330b9aefbd35e56143cfe60173ba35824feb4dfddc",
+      "old_passed": 9,
+      "passed": 9,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/recovery/eval-1000/direct/results.json",
+      "source_sha256": "55d3fae66ccff8cfbcab8dc1f41b50e719ce23d31126d25001fe7b7b7f60c66a",
+      "old_passed": 10,
+      "passed": 10,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/optimization-lr1e4-v1/recovery/eval-2000/direct/results.json",
+      "source_sha256": "62b056f5eae01357b9d77d1a1076d6e0de0dd334f1b12d1368ade98935674932",
+      "old_passed": 7,
+      "passed": 7,
+      "total": 100,
+      "changed": []
+    },
+    {
+      "source": "runs/verified-code-learning-pilot-v1/eval-500/direct/results.json",
+      "source_sha256": "74992ffa31c693394307fb80d66fde1b3a14312e65e03b764be91a1ad68f2945",
+      "old_passed": 24,
+      "passed": 24,
+      "total": 100,
+      "changed": []
+    }
+  ],
+  "full_report_sha256": "75720a59f80775797b31eea69ddda2443cb288fa9661abf85ddc6692831d3f35"
+}

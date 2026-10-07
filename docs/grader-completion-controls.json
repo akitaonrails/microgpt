@@ -1,0 +1,17 @@
+{
+  "cases": {
+    "correct": {
+      "passed": true,
+      "output": "PASS\n"
+    },
+    "wrong": {
+      "passed": false,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.answer() == 42\n           ^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    "early_exit": {
+      "passed": false,
+      "output": ""
+    }
+  },
+  "limitations": "Completion sentinel rejects accidental early exits; it is not proof against deliberate grader manipulation."
+}
