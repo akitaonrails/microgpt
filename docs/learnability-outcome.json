@@ -184,5 +184,33 @@
       "sha256": "c59902ecfe93e094344ff87e596d95cad802013e9792b65e24d4058c418cd2d3"
     }
   },
-  "interpretation": "All seen answers reproduced; renamed transfer failed and unseen-source transfer stayed 1/16. This checkpoint is isolated and never used as a broader training parent."
+  "interpretation": "All seen answers reproduced; renamed transfer failed and unseen-source transfer stayed 1/16. This checkpoint is isolated and never used as a broader training parent.",
+  "original_foundation_cpu_baseline": {
+    "families": {
+      "seen_train": {
+        "passed": 0,
+        "total": 16
+      }
+    },
+    "result_sha256": "a8d0dc472d23086f553440b7cf330a7da5cd93006b9e4ee6420d8b625b243701",
+    "server": {
+      "status": "ok",
+      "model": "microgpt",
+      "context": 32768,
+      "source": {
+        "checkpoint": "runs/capacity-pilot-v1/foundation/last.pt",
+        "context": 32768,
+        "attention": "sdpa",
+        "parameters": 238568448,
+        "stage": "pretrain",
+        "step": 122071,
+        "origin": {
+          "initialization": "random"
+        },
+        "canonical_tool_ids": false,
+        "constrained_tools": true
+      }
+    },
+    "limitation": "CPU SDPA uses different numerical execution from GPU Flash evaluation. A qualitative pre-adaptation baseline, not a bitwise matched backend comparison."
+  }
 }

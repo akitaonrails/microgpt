@@ -82,3 +82,10 @@ cover unchecked success, recovery, errors, exhausted runs and stale checks.
 Offline regrading of eight archived OpenCode runs preserved their 7/8 score.
 The direct-code comparison is unaffected. Apply the same completion rule to the
 fresh/cumulative agent evaluators before the next agent trial.
+
+An additional CPU-only check of the original foundation scored 0/16 on the exact
+seen-training prompts, versus 16/16 after diagnostic adaptation. This is a
+qualitative baseline because CPU SDPA and GPU Flash use different numerical
+execution. The first CPU launch rejected `--attention math`: the server CLI accepts
+`sdpa` or `flash`, while the trainer also exposes `math`. Retrying with CPU SDPA
+completed all 16 requests; no training checkpoint changed.
