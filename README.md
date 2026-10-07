@@ -17,6 +17,13 @@ request-format sensitivity and training-data defects. The served 91M artifact
 below remains a narrow arithmetic lesson.
 
 
+**New direction (October 7):** the authorized [foundation-first pivot](docs/foundation-pivot.md)
+prepares a fresh 337M model with a 32K vocabulary and 304M transformer parameters.
+It measures coding at 2B/5B/10B token milestones with explicit spending gates.
+Preparation and training progress are in `runs/pivot-v1/status.json`; this is
+an experiment, not an improved capability claim.
+
+
 An independently written PyTorch GPT inspired by
 [Karpathy's microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95).
 Every model weight starts random. Pretraining, assistant/tool training and serving

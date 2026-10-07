@@ -20,6 +20,7 @@ class Tokenizer:
         if path is not None:
             from tokenizers import Tokenizer as BPE
             self.backend = BPE.from_file(str(path))
+            self.backend.encode_special_tokens = True
         self.eos = self.backend.token_to_id("<|endoftext|>") if self.backend else 256
         self.vocab_size = self.backend.get_vocab_size() if self.backend else 257
         if self.eos is None:
@@ -94,6 +95,7 @@ def train_bpe(texts, vocab_size):
         initial_alphabet=pre_tokenizers.ByteLevel.alphabet(), show_progress=False,
     ))
     tokenizer = Tokenizer()
+    backend.encode_special_tokens = True
     tokenizer.backend = backend
     tokenizer.eos = backend.token_to_id("<|endoftext|>")
     tokenizer.vocab_size = backend.get_vocab_size()

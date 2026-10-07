@@ -120,7 +120,7 @@ def run_training(args, parser):
     if args.init_from:
         from .protocol import tokenizer_identity
         previous = torch.load(args.init_from, map_location="cpu", weights_only=True)
-        if previous["model_config"] != asdict(model_config):
+        if asdict(ModelConfig(**previous["model_config"])) != asdict(model_config):
             raise ValueError("Stage continuation requires identical model configuration")
         if tokenizer_identity(Tokenizer.load(args.init_from.parent)) != tokenizer_identity(Tokenizer.load(args.data)):
             raise ValueError("Stage continuation requires identical tokenizer IDs")
@@ -129,7 +129,7 @@ def run_training(args, parser):
                   "parent_checkpoint": str(args.init_from), "parent_step": previous["step"]}
     if args.resume:
         checkpoint = torch.load(args.resume, map_location="cpu", weights_only=True)
-        if checkpoint["model_config"] != asdict(model_config) or checkpoint["data"] != metadata:
+        if asdict(ModelConfig(**checkpoint["model_config"])) != asdict(model_config) or checkpoint["data"] != metadata:
             raise ValueError("Resume requires identical model configuration and prepared data")
         if checkpoint["settings"].get("sequence_length", model_config.context) != sequence_length:
             raise ValueError("Resume requires identical sequence-length")
@@ -187,7 +187,7 @@ def run_training(args, parser):
             train_loss += loss.item()
             loss.backward()
             pacer.wait()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
         optimizer.step()
         pacer.wait()
         budget_reached = bool(stopping) or (args.stop_at_step is not None and step + 1 >= args.stop_at_step) or (args.max_seconds is not None and time.monotonic() - started >= args.max_seconds)

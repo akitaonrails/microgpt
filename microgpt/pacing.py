@@ -11,11 +11,18 @@ class GpuPacer:
         self.fraction = float(os.environ.get('MICROGPT_GPU_DUTY_CYCLE', '0.75')) if fraction is None else fraction
         if not math.isfinite(self.fraction) or not 0 < self.fraction <= 1:
             raise ValueError('MICROGPT_GPU_DUTY_CYCLE must be in (0, 1]')
+        self.full_until = float(os.environ.get("MICROGPT_FULL_GPU_UNTIL", "0")) if fraction is None else 0.0
+        if not math.isfinite(self.full_until):
+            raise ValueError("MICROGPT_FULL_GPU_UNTIL must be a finite Unix timestamp")
         self.device = device
         self.enabled = device.type == 'cuda' and self.fraction < 1
         self.last = time.monotonic()
 
     def wait(self):
+        if self.full_until and time.time() >= self.full_until:
+            self.fraction = min(self.fraction, 0.75)
+            self.enabled = self.device.type == "cuda"
+            self.full_until = 0.0
         if not self.enabled:
             return
         # Host sleeps alone are insufficient: previously queued CUDA work must

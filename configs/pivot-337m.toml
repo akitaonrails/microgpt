@@ -1,0 +1,19 @@
+# Scratch foundation. 10B-token cosine schedule; checkpoints at 2B/5B/10B.
+[model]
+context = 32768
+layers = 24
+heads = 16
+width = 1024
+residual_scale = true
+
+[train]
+steps = 305176
+batch_size = 2
+accumulation = 8
+learning_rate = 0.0003
+warmup = 1000
+eval_every = 500
+eval_batches = 16
+gradient_checkpointing = false
+loss_chunk = 0
+seed = 20261007

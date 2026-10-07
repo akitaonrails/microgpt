@@ -140,6 +140,9 @@ class TrainingTests(unittest.TestCase):
             midpoint = torch.load(base / 'staged/last.pt', weights_only=True)
             self.assertEqual(midpoint['step'], 2)
             self.assertEqual(midpoint['settings']['steps'], 4)
+            # Old checkpoints without this optional field still resume exactly.
+            midpoint["model_config"].pop("residual_scale")
+            torch.save(midpoint, base / "staged/last.pt")
             rejected = subprocess.run(command + ['--out', str(base / 'staged'),
                 '--resume', str(base / 'staged/last.pt'), '--steps', '8'], capture_output=True, text=True)
             self.assertNotEqual(rejected.returncode, 0)

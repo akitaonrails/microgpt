@@ -19,6 +19,7 @@ class ModelConfig:
     layers: int = 4
     heads: int = 4
     width: int = 128
+    residual_scale: bool = False
 
     def __post_init__(self):
         if min(self.vocab_size, self.context, self.layers, self.heads, self.width) < 1:
@@ -99,6 +100,11 @@ class GPT(nn.Module):
         self.norm = RMSNorm(config.width)
         self.gradient_checkpointing = False
         self.apply(self._initialize)
+        if config.residual_scale:
+            # Keep the initial residual variance bounded as depth increases.
+            for block in self.blocks:
+                for projection in (block.attention.output, block.down):
+                    nn.init.normal_(projection.weight, std=0.02 / (2 * config.layers) ** 0.5)
 
     @staticmethod
     def _initialize(module):
