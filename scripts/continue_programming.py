@@ -46,11 +46,13 @@ def main():
     p.add_argument('--port', type=int, default=8021)
     p.add_argument('--tasks-file', type=Path, help='Frozen broader evaluation set')
     p.add_argument('--direct-only', action='store_true', help='Diagnose instruction training without claiming agent readiness')
+    p.add_argument('--repair-eval', action='store_true', help='Also measure the four real OpenCode repairs with the general assistant prompt')
+    p.add_argument('--patience', type=int, default=3, help='Stop after this many direct-score plateaus; 0 disables for a fixed mixed-agent curriculum')
     p.add_argument('--exact-prompt', action='store_true', help='Use the frozen task prompt without adding formatting instructions')
     p.add_argument('--evaluate-current', action='store_true', help='First milestone must equal the saved step; evaluate it without another optimizer update')
     p.add_argument('--server-startup-seconds', type=int, default=300, help='Allow cold NAS checkpoint loads before evaluation')
     args = p.parse_args()
-    if args.hours <= 0 or args.server_startup_seconds < 1 or args.milestones != sorted(set(args.milestones)):
+    if args.hours <= 0 or args.patience < 0 or args.server_startup_seconds < 1 or args.milestones != sorted(set(args.milestones)):
         p.error('Positive hours and strictly increasing milestones are required')
     args.out.mkdir(parents=True, exist_ok=False)
     saved = torch.load(args.run / 'last.pt', map_location='cpu', weights_only=True)
@@ -65,6 +67,7 @@ def main():
     state = {'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
              'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'exact_prompt': args.exact_prompt,
              'evaluate_current': args.evaluate_current, 'server_startup_seconds': args.server_startup_seconds, 'stages': [],
+             'repair_eval': args.repair_eval, 'patience': args.patience,
              'note': 'Continuation, not a claim of model readiness. The existing service is not replaced.'}
     child = None; stopping = False
     def save():
@@ -128,6 +131,8 @@ def main():
                     if args.exact_prompt:
                         evaluation_flags.append('--exact-prompt')
                     checks = [('direct', 'scripts/eval_programming.py', ['--mode', 'direct', *evaluation_flags])]
+                    if args.repair_eval:
+                        checks.append(('repair', 'scripts/eval_opencode.py', ['--suite', 'basic', '--general-prompt', '--effort', 'none', '--label', str(frozen)]))
                     passed = True; checked = set()
                     for name, script, flags in checks:
                         execute([sys.executable, script, *flags, '--url', url + '/v1', '--out', str(destination / name)], destination / f'{name}.log', 1800)
@@ -139,6 +144,8 @@ def main():
                         else:
                             score = sum(row['passed'] for row in result['tasks'])
                             stage[name] = {'passed': score, 'total': len(result['tasks'])}
+                            if name == 'repair':
+                                stage[name]['tasks_using_tools'] = sum(bool(row['tools']) for row in result['tasks'])
                             passed = passed and score == len(result['tasks'])
                         if name == 'direct':
                             if args.tasks_file:
@@ -157,7 +164,8 @@ def main():
                                            ('horizon', 'scripts/eval_horizon.py', ['--rounds', '32', '--seed', '20261004', '--effort', 'none', '--label', str(frozen)])]
                         save()
                         if stopping: break
-                    stage['passed_gates'] = passed and not stopping and checked == {'direct', 'agent', 'basic', 'horizon'}
+                    required = {'direct', 'agent', 'basic', 'horizon'} | ({'repair'} if args.repair_eval else set())
+                    stage['passed_gates'] = passed and not stopping and checked == required
                 finally:
                     server.terminate()
                     try: server.wait(timeout=15)
@@ -165,7 +173,7 @@ def main():
             stage['status'] = 'evaluated'; save()
             if stage['passed_gates']:
                 state['status'] = 'candidate_passed_gates'; state['candidate'] = str(frozen); break
-            if stalled >= 3:
+            if args.patience and stalled >= args.patience:
                 state['status'] = 'stopped_no_improvement'; break
         else:
             state['status'] = 'milestones_exhausted'

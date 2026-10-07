@@ -13,7 +13,7 @@ import time
 
 import torch
 
-from microgpt.finetune import load_data, loss_for_batch
+from microgpt.finetune import load_data, loss_for_batch, bucket_weights
 from microgpt.inference import attention_context
 from microgpt.model import GPT, ModelConfig
 from microgpt.protocol import tokenizer_identity
@@ -32,6 +32,8 @@ def main():
     parser.add_argument('--steps', type=int, default=16)
     parser.add_argument('--warmup', type=int, default=2)
     parser.add_argument('--attention', choices=['math', 'flash', 'sdpa'], default='math')
+    parser.add_argument('--max-length', type=int, default=8192)
+    parser.add_argument('--source-weight', action='append', default=[])
     args = parser.parse_args()
     if args.out.exists():
         parser.error('Use a fresh output')
@@ -47,12 +49,20 @@ def main():
     if tokenizer_identity(Tokenizer.load(args.checkpoint.parent)) != manifest['tokenizer_fingerprint']:
         raise ValueError('Checkpoint and data tokenizers differ')
     rng = random.Random(42)
-    eligible = [index for bucket in data['train'].buckets(8192).values() for index in bucket]
-    batches = [[data['train'][rng.choice(eligible)] for _ in range(args.effective_batch)]
+    buckets = data['train'].buckets(args.max_length)
+    weights = {name: float(value) for name, value in (item.rsplit(':', 1) for item in args.source_weight)}
+    sampling_weights = bucket_weights(buckets, weights) if weights else None
+    eligible = list(buckets.values()) if weights else [[index for bucket in buckets.values() for index in bucket]]
+    def example():
+        bucket = rng.choices(eligible, weights=sampling_weights, k=1)[0] if weights else rng.choice(eligible)
+        return data['train'][rng.choice(bucket)]
+    batches = [[example() for _ in range(args.effective_batch)]
                for _ in range(args.steps + args.warmup)]
     report = {'checkpoint': str(args.checkpoint), 'data_manifest': manifest,
               'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'effective_batch': args.effective_batch, 'attention': args.attention,
+              'max_length': args.max_length, 'source_weights': weights,
+              'retained_by_source': {key: len(value) for key, value in buckets.items()},
               'steps': args.steps, 'warmup': args.warmup, 'results': [],
               'note': 'Same examples and episode-mean objective; floating-point execution can differ. Data preloaded for profiling; real training also pays random-access I/O.'}
     device = torch.device('cuda')

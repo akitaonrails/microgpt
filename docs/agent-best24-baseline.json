@@ -1,0 +1,109 @@
+{
+  "label": "runs/verified-code-learning-v1/checkpoint-500.pt",
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "steps": 8,
+  "suite": "basic",
+  "effort": "none",
+  "agent_prompt": "general",
+  "harness_sha256": "ef158835183ee3f977b1f56f09c9ff161bb727d901165b6c2e03168bf49b35df",
+  "tasks_sha256": "2cf738029f23edd1ebb758a63d53a98c875e7840cf0adacdf9f279895c63b878",
+  "opencode": "mise ~/.config/mise/config.toml tools: opencode@1.18.34\n1.18.34",
+  "tasks": [
+    {
+      "id": "mean",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.mean([1, 2]) == 1.5\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 0,
+      "seconds": 25.2,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 4772,
+          "input": 1532,
+          "output": 3240,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "chunks",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks([1,2,3,4,5], 2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 0,
+      "seconds": 8.2,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 1629,
+          "input": 124,
+          "output": 88,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1417
+          }
+        }
+      ]
+    },
+    {
+      "id": "unique",
+      "code_correct": false,
+      "checked": false,
+      "completed": false,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.unique([3,1,3,2,1]) == [3,1,2]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 0,
+      "seconds": 29.7,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 5633,
+          "input": 120,
+          "output": 4096,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1417
+          }
+        }
+      ]
+    },
+    {
+      "id": "counts",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_words('One one TWO') == {'one':2,'two':1}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 0,
+      "seconds": 9.8,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 2144,
+          "input": 129,
+          "output": 598,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1417
+          }
+        }
+      ]
+    }
+  ]
+}
