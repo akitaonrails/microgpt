@@ -1,0 +1,70 @@
+{
+  "profiles": {
+    "flash": [
+      {
+        "microbatch": 1,
+        "accumulation": 16,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 2.5320627989713103,
+        "assistant_tokens": 7829,
+        "target_tokens_per_second": 3091.945430097805,
+        "peak_allocated_gb": 5.089211392
+      },
+      {
+        "microbatch": 2,
+        "accumulation": 8,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 1.7762397469487041,
+        "assistant_tokens": 7829,
+        "target_tokens_per_second": 4407.62572363836,
+        "peak_allocated_gb": 5.304621056
+      }
+    ],
+    "math": [
+      {
+        "microbatch": 1,
+        "accumulation": 16,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 5.5270666719879955,
+        "assistant_tokens": 7829,
+        "target_tokens_per_second": 1416.483727196299,
+        "peak_allocated_gb": 6.03094528
+      }
+    ]
+  },
+  "lengths": {
+    "verified-opencodeinstruct": {
+      "count": 92214,
+      "mean": 549.9550393649554,
+      "p50": 524,
+      "p95": 791,
+      "p99": 979,
+      "max": 2046
+    },
+    "executed-public-repair": {
+      "count": 14061,
+      "mean": 2308.7442571652086,
+      "p50": 2288,
+      "p95": 2544,
+      "p99": 2738,
+      "max": 4986
+    },
+    "smoltalk": {
+      "count": 11319,
+      "mean": 797.2260800424066,
+      "p50": 864,
+      "p95": 1346,
+      "p99": 1424,
+      "max": 7986
+    },
+    "multilingual": {
+      "count": 3796,
+      "mean": 506.9986828240253,
+      "p50": 493,
+      "p95": 963,
+      "p99": 1243,
+      "max": 2104
+    }
+  },
+  "limitations": "Three measured updates per profile; allocation excludes other GPU processes. Full training has variable lengths and random-access I/O."
+}
