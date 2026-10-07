@@ -1,0 +1,11 @@
+{
+  "examples": 97074,
+  "median_code_tokens": 134.0,
+  "mean_code_tokens": 148.65404742773555,
+  "code_tokens": 14430443,
+  "examples_with_docstrings": 97050,
+  "docstring_content_tokens": 6346441,
+  "approximate_docstring_content_fraction": 0.43979529942358664,
+  "limitations": "Token counts for extracted docstring contents omit quotation delimiters and differ at token boundaries. Descriptive composition only; docstrings may be useful supervision and this does not diagnose a causal bottleneck.",
+  "source_sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297"
+}
