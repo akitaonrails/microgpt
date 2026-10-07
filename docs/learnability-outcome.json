@@ -1,0 +1,188 @@
+{
+  "experiment": {
+    "hashes": {
+      "runs/capacity-pilot-v1/foundation/last.pt": "77315ecd671a1350bf72b8c50cb50060cd0ef3e6e0da3bbd84c571220bf03ced",
+      "data/learnability-sft-v1/manifest.json": "8c9601b39725fd1e914d88856ad50032b35bba5bbf7933e95aa77a470605308f",
+      "data/learnability-v1/tasks.jsonl": "bca2c97fe2337dcd0db9321d268ed56fe07f00bf2187fa630b4061cf0cefc4a1",
+      "docs/learnability-plan.md": "0faa0b8216078a438bf0f247be4d05815b08c741758172e4ccd78ef08a02339c"
+    },
+    "lr": 0.0001,
+    "microbatch": 4,
+    "accumulation": 8,
+    "seed": 20261006,
+    "milestones": [
+      100,
+      300,
+      600
+    ],
+    "seen_gate": 15,
+    "git_commit": "648425156b0b478f155ed6664b21872f76d17345"
+  },
+  "template_check": {
+    "examples": 32,
+    "training_serving_prefix_equal": true,
+    "assistant_only_targets_equal": true,
+    "note": "Exact diagnostic requests; does not establish all future prompt formats."
+  },
+  "status": {
+    "status": "milestones_exhausted",
+    "pid": 814283,
+    "started": "2026-10-07T02:07:17.105306+00:00",
+    "initial_step": 25,
+    "milestones": [
+      100,
+      300,
+      600
+    ],
+    "hours": 1.0,
+    "exact_prompt": true,
+    "stages": [
+      {
+        "target": 100,
+        "status": "evaluated",
+        "metrics": {
+          "step": 100,
+          "train_loss": 0.0001041645955410786,
+          "val_loss": 1.3227799547071064,
+          "val_loss_by_source": {
+            "verified-opencodeinstruct": 1.3227799547071064
+          },
+          "assistant_tokens_seen": 388825,
+          "gpu_duty_cycle": 0.75,
+          "seconds": 51.0,
+          "budget_reached": false,
+          "peak_memory_gb": 5.813864448
+        },
+        "checkpoint": "data/experiments/learnability-v1/checkpoint-100.pt",
+        "direct": {
+          "passed": 17,
+          "total": 48
+        },
+        "code_diagnostics": {
+          "passed": 17,
+          "syntax_valid": 43,
+          "requested_function_present": 24,
+          "parameter_names_match": 22,
+          "total": 48
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 300,
+        "status": "evaluated",
+        "metrics": {
+          "step": 300,
+          "train_loss": 2.8758170856235665e-05,
+          "val_loss": 1.3772294558466676,
+          "val_loss_by_source": {
+            "verified-opencodeinstruct": 1.3772294558466676
+          },
+          "assistant_tokens_seen": 1167668,
+          "gpu_duty_cycle": 0.75,
+          "seconds": 131.7,
+          "budget_reached": false,
+          "peak_memory_gb": 5.809083392
+        },
+        "checkpoint": "data/experiments/learnability-v1/checkpoint-300.pt",
+        "direct": {
+          "passed": 17,
+          "total": 48
+        },
+        "code_diagnostics": {
+          "passed": 17,
+          "syntax_valid": 43,
+          "requested_function_present": 24,
+          "parameter_names_match": 22,
+          "total": 48
+        },
+        "passed_gates": false
+      },
+      {
+        "target": 600,
+        "status": "evaluated",
+        "metrics": {
+          "step": 600,
+          "train_loss": 1.7589651747584867e-05,
+          "val_loss": 1.4321282512912528,
+          "val_loss_by_source": {
+            "verified-opencodeinstruct": 1.4321282512912528
+          },
+          "assistant_tokens_seen": 2336082,
+          "gpu_duty_cycle": 0.75,
+          "seconds": 197.2,
+          "budget_reached": false,
+          "peak_memory_gb": 5.812332544
+        },
+        "checkpoint": "data/experiments/learnability-v1/checkpoint-600.pt",
+        "direct": {
+          "passed": 17,
+          "total": 48
+        },
+        "code_diagnostics": {
+          "passed": 17,
+          "syntax_valid": 43,
+          "requested_function_present": 24,
+          "parameter_names_match": 22,
+          "total": 48
+        },
+        "passed_gates": false
+      }
+    ],
+    "note": "Continuation, not a claim of model readiness. The existing service is not replaced.",
+    "updated": "2026-10-07T02:19:09.983122+00:00"
+  },
+  "results": {
+    "100": {
+      "families": {
+        "seen_train": {
+          "passed": 16,
+          "total": 16
+        },
+        "renamed": {
+          "passed": 0,
+          "total": 16
+        },
+        "unseen_source": {
+          "passed": 1,
+          "total": 16
+        }
+      },
+      "sha256": "5993b70913ab549c2528d46647b9842fa0e254281839e9e6c37272532211a759"
+    },
+    "300": {
+      "families": {
+        "seen_train": {
+          "passed": 16,
+          "total": 16
+        },
+        "renamed": {
+          "passed": 0,
+          "total": 16
+        },
+        "unseen_source": {
+          "passed": 1,
+          "total": 16
+        }
+      },
+      "sha256": "930beffa0e486ef9daf1195452ed9b32168d76e61b3bf57b4c5cda54797ef4e5"
+    },
+    "600": {
+      "families": {
+        "seen_train": {
+          "passed": 16,
+          "total": 16
+        },
+        "renamed": {
+          "passed": 0,
+          "total": 16
+        },
+        "unseen_source": {
+          "passed": 1,
+          "total": 16
+        }
+      },
+      "sha256": "c59902ecfe93e094344ff87e596d95cad802013e9792b65e24d4058c418cd2d3"
+    }
+  },
+  "interpretation": "All seen answers reproduced; renamed transfer failed and unseen-source transfer stayed 1/16. This checkpoint is isolated and never used as a broader training parent."
+}

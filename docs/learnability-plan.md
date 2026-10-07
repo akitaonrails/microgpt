@@ -57,3 +57,10 @@ memorization while directly showing poor transfer. The diagnostic is not a
 candidate model. NAS cold loading of its optimizer checkpoint added roughly two
 minutes to controller startup; subsequent evaluation loading was faster. Storage
 capacity and checkpoint I/O latency are separate constraints.
+
+The diagnostic completed all three checkpoints with identical scores: 16/16 seen,
+0/16 renamed, 1/16 unseen-source. At 600 updates it had sampled 2,336,082 assistant
+tokens from just 1,942 stored training target tokens; more repetition did not
+improve transfer. Full evidence is in `learnability-outcome.json`. The higher-rate
+control started after this run ended, using the original foundation, not these
+memorized weights. Its live record is `runs/optimization-lr1e4-v1/experiment.json`.
