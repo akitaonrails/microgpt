@@ -153,6 +153,7 @@ def main():
     parser.add_argument("--label", required=True, help="Exact scratch checkpoint provenance for this run")
     parser.add_argument("--steps", type=int, default=8)
     parser.add_argument('--suite', choices=['basic', 'grounding'], default='basic')
+    parser.add_argument('--tasks-file', type=Path, help='Frozen local JSONL repair fixtures with id, prompt, code and tests')
     parser.add_argument('--general-prompt', action='store_true', help='Use the general assistant instruction shared with the public repair curriculum')
     parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     args = parser.parse_args()
@@ -162,7 +163,15 @@ def main():
     root = Path(__file__).resolve().parents[1]
     args.out.mkdir(parents=True)
     tasks = TASKS if args.suite == 'basic' else grounding_tasks()
+    if args.tasks_file:
+        tasks = [json.loads(line) for line in args.tasks_file.open()]
+        if not tasks or len({t['id'] for t in tasks}) != len(tasks):
+            parser.error('Repair fixtures need nonempty unique IDs')
+        if any(not all(isinstance(t.get(key), str) for key in ('id', 'prompt', 'code', 'tests'))
+               or not t['id'].replace('_', '').replace('-', '').isalnum() for t in tasks):
+            parser.error('Invalid repair fixture fields or unsafe ID')
     summary = {"label": args.label, "image": IMAGE, "steps": args.steps, "suite": args.suite, 'effort': args.effort,
+               'tasks_file': str(args.tasks_file) if args.tasks_file else None,
                'agent_prompt': 'general' if args.general_prompt else 'repair_lesson',
                "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                "tasks_sha256": hashlib.sha256(json.dumps(tasks, sort_keys=True).encode()).hexdigest(),

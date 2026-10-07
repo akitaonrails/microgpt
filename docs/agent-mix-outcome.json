@@ -1,0 +1,304 @@
+{
+  "experiment": {
+    "status": "milestones_exhausted",
+    "pid": 1370098,
+    "started": "2026-10-07T03:16:53.288192+00:00",
+    "parent": "runs/verified-code-learning-v1/checkpoint-500.pt",
+    "parent_sha256": "eb9e29177cdec107be385a24bf1d6687e85afcbf490cb00cc81df756674d416d",
+    "data_manifest_sha256": "68bc3843d7e5691c068e73265e601d580779994c2ea03186ee883bfb6ad07edd",
+    "plan_sha256": "e47abb6a1d2f5014241fd9926228ac155aa8a3a0c000a2bcfec638e38d8a2090",
+    "baseline": {
+      "direct": 24,
+      "repair": 0,
+      "tasks_using_tools": 0
+    },
+    "source_weights": {
+      "verified-opencodeinstruct": 0.5,
+      "executed-public-repair": 0.4,
+      "smoltalk": 0.08,
+      "multilingual": 0.02
+    },
+    "lr": 1e-05,
+    "microbatch": 1,
+    "accumulation": 16,
+    "attention": "math",
+    "max_length": 8192,
+    "seed": 20261008,
+    "milestones": [
+      250,
+      1000,
+      3000,
+      6000,
+      12000
+    ],
+    "hours": 6,
+    "gpu_duty_cycle": "0.75",
+    "git_commit": "35503b80122e120fded6b8b218bf044a37287a2a",
+    "acceptance_used": false,
+    "automatic_promotion": false,
+    "commands": [
+      [
+        "/mnt/data/Projects/microgpt/.venv/bin/python",
+        "-m",
+        "microgpt.finetune",
+        "--checkpoint",
+        "runs/verified-code-learning-v1/checkpoint-500.pt",
+        "--data",
+        "data/programming-agent-mix-v1",
+        "--out",
+        "data/experiments/agent-mix-v1",
+        "--steps",
+        "250",
+        "--lr",
+        "0.00001",
+        "--seed",
+        "20261008",
+        "--microbatch",
+        "1",
+        "--accumulation",
+        "16",
+        "--eval-every",
+        "250",
+        "--eval-examples",
+        "256",
+        "--validation-seed",
+        "20261007",
+        "--max-length",
+        "8192",
+        "--device",
+        "cuda",
+        "--attention",
+        "math",
+        "--source-weight",
+        "verified-opencodeinstruct:0.5",
+        "--source-weight",
+        "executed-public-repair:0.4",
+        "--source-weight",
+        "smoltalk:0.08",
+        "--source-weight",
+        "multilingual:0.02"
+      ],
+      [
+        "/mnt/data/Projects/microgpt/.venv/bin/python",
+        "scripts/continue_programming.py",
+        "--run",
+        "data/experiments/agent-mix-v1",
+        "--data",
+        "data/programming-agent-mix-v1",
+        "--out",
+        "runs/agent-mix-v1/pilot",
+        "--milestones",
+        "250",
+        "1000",
+        "3000",
+        "6000",
+        "12000",
+        "--hours",
+        "5.877940237732805",
+        "--port",
+        "8034",
+        "--tasks-file",
+        "evaluation/programming-v1/development.jsonl",
+        "--direct-only",
+        "--repair-eval",
+        "--patience",
+        "0",
+        "--evaluate-current"
+      ]
+    ],
+    "finished": "2026-10-07T09:21:18.395409+00:00"
+  },
+  "stages": [
+    {
+      "target": 250,
+      "status": "evaluated",
+      "metrics": {
+        "step": 250,
+        "train_loss": 0.913118849042803,
+        "val_loss": 3.832050376725966,
+        "val_loss_by_source": {
+          "executed-public-repair": 0.03602312205661984,
+          "multilingual": 6.740987889638644,
+          "smoltalk": 3.5647058085143306,
+          "verified-opencodeinstruct": 0.712556994980202
+        },
+        "assistant_tokens_seen": 735049,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 410.3,
+        "budget_reached": false,
+        "peak_memory_gb": 16.985954304
+      },
+      "checkpoint": "data/experiments/agent-mix-v1/checkpoint-250.pt",
+      "direct": {
+        "passed": 18,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 18,
+        "syntax_valid": 79,
+        "requested_function_present": 59,
+        "parameter_names_match": 57,
+        "total": 100
+      },
+      "repair": {
+        "passed": 0,
+        "total": 4,
+        "tasks_using_tools": 4
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 1000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 1000,
+        "train_loss": 0.7810560510697542,
+        "val_loss": 3.461844244934576,
+        "val_loss_by_source": {
+          "executed-public-repair": 0.017686689613379058,
+          "multilingual": 6.081024249027344,
+          "smoltalk": 3.227472864913898,
+          "verified-opencodeinstruct": 0.6542425530157142
+        },
+        "assistant_tokens_seen": 3026994,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 1197.7,
+        "budget_reached": false,
+        "peak_memory_gb": 16.544659968
+      },
+      "checkpoint": "data/experiments/agent-mix-v1/checkpoint-1000.pt",
+      "direct": {
+        "passed": 18,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 18,
+        "syntax_valid": 89,
+        "requested_function_present": 53,
+        "parameter_names_match": 53,
+        "total": 100
+      },
+      "repair": {
+        "passed": 0,
+        "total": 4,
+        "tasks_using_tools": 4
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 3000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 3000,
+        "train_loss": 0.22369859131867997,
+        "val_loss": 3.092910792870218,
+        "val_loss_by_source": {
+          "executed-public-repair": 0.012534354578081115,
+          "multilingual": 5.382366058365595,
+          "smoltalk": 2.926563948775735,
+          "verified-opencodeinstruct": 0.5682737007747718
+        },
+        "assistant_tokens_seen": 9092751,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 4116.6,
+        "budget_reached": false,
+        "peak_memory_gb": 16.98371584
+      },
+      "checkpoint": "data/experiments/agent-mix-v1/checkpoint-3000.pt",
+      "direct": {
+        "passed": 20,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 20,
+        "syntax_valid": 77,
+        "requested_function_present": 47,
+        "parameter_names_match": 45,
+        "total": 100
+      },
+      "repair": {
+        "passed": 0,
+        "total": 4,
+        "tasks_using_tools": 4
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 6000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 6000,
+        "train_loss": 0.43951840119234475,
+        "val_loss": 2.832329959658354,
+        "val_loss_by_source": {
+          "executed-public-repair": 0.009930414402125397,
+          "multilingual": 4.872580558537639,
+          "smoltalk": 2.7240387360754363,
+          "verified-opencodeinstruct": 0.5136673553658928
+        },
+        "assistant_tokens_seen": 18135040,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 5613.1,
+        "budget_reached": false,
+        "peak_memory_gb": 17.100736
+      },
+      "checkpoint": "data/experiments/agent-mix-v1/checkpoint-6000.pt",
+      "direct": {
+        "passed": 13,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 13,
+        "syntax_valid": 89,
+        "requested_function_present": 57,
+        "parameter_names_match": 57,
+        "total": 100
+      },
+      "repair": {
+        "passed": 0,
+        "total": 4,
+        "tasks_using_tools": 4
+      },
+      "passed_gates": false
+    },
+    {
+      "target": 12000,
+      "status": "evaluated",
+      "metrics": {
+        "step": 11718,
+        "train_loss": 0.20675071184450644,
+        "val_loss": 2.5713653101540044,
+        "val_loss_by_source": {
+          "executed-public-repair": 0.008471420421122883,
+          "multilingual": 4.336171010146574,
+          "smoltalk": 2.5382002181788983,
+          "verified-opencodeinstruct": 0.4653171306622932
+        },
+        "assistant_tokens_seen": 35583002,
+        "gpu_duty_cycle": 0.75,
+        "seconds": 9260.7,
+        "budget_reached": true,
+        "peak_memory_gb": 17.130543616
+      },
+      "checkpoint": "data/experiments/agent-mix-v1/checkpoint-11718.pt",
+      "direct": {
+        "passed": 14,
+        "total": 100
+      },
+      "code_diagnostics": {
+        "passed": 14,
+        "syntax_valid": 93,
+        "requested_function_present": 54,
+        "parameter_names_match": 54,
+        "total": 100
+      },
+      "repair": {
+        "passed": 0,
+        "total": 4,
+        "tasks_using_tools": 4
+      },
+      "passed_gates": false
+    }
+  ],
+  "interpretation": "Budget reached at 11718 updates, though the legacy controller labels the last evaluated target milestones_exhausted. No checkpoint improved the 24/100 parent; every broad repair evaluation remained 0/4. No promotion."
+}

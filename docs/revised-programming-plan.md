@@ -5,9 +5,11 @@ follows the completed 250M-token continuation, which did not improve the matched
 coding control (11/100 versus 12/100). A 16-example diagnostic can reproduce all
 16 training solutions but fails all 16 renamed variants at its first checkpoint.
 The completed higher-rate comparison peaked at 10/100 versus the control's 12/100;
-it is not being extended. The best 24/100 checkpoint makes no tool calls on four
-actual OpenCode repairs. The [longer mixed agent curriculum](agent-mix-plan.md)
-now targets tool policy while retaining coding and conversational practice.
+it is not being extended. The six-hour mixed agent run learned tools but remained
+at 0/4 broad repairs and reduced direct coding to 14/100. The
+[repair investigation and revised execution plan](repair-investigation.md) found
+7/8 successes on narrow source-held-out repairs, isolating data coverage,
+localization and recovery as the next targets.
 The [controlled experiment notebook](capacity-pilot.md)
 supersedes the status snapshot below. The scratch candidate is now 238,568,448
 parameters; its best broader direct-code score is 24/100. Programming correctness
