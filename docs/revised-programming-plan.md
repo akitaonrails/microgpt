@@ -10,6 +10,9 @@ at 0/4 broad repairs and reduced direct coding to 14/100. The
 [repair investigation and revised execution plan](repair-investigation.md) found
 7/8 successes on narrow source-held-out repairs, isolating data coverage,
 localization and recovery as the next targets.
+The [execution plan](refined-agent-execution.md) is now running: the refined corpus
+and 96-case diagnostic are prepared, with actual model-failure corrections and
+gated continuation from the preserved 24/100 parent.
 The [controlled experiment notebook](capacity-pilot.md)
 supersedes the status snapshot below. The scratch candidate is now 238,568,448
 parameters; its best broader direct-code score is 24/100. Programming correctness

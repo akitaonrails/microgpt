@@ -1,0 +1,98 @@
+{
+  "prepared_corpus": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/public-code-multiseed-v1/code.jsonl",
+        "sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297"
+      },
+      {
+        "file": "data/refined-repairs-v1.jsonl",
+        "sha256": "fecdbc1f10f1576253f6c7efee6aaee72c17c7c4c82159359d10e01bb3cdf8ff"
+      },
+      {
+        "file": "data/smoltalk-large.jsonl",
+        "sha256": "6a2b6073549ea24aee1f21090e2c9646bf2e49d16c6dac27d1390d16ab7ce559"
+      },
+      {
+        "file": "data/multilingual-large.jsonl",
+        "sha256": "c2ace5f695433b6d0568727e793fc8022fc710fad5201bf20f7c65b925d7839f"
+      }
+    ],
+    "counts": {
+      "scanned": 130208,
+      "train_episodes": 123932,
+      "val_episodes": 6208,
+      "overlength_or_empty": 66,
+      "duplicates": 2
+    },
+    "splits": {
+      "train": {
+        "examples": 123932,
+        "assistant_tokens": 25490710,
+        "groups": 104999,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 92214,
+          "executed-public-repair": 16603,
+          "smoltalk": 11319,
+          "multilingual": 3796
+        },
+        "sha256": "c0cdcfd82e04717fc6dc74878e4722fdb7d2a4145a717e9187ef1b12dda44570"
+      },
+      "val": {
+        "examples": 6208,
+        "assistant_tokens": 1303477,
+        "groups": 5603,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 4860,
+          "executed-public-repair": 531,
+          "smoltalk": 613,
+          "multilingual": 204
+        },
+        "sha256": "30e5736af545ea6ffb0c3131fdcc67ab4609ccce0fe9e9831079ccf90f28422e"
+      }
+    }
+  },
+  "repairs": {
+    "single_mutation": {
+      "train": 5513,
+      "val": 177
+    },
+    "structural": {
+      "train": 5513,
+      "val": 177
+    },
+    "reference_recovery": 5690,
+    "model_failure_corrections": 64,
+    "total": 17134,
+    "output_sha256": "fecdbc1f10f1576253f6c7efee6aaee72c17c7c4c82159359d10e01bb3cdf8ff",
+    "source": "executed-public-repair",
+    "source_weights_unchanged": true,
+    "generated_user_format": "literal surrounding quotes and newlines, matching captured OpenCode 1.18.34 CLI requests",
+    "note": "Roughly equal simple/structural/reference-recovery episode counts within the repair source; bounded model corrections appended. Source-group splits unchanged."
+  },
+  "model_corrections": {
+    "captured_tasks": 64,
+    "candidate_failures": 64,
+    "verified_corrections": 64,
+    "captures_sha256": "bfb5033d1ba884fb2e664c3f44196855fda47cc97dc5079d78b65a1b19c75c93",
+    "output_sha256": "3e8a0562adca0790ae231813f0b17504b16f3392336187f161b6842185076cf8",
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "runtime_controls": {
+    "tasks_sha256": "ca1bde00e7b389610a75b6892586ada370540b809ef9512272da952f28d15213",
+    "passed": true,
+    "count": 96,
+    "broken_rejected": 96,
+    "references_passed": 96
+  },
+  "verified_model_corrections_retained": 64
+}
