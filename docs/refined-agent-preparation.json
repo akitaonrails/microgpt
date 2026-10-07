@@ -1,0 +1,57 @@
+{
+  "structural": {
+    "selected": {
+      "train": 6000,
+      "val": 192
+    },
+    "retained": {
+      "train": 5513,
+      "val": 177
+    },
+    "families": {
+      "omitted_guard": 842,
+      "omitted_loop_body": 671,
+      "wrong_return": 1977,
+      "empty_implementation": 2200
+    },
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "seed": 20261010,
+    "files": {
+      "references.jsonl": "028eb46de8cdaa0695490e34d0dbefb7df8d616f27cf5982ae454bb589fbacd4",
+      "checks.jsonl": "d922f43a47af8aaeaf572ea37a9bd1ab47aeb53dc4ccf49814cae048a629936b",
+      "structural.jsonl": "d4c50676f3c5f2f42a79ed62e8f63588acd77636503485c87201bca8bf7d89b3",
+      "recovery.jsonl": "878de87c70f947960edd7502a5377efcc7f09db96d97c276199a8c4785b82f78"
+    },
+    "note": "Prepared execution-checked data; no model performance claim."
+  },
+  "diagnostic": {
+    "counts": {
+      "single_mutation": 32,
+      "structural": 32,
+      "recovery": 32
+    },
+    "unique_eval_groups": 96,
+    "train_rollouts": 64,
+    "split": "unchanged SHA256 source-group split",
+    "files": {
+      "evaluation.jsonl": "ca1bde00e7b389610a75b6892586ada370540b809ef9512272da952f28d15213",
+      "training-rollouts.jsonl": "f22e08ec05b74a4a98937406afe476b6887b611fe3685ee652fb039ce9a18b48"
+    },
+    "note": "Frozen before new training. Initial fixtures derive from multiseed controls. Runtime injected transient failure is validated separately."
+  },
+  "training_rollouts": {
+    "completed": 64,
+    "passed": 0,
+    "request_count": 317,
+    "all_user_prompts_match_runtime_formatter": true,
+    "requests_sha256": "bfb5033d1ba884fb2e664c3f44196855fda47cc97dc5079d78b65a1b19c75c93",
+    "checkpoint": "data/experiments/agent-mix-v1/checkpoint-11718.pt"
+  },
+  "upstream_dataset": "nvidia/OpenCodeInstruct",
+  "license": "CC-BY-4.0",
+  "regression_tests_passed": 74
+}

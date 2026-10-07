@@ -47,6 +47,7 @@ def main():
     p.add_argument('--tasks-file', type=Path, help='Frozen broader evaluation set')
     p.add_argument('--direct-only', action='store_true', help='Diagnose instruction training without claiming agent readiness')
     p.add_argument('--repair-eval', action='store_true', help='Also measure the four real OpenCode repairs with the general assistant prompt')
+    p.add_argument('--repair-tasks-file', type=Path, help='Also evaluate a frozen, stratified repair diagnostic')
     p.add_argument('--patience', type=int, default=3, help='Stop after this many direct-score plateaus; 0 disables for a fixed mixed-agent curriculum')
     p.add_argument('--exact-prompt', action='store_true', help='Use the frozen task prompt without adding formatting instructions')
     p.add_argument('--evaluate-current', action='store_true', help='First milestone must equal the saved step; evaluate it without another optimizer update')
@@ -68,6 +69,7 @@ def main():
              'initial_step': start, 'milestones': args.milestones, 'hours': args.hours, 'exact_prompt': args.exact_prompt,
              'evaluate_current': args.evaluate_current, 'server_startup_seconds': args.server_startup_seconds, 'stages': [],
              'repair_eval': args.repair_eval, 'patience': args.patience,
+             'repair_tasks_file': str(args.repair_tasks_file) if args.repair_tasks_file else None,
              'note': 'Continuation, not a claim of model readiness. The existing service is not replaced.'}
     child = None; stopping = False
     def save():
@@ -133,9 +135,11 @@ def main():
                     checks = [('direct', 'scripts/eval_programming.py', ['--mode', 'direct', *evaluation_flags])]
                     if args.repair_eval:
                         checks.append(('repair', 'scripts/eval_opencode.py', ['--suite', 'basic', '--general-prompt', '--effort', 'none', '--label', str(frozen)]))
+                    if args.repair_tasks_file:
+                        checks.append(('diagnostic', 'scripts/eval_opencode.py', ['--tasks-file', str(args.repair_tasks_file), '--general-prompt', '--effort', 'none', '--label', str(frozen)]))
                     passed = True; checked = set()
                     for name, script, flags in checks:
-                        execute([sys.executable, script, *flags, '--url', url + '/v1', '--out', str(destination / name)], destination / f'{name}.log', 1800)
+                        execute([sys.executable, script, *flags, '--url', url + '/v1', '--out', str(destination / name)], destination / f'{name}.log', 7200 if name == 'diagnostic' else 1800)
                         result = json.loads((destination / name / 'results.json').read_text())
                         checked.add(name)
                         if name == 'horizon':
@@ -144,8 +148,12 @@ def main():
                         else:
                             score = sum(row['passed'] for row in result['tasks'])
                             stage[name] = {'passed': score, 'total': len(result['tasks'])}
-                            if name == 'repair':
+                            if name in ('repair', 'diagnostic'):
                                 stage[name]['tasks_using_tools'] = sum(bool(row['tools']) for row in result['tasks'])
+                                stage[name]['unsupported_pass_claim_flags'] = sum(row.get('unsupported_pass_claim_flag', False) for row in result['tasks'])
+                                stage[name]['families'] = {family: {'passed': sum(row['passed'] for row in result['tasks'] if row.get('family') == family),
+                                    'total': sum(row.get('family') == family for row in result['tasks'])}
+                                    for family in sorted({row.get('family', 'unknown') for row in result['tasks']})}
                             passed = passed and score == len(result['tasks'])
                         if name == 'direct':
                             if args.tasks_file:
@@ -165,6 +173,7 @@ def main():
                         save()
                         if stopping: break
                     required = {'direct', 'agent', 'basic', 'horizon'} | ({'repair'} if args.repair_eval else set())
+                    if args.repair_tasks_file: required.add('diagnostic')
                     stage['passed_gates'] = passed and not stopping and checked == required
                 finally:
                     server.terminate()
@@ -173,6 +182,8 @@ def main():
             stage['status'] = 'evaluated'; save()
             if stage['passed_gates']:
                 state['status'] = 'candidate_passed_gates'; state['candidate'] = str(frozen); break
+            if step < target:
+                state['status'] = 'budget_exhausted'; break
             if args.patience and stalled >= args.patience:
                 state['status'] = 'stopped_no_improvement'; break
         else:

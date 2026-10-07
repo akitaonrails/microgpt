@@ -8,6 +8,15 @@ from pathlib import PurePosixPath
 AGENT_PROMPT = 'You fix Python code. Read solution.py, edit it to satisfy the request, then call check to test. Preserve earlier requirements in TASK_STATE.md when present. Line numbers in read output are annotations, not file content. Correct failures. Give a brief final answer.'
 
 
+def cli_user_content(text):
+    """Observed OpenCode 1.18.34 CLI text: quote wrapping, not JSON encoding.
+
+    Embedded quotes are escaped; newlines and existing backslashes are preserved.
+    This helper is for generated CLI lessons, not normalization of user requests.
+    """
+    return '"' + text.replace('"', '\\"') + '"'
+
+
 def state_text(items):
     notes = '\n'.join(f"- {t['name']}(value) must return value * {t['factor']} + {t['offset']}." for t in items)
     return '# Required behavior\n' + notes + '\nPreserve and test every requirement above.\n'

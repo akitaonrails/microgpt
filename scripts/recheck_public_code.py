@@ -68,10 +68,10 @@ with open('/input.jsonl') as source, concurrent.futures.ThreadPoolExecutor(max_w
 '''
 
 
-def sandbox(source, destination, seeds, timeout):
+def sandbox(source, destination, seeds, timeout, worker_source=WORKER):
     with tempfile.TemporaryDirectory(prefix='microgpt-recheck-') as directory:
         root = Path(directory); root.chmod(0o755)
-        worker = root / 'worker.py'; worker.write_text(WORKER); worker.chmod(0o644)
+        worker = root / 'worker.py'; worker.write_text(worker_source); worker.chmod(0o644)
         settings = root / 'settings.json'; settings.write_text(json.dumps({'hash_seeds': seeds})); settings.chmod(0o644)
         name = 'microgpt-recheck-' + uuid.uuid4().hex
         command = ['docker', 'run', '--rm', '--name', name, '--network', 'none', '--read-only', '--cap-drop', 'ALL',

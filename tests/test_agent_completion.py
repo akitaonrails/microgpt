@@ -36,3 +36,11 @@ class AgentCompletionTests(unittest.TestCase):
         self.assertFalse(completion_evidence([self.check(), edit, stop], True, 0)['passed'])
         self.assertTrue(completion_evidence([edit, self.check(), stop], True, 0)['passed'])
         self.assertFalse(completion_evidence([edit, self.check(), self.check('FAIL\n'), stop], True, 0)['passed'])
+
+class SuccessClaimTests(unittest.TestCase):
+    def test_explicit_unverified_claim_is_flagged(self):
+        from scripts.eval_opencode import success_claim_evidence
+        events = [{'type': 'text', 'part': {'text': 'The supplied checks passed.'}}]
+        self.assertTrue(success_claim_evidence(events, False)['unsupported_pass_claim_flag'])
+        self.assertFalse(success_claim_evidence(events, True)['unsupported_pass_claim_flag'])
+        self.assertFalse(success_claim_evidence([], False)['unsupported_pass_claim_flag'])
