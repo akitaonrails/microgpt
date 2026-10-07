@@ -1,0 +1,69 @@
+{
+  "manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": true,
+    "tokenizer_fingerprint": "cab4f7b8d36abf3250907ed9eadab111a8cbf8b66224c457a48a1537a17cba9f",
+    "sources": [
+      {
+        "file": "data/public-code-multiseed-v1/code.jsonl",
+        "sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297"
+      },
+      {
+        "file": "data/public-code-multiseed-v1/repairs.jsonl",
+        "sha256": "b4d391802830ff84d309561f48b6a3cbf60824e7a94b0419043cfc4ce4f6e4e3"
+      },
+      {
+        "file": "data/smoltalk-large.jsonl",
+        "sha256": "6a2b6073549ea24aee1f21090e2c9646bf2e49d16c6dac27d1390d16ab7ce559"
+      },
+      {
+        "file": "data/multilingual-large.jsonl",
+        "sha256": "c2ace5f695433b6d0568727e793fc8022fc710fad5201bf20f7c65b925d7839f"
+      }
+    ],
+    "counts": {
+      "scanned": 127844,
+      "train_episodes": 121390,
+      "val_episodes": 6386,
+      "overlength_or_empty": 66,
+      "duplicates": 2
+    },
+    "splits": {
+      "train": {
+        "examples": 121390,
+        "assistant_tokens": 24539869,
+        "groups": 104999,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 92214,
+          "executed-public-repair": 14061,
+          "smoltalk": 11319,
+          "multilingual": 3796
+        },
+        "sha256": "a7a0d7bc8af509bf8c287cb303ab4dcb0bfbfeea27782b991e309d1d05e3ad85"
+      },
+      "val": {
+        "examples": 6386,
+        "assistant_tokens": 1308392,
+        "groups": 5603,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 4860,
+          "executed-public-repair": 709,
+          "smoltalk": 613,
+          "multilingual": 204
+        },
+        "sha256": "c328f7ef65ff8aeaa3295be1b848d4830d18c1286621b161716360ea03a24d2b"
+      }
+    }
+  },
+  "manifest_sha256": "68bc3843d7e5691c068e73265e601d580779994c2ea03186ee883bfb6ad07edd",
+  "status": "prepared_not_trained",
+  "note": "Future short-window agent stage. No acceptance-set files were used; this does not establish semantic decontamination of public data. No cumulative long-window episodes or diagnostic memorization weights. Sampling weights and parent remain undecided pending optimization evidence.",
+  "audit": {
+    "hashes_verified": true,
+    "split_groups_disjoint": true,
+    "train_examples": 121390,
+    "validation_examples": 6386
+  }
+}
