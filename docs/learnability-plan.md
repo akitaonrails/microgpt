@@ -89,3 +89,10 @@ qualitative baseline because CPU SDPA and GPU Flash use different numerical
 execution. The first CPU launch rejected `--attention math`: the server CLI accepts
 `sdpa` or `flash`, while the trainer also exposes `math`. Retrying with CPU SDPA
 completed all 16 requests; no training checkpoint changed.
+
+Next, evaluate the strongest retained direct-code checkpoint on actual OpenCode
+repairs before further agent training. `eval_opencode.py --general-prompt` selects
+the general assistant instruction used in the public repair curriculum and records
+that choice. The older specialized repair-lesson prompt remains the default for
+historical reproducibility. Keep the general prompt fixed for the new before/after
+comparison; these four repairs are a smoke test, not the broader readiness gate.

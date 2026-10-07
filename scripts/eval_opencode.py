@@ -13,6 +13,7 @@ import tempfile
 import time
 import uuid
 from microgpt.opencode_format import AGENT_PROMPT
+from microgpt.programming_data import GENERAL_PROMPT
 
 IMAGE = "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016"
 
@@ -148,6 +149,7 @@ def main():
     parser.add_argument("--label", required=True, help="Exact scratch checkpoint provenance for this run")
     parser.add_argument("--steps", type=int, default=8)
     parser.add_argument('--suite', choices=['basic', 'grounding'], default='basic')
+    parser.add_argument('--general-prompt', action='store_true', help='Use the general assistant instruction shared with the public repair curriculum')
     parser.add_argument('--effort', choices=['none', 'low', 'medium', 'high'])
     args = parser.parse_args()
     if args.out.exists() or args.steps < 1:
@@ -157,6 +159,7 @@ def main():
     args.out.mkdir(parents=True)
     tasks = TASKS if args.suite == 'basic' else grounding_tasks()
     summary = {"label": args.label, "image": IMAGE, "steps": args.steps, "suite": args.suite, 'effort': args.effort,
+               'agent_prompt': 'general' if args.general_prompt else 'repair_lesson',
                "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                "tasks_sha256": hashlib.sha256(json.dumps(tasks, sort_keys=True).encode()).hexdigest(),
                "opencode": subprocess.check_output(["opencode", "--version"], text=True).strip(), "tasks": []}
@@ -170,7 +173,8 @@ def main():
             grader = base / "grader.py"
             grader.write_text("import sys\nsys.path.insert(0, '/work')\nimport solution as s\n" + task["tests"] + "print('PASS')\n")
             grader.chmod(0o644)
-            command, environment = configure(work, grader, args.url, args.steps, reasoning_effort=args.effort)
+            command, environment = configure(work, grader, args.url, args.steps, reasoning_effort=args.effort,
+                                             agent_prompt=GENERAL_PROMPT if args.general_prompt else AGENT_PROMPT)
             baseline = grade(command)
             if baseline["passed"]:
                 raise RuntimeError(f"Broken fixture already passes: {task['id']}")
