@@ -25,6 +25,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--preparation-pid', type=int, required=True)
     p.add_argument('--previous-run-pid', type=int, required=True)
+    p.add_argument('--resume-after-2b', action='store_true')
     args = p.parse_args()
     root = Path('runs/pivot-v1')
     corpus = Path('data/foundation-bpe32k-v1')
@@ -35,15 +36,41 @@ def main():
     for path in (corpus, base, adapter_data):
         if not path.resolve().is_relative_to(Path('/mnt/gigachad/microgpt/dataset')):
             raise ValueError('Artifacts must stay within the authorized NAS path')
-    if (root / 'status.json').exists() or base.exists():
+    if not args.resume_after_2b and ((root / 'status.json').exists() or base.exists()):
         raise ValueError('Existing experiment; use its recorded resume commands, never overwrite')
-    base.mkdir(parents=True)
+    base.mkdir(parents=True, exist_ok=args.resume_after_2b)
     state = {'status': 'running', 'phase': 'waiting_for_corpus', 'pid': os.getpid(),
              'started': datetime.now(timezone.utc).isoformat(), 'initialization': 'random',
              'config_sha256': sha(config), 'plan_sha256': sha('docs/foundation-pivot.md'),
              'tasks_sha256': sha(tasks), 'automatic_promotion': False, 'acceptance_used': False,
              'commands': [], 'milestones': [], 'full_gpu_seconds': 8 * 3600,
              'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()}
+    if args.resume_after_2b:
+        previous = json.loads((root / 'status.json').read_text())
+        recovery = json.loads((root / 'coding-2b-recovery/status.json').read_text())
+        if previous['status'] != 'failed' or previous['phase'] != 'coding-2b' or len(previous['milestones']) != 1:
+            raise ValueError('Recovery requires the failed 2B coding phase')
+        for key in ('config_sha256', 'plan_sha256', 'tasks_sha256'):
+            if previous[key] != state[key]: raise ValueError(f'Changed experiment: {key}')
+        for key, path in [('corpus_sha256', corpus / 'meta.json'),
+                          ('adapter_manifest_sha256', adapter_data / 'manifest.json')]:
+            if previous[key] != sha(path): raise ValueError(f'Changed data: {key}')
+        if recovery['status'] != 'milestones_exhausted' or [r['target'] for r in recovery['stages']] != [500, 1000]:
+            raise ValueError('Incomplete recovery evaluation')
+        if any(r['status'] != 'evaluated' or r['direct']['total'] != 100 for r in recovery['stages']):
+            raise ValueError('Incomplete coding scores')
+        scores = [r['direct']['passed'] for r in recovery['stages']]
+        if max(scores) < 10: raise ValueError('Original 2B spending gate not met')
+        checkpoint = base / 'foundation/last.pt'
+        if sha(checkpoint) != previous['milestones'][0]['checkpoint_sha256']:
+            raise ValueError('Foundation checkpoint changed since 2B milestone')
+        archive = root / 'status-before-2b-recovery.json'
+        with archive.open('x') as handle: json.dump(previous, handle, indent=2)
+        previous['milestones'][0].update(direct_scores=scores, best_direct=max(scores), raw_passed=0,
+            recovery_evidence=str(root / 'coding-2b-recovery/status.json'))
+        previous.update(status='running', pid=os.getpid(), recovery_commit=state['git_commit'])
+        previous.pop('error', None)
+        state = previous
     child = None
     stopping = False
     env = dict(os.environ, TOKENIZERS_PARALLELISM='false', OMP_NUM_THREADS='4')
@@ -78,42 +105,47 @@ def main():
     py = sys.executable
     save()
     try:
-        deadline = time.monotonic() + 6 * 3600
-        while not (corpus / 'meta.json').exists():
-            if stopping: raise InterruptedError('Interrupted')
-            os.kill(args.preparation_pid, 0)
-            if time.monotonic() > deadline: raise TimeoutError('Corpus preparation exceeded six hours')
-            time.sleep(15)
-        state['corpus_sha256'] = sha(corpus / 'meta.json')
-        # End the superseded experiment gracefully, including its child trainer.
-        # The checked PID belongs to the explicitly supplied old runner.
-        previous = Path(f'/proc/{args.previous_run_pid}/cmdline')
-        if previous.exists():
-            if b'scripts/run_refined_agent.py' not in previous.read_bytes():
-                raise ValueError('Previous PID no longer belongs to the old experiment')
-            os.kill(args.previous_run_pid, signal.SIGTERM)
-            until = time.monotonic() + 600
-            while previous.exists():
+        if not args.resume_after_2b:
+            deadline = time.monotonic() + 6 * 3600
+            while not (corpus / 'meta.json').exists():
                 if stopping: raise InterruptedError('Interrupted')
-                if time.monotonic() > until: raise TimeoutError('Old run did not exit gracefully')
-                time.sleep(2)
-        state['previous_run'] = json.loads(Path('runs/refined-agent-v1/status.json').read_text())
-        run('prepare_adapter', [py, '-m', 'microgpt.trajectories', '--input',
-            'data/public-code-multiseed-v1/code.jsonl', '--out', str(adapter_data),
-            '--tokenizer', str(corpus), '--max-length', '8192', '--limit', '100000', '--pack-episodes'])
-        state['adapter_manifest_sha256'] = sha(adapter_data / 'manifest.json')
-        env['MICROGPT_GPU_DUTY_CYCLE'] = '1'
-        env['MICROGPT_FULL_GPU_UNTIL'] = str(time.time() + state['full_gpu_seconds'])
-        state['full_gpu_until'] = float(env['MICROGPT_FULL_GPU_UNTIL']); save()
-        run('profile', [py, 'scripts/profile_pivot.py', '--data', str(corpus), '--config', str(config),
-            '--out', str(root / 'profile.json')])
-        profile = json.loads((root / 'profile.json').read_text())
-        state['profile'] = profile; save()
-        journal(f'GPU profile: {profile["tokens_per_second"]:.0f} tokens/s, {profile["peak_allocated_gb"]:.2f} GB allocated. Short profile, not a deadline.')
-        if not math.isfinite(profile['tokens_per_second']) or profile['tokens_per_second'] <= 0:
-            raise ValueError('Invalid throughput')
+                os.kill(args.preparation_pid, 0)
+                if time.monotonic() > deadline: raise TimeoutError('Corpus preparation exceeded six hours')
+                time.sleep(15)
+            state['corpus_sha256'] = sha(corpus / 'meta.json')
+            # End the superseded experiment gracefully, including its child trainer.
+            # The checked PID belongs to the explicitly supplied old runner.
+            previous = Path(f'/proc/{args.previous_run_pid}/cmdline')
+            if previous.exists():
+                if b'scripts/run_refined_agent.py' not in previous.read_bytes():
+                    raise ValueError('Previous PID no longer belongs to the old experiment')
+                os.kill(args.previous_run_pid, signal.SIGTERM)
+                until = time.monotonic() + 600
+                while previous.exists():
+                    if stopping: raise InterruptedError('Interrupted')
+                    if time.monotonic() > until: raise TimeoutError('Old run did not exit gracefully')
+                    time.sleep(2)
+            state['previous_run'] = json.loads(Path('runs/refined-agent-v1/status.json').read_text())
+            run('prepare_adapter', [py, '-m', 'microgpt.trajectories', '--input',
+                'data/public-code-multiseed-v1/code.jsonl', '--out', str(adapter_data),
+                '--tokenizer', str(corpus), '--max-length', '8192', '--limit', '100000', '--pack-episodes'])
+            state['adapter_manifest_sha256'] = sha(adapter_data / 'manifest.json')
+            env['MICROGPT_GPU_DUTY_CYCLE'] = '1'
+            env['MICROGPT_FULL_GPU_UNTIL'] = str(time.time() + state['full_gpu_seconds'])
+            state['full_gpu_until'] = float(env['MICROGPT_FULL_GPU_UNTIL']); save()
+            run('profile', [py, 'scripts/profile_pivot.py', '--data', str(corpus), '--config', str(config),
+                '--out', str(root / 'profile.json')])
+            profile = json.loads((root / 'profile.json').read_text())
+            state['profile'] = profile; save()
+            journal(f'GPU profile: {profile["tokens_per_second"]:.0f} tokens/s, {profile["peak_allocated_gb"]:.2f} GB allocated. Short profile, not a deadline.')
+            if not math.isfinite(profile['tokens_per_second']) or profile['tokens_per_second'] <= 0:
+                raise ValueError('Invalid throughput')
+        else:
+            env['MICROGPT_GPU_DUTY_CYCLE'] = '0.75'
+            env.pop('MICROGPT_FULL_GPU_UNTIL', None)
+            journal('Recovered 2B evaluation: 24/100 at 500 SFT updates; 39/100 at 1000. Original spending gate passed; resuming foundation optimizer toward 5B.')
         foundation = base / 'foundation'
-        for tokens in (2_000_000_000, 5_000_000_000, 10_000_000_000):
+        for tokens in ((5_000_000_000, 10_000_000_000) if args.resume_after_2b else (2_000_000_000, 5_000_000_000, 10_000_000_000)):
             target = math.ceil(tokens / 32768)
             name = f'{tokens // 1_000_000_000}b'
             command = [py, '-m', 'microgpt.train', '--config', str(config), '--data', str(corpus),
