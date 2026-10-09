@@ -63,3 +63,17 @@ class PivotCorpusTests(unittest.TestCase):
             self.assertEqual(counts['documents'], 3)
             with self.assertRaisesRegex(ValueError, 'checksum'):
                 convert((str(source), str(target), 'train', {**expected, 'sha256': 'wrong'}))
+
+    def test_bpe_tool_grammar_accepts_unicode_and_rejects_unknown_tool(self):
+        from microgpt.constraints import ToolGrammar
+        text = '<tool_call>{"name":"read","arguments":{"filePath":"ação/日本語.py"}}</tool_call>'
+        tokenizer = train_bpe([text], 300)
+        grammar = ToolGrammar(tokenizer)
+        tools = [{'type': 'function', 'function': {'name': 'read', 'parameters': {
+            'type': 'object', 'properties': {'filePath': {'type': 'string'}},
+            'required': ['filePath'], 'additionalProperties': False}}}]
+        matcher = grammar.matcher(tools)
+        for token in tokenizer.encode(text):
+            self.assertTrue(matcher.accept_token(token))
+        self.assertTrue(matcher.accept_token(tokenizer.eos))
+        self.assertFalse(grammar.matcher(tools).accept_string(text.replace('read', 'delete')))

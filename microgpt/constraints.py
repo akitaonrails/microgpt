@@ -7,6 +7,7 @@ class ToolGrammar:
     def __init__(self, tokenizer):
         import xgrammar as xgr
         self.xgr = xgr
+        vocab_type = xgr.VocabType.RAW
         if tokenizer.encoding:
             vocab = [b''] * tokenizer.vocab_size
             for value, index in tokenizer.encoding._mergeable_ranks.items():
@@ -16,8 +17,10 @@ class ToolGrammar:
         elif tokenizer.backend is None:
             vocab = [bytes([i]) for i in range(256)] + [b'']
         else:
-            raise ValueError('Tool grammar currently supports bytes and o200k tokenizers')
-        info = xgr.TokenizerInfo(vocab, vocab_type=xgr.VocabType.RAW,
+            # ByteLevel BPE stores bytes as printable Unicode vocabulary symbols.
+            vocab = [tokenizer.backend.id_to_token(i) for i in range(tokenizer.vocab_size)]
+            vocab_type = xgr.VocabType.BYTE_LEVEL
+        info = xgr.TokenizerInfo(vocab, vocab_type=vocab_type,
                                  vocab_size=tokenizer.vocab_size, stop_token_ids=[tokenizer.eos])
         self.compiler = xgr.GrammarCompiler(info, max_threads=2, cache_enabled=False)
         self.vocab_size = tokenizer.vocab_size
