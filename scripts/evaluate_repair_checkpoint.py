@@ -16,7 +16,10 @@ def main():
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--port', type=int, default=8034)
     p.add_argument('--capture', action='store_true', help='Capture actual training-fixture requests and file snapshots')
-    args = p.parse_args(); args.out.mkdir(parents=True, exist_ok=False)
+    p.add_argument('--programming', action='store_true', help='Evaluate direct programming instead of repairs')
+    args = p.parse_args()
+    if args.programming and args.capture: p.error('Programming evaluation does not capture repair rollouts')
+    args.out.mkdir(parents=True, exist_ok=False)
     child = None
     def stop(*_):
         if child is not None and child.poll() is None: child.terminate()
@@ -41,7 +44,11 @@ def main():
                             '--out', str(args.out / 'rollouts')] if args.capture else
                            [sys.executable, 'scripts/eval_opencode.py', '--url', url + '/v1',
                             '--general-prompt', '--effort', 'none', '--out', str(args.out / 'repairs')])
-                command += ['--tasks-file', str(args.tasks_file), '--label', str(args.checkpoint)]
+                if args.programming:
+                    command = [sys.executable, 'scripts/eval_programming.py', '--url', url + '/v1',
+                               '--mode', 'direct', '--limit', '100', '--out', str(args.out / 'direct')]
+                command += ['--tasks-file', str(args.tasks_file)]
+                if not args.programming: command += ['--label', str(args.checkpoint)]
                 child = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT)
                 if child.wait(): raise RuntimeError('Repair evaluation failed')
         finally:
