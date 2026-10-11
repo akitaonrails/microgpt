@@ -55,3 +55,17 @@ live transitions, and rejection of stale saved steps. Existing staged-training
 checks preserve exact CPU optimizer/RNG equivalence. Runtime verification must
 show step152588 loaded, then a later saved training update; no checkpoint beyond
 5B should be claimed until it is actually observed.
+
+## Observed restart
+
+The frozen checkpoint SHA-256 matched
+`9434ae6027fb1f64f4229c8f954ce307f1c0d67c4878941989ff31d67954de95`.
+It contains step152588, 170 optimizer-state entries, CUDA RNG state and random
+initialization provenance. Tokenizer fingerprints match across foundation data,
+instruction data, original foundation checkpoints and both adapter directories.
+The mutable old last.pt instead contains step81500; it was not used.
+
+The resumed trainer logged `step 152588: validation loss 1.2108`, matching the
+preserved 5B result, and is active with the expected-step guard. The post-training
+queue is active and waiting. New weights will save in foundation-resumed-5b.
+The first later checkpoint is still pending at the time of this restart note.
