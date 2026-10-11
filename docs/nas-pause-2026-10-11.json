@@ -1,0 +1,10 @@
+{
+  "checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+  "sha256": "11cac3eb5d98313cabff027867bf6108d66bb50d852566fd3dc0a0722c654225",
+  "step": 207508,
+  "tokens": 6799622144,
+  "bytes": 4046203862,
+  "optimizer_states": 170,
+  "cuda_rng_states": 1,
+  "resume_requires_user_instruction": true
+}
