@@ -1,4 +1,5 @@
 """Queue a fixed longer SFT comparison and one reserved-holdout evaluation."""
+import argparse
 import hashlib
 import json
 import os
@@ -14,12 +15,21 @@ def sha(path):
 
 
 def main():
-    root = Path('runs/pivot-posttraining-v1'); root.mkdir(exist_ok=False)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--resume-waiting', action='store_true')
+    args = parser.parse_args()
+    root = Path('runs/pivot-posttraining-v1'); root.mkdir(exist_ok=args.resume_waiting)
     parent = Path('runs/pivot-v1/status.json')
     holdout = Path('evaluation/programming-v1/acceptance.jsonl')
     state = {'status': 'waiting_for_foundation', 'pid': os.getpid(), 'holdout_sha256': sha(holdout),
              'selection': 'Development correctness only; holdout evaluated once after selection',
              'automatic_promotion': False, 'commands': []}
+    if args.resume_waiting:
+        previous = json.loads((root / 'status.json').read_text())
+        if previous['status'] != 'interrupted' or previous['commands']:
+            raise ValueError('Only an interrupted waiting queue can resume here')
+        if previous['holdout_sha256'] != state['holdout_sha256']: raise ValueError('Holdout changed')
+        with (root / 'status-before-maintenance.json').open('x') as f: json.dump(previous, f, indent=2)
     child = None
     stopping = False
     def save():

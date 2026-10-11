@@ -26,7 +26,9 @@ def main():
     p.add_argument('--preparation-pid', type=int, required=True)
     p.add_argument('--previous-run-pid', type=int, required=True)
     p.add_argument('--resume-after-2b', action='store_true')
+    p.add_argument('--resume-after-5b', action='store_true')
     args = p.parse_args()
+    if args.resume_after_2b and args.resume_after_5b: p.error('Choose one recovery mode')
     root = Path('runs/pivot-v1')
     corpus = Path('data/foundation-bpe32k-v1')
     base = Path('data/experiments/foundation-pivot-v1')
@@ -36,9 +38,9 @@ def main():
     for path in (corpus, base, adapter_data):
         if not path.resolve().is_relative_to(Path('/mnt/gigachad/microgpt/dataset')):
             raise ValueError('Artifacts must stay within the authorized NAS path')
-    if not args.resume_after_2b and ((root / 'status.json').exists() or base.exists()):
+    if not (args.resume_after_2b or args.resume_after_5b) and ((root / 'status.json').exists() or base.exists()):
         raise ValueError('Existing experiment; use its recorded resume commands, never overwrite')
-    base.mkdir(parents=True, exist_ok=args.resume_after_2b)
+    base.mkdir(parents=True, exist_ok=args.resume_after_2b or args.resume_after_5b)
     state = {'status': 'running', 'phase': 'waiting_for_corpus', 'pid': os.getpid(),
              'started': datetime.now(timezone.utc).isoformat(), 'initialization': 'random',
              'config_sha256': sha(config), 'plan_sha256': sha('docs/foundation-pivot.md'),
@@ -71,6 +73,35 @@ def main():
         previous.update(status='running', pid=os.getpid(), recovery_commit=state['git_commit'])
         previous.pop('error', None)
         state = previous
+    if args.resume_after_5b:
+        previous = json.loads((root / 'status.json').read_text())
+        if previous['status'] != 'interrupted' or previous['phase'] != 'foundation-10b' or len(previous['milestones']) != 2:
+            raise ValueError('Recovery requires interrupted post-5B training')
+        for key in ('config_sha256', 'plan_sha256', 'tasks_sha256'):
+            if previous[key] != state[key]: raise ValueError(f'Changed experiment: {key}')
+        for key, path in [('corpus_sha256', corpus / 'meta.json'), ('adapter_manifest_sha256', adapter_data / 'manifest.json')]:
+            if previous[key] != sha(path): raise ValueError(f'Changed data: {key}')
+        milestone = previous['milestones'][-1]
+        if milestone['best_direct'] < max(25, previous['milestones'][0]['best_direct'] + 3):
+            raise ValueError('5B spending gate failed')
+        if sha(milestone['checkpoint']) != milestone['checkpoint_sha256']:
+            raise ValueError('Frozen 5B checkpoint checksum mismatch')
+        checkpoint_audit = json.loads((root / 'maintenance-checkpoint-check.json').read_text())
+        if checkpoint_audit['step'] != 152588 or checkpoint_audit['sha256'] != milestone['checkpoint_sha256']:
+            raise ValueError('Verified checkpoint metadata does not match milestone')
+        audit = json.loads((root / 'maintenance-data-check.json').read_text())
+        if len(audit['files']) != 14 or not all(r['matches'] for r in audit['files']):
+            raise ValueError('Complete corpus and SFT integrity checks first')
+        if (base / 'foundation-resumed-5b').exists(): raise ValueError('Recovery output already exists')
+        with (root / 'status-before-maintenance-recovery.json').open('x') as f:
+            json.dump(previous, f, indent=2)
+        previous.update(status='running', pid=os.getpid(), maintenance_recovery_commit=state['git_commit'],
+                        foundation_output=str(base / 'foundation-resumed-5b'))
+        previous.pop('error', None)
+        state = previous
+    state['gpu_schedule'] = {'window': os.environ.get('MICROGPT_FULL_GPU_WINDOW'),
+                             'timezone': os.environ.get('MICROGPT_GPU_TIMEZONE', 'America/Sao_Paulo'),
+                             'outside_fraction': 0.75}
     child = None
     stopping = False
     env = dict(os.environ, TOKENIZERS_PARALLELISM='false', OMP_NUM_THREADS='4')
@@ -105,7 +136,7 @@ def main():
     py = sys.executable
     save()
     try:
-        if not args.resume_after_2b:
+        if not (args.resume_after_2b or args.resume_after_5b):
             deadline = time.monotonic() + 6 * 3600
             while not (corpus / 'meta.json').exists():
                 if stopping: raise InterruptedError('Interrupted')
@@ -143,15 +174,18 @@ def main():
         else:
             env['MICROGPT_GPU_DUTY_CYCLE'] = '0.75'
             env.pop('MICROGPT_FULL_GPU_UNTIL', None)
-            journal('Recovered 2B evaluation: 24/100 at 500 SFT updates; 39/100 at 1000. Original spending gate passed; resuming foundation optimizer toward 5B.')
-        foundation = base / 'foundation'
-        for tokens in ((5_000_000_000, 10_000_000_000) if args.resume_after_2b else (2_000_000_000, 5_000_000_000, 10_000_000_000)):
+            journal('Resuming after verified 5B checkpoint following maintenance.' if args.resume_after_5b else 'Recovered 2B evaluation; spending gate passed.')
+        foundation = base / ('foundation-resumed-5b' if args.resume_after_5b else 'foundation')
+        for tokens in ((10_000_000_000,) if args.resume_after_5b else (5_000_000_000, 10_000_000_000) if args.resume_after_2b else (2_000_000_000, 5_000_000_000, 10_000_000_000)):
             target = math.ceil(tokens / 32768)
             name = f'{tokens // 1_000_000_000}b'
             command = [py, '-m', 'microgpt.train', '--config', str(config), '--data', str(corpus),
                 '--out', str(foundation), '--device', 'cuda', '--attention', 'flash',
                 '--sequence-length', '2048', '--stop-at-step', str(target)]
-            if (foundation / 'last.pt').exists(): command += ['--resume', str(foundation / 'last.pt')]
+            if args.resume_after_5b:
+                command += ['--resume', state['milestones'][-1]['checkpoint'], '--expected-resume-step', '152588']
+            elif (foundation / 'last.pt').exists():
+                command += ['--resume', str(foundation / 'last.pt'), '--expected-resume-step', str(state['milestones'][-1]['metric']['step'])]
             run(f'foundation-{name}', command)
             metric = json.loads((foundation / 'metrics.jsonl').read_text().splitlines()[-1])
             if metric['step'] != target or not math.isfinite(metric['val_loss']):

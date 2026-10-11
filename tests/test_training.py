@@ -148,6 +148,11 @@ class TrainingTests(unittest.TestCase):
             self.assertNotEqual(rejected.returncode, 0)
             self.assertIn('identical training settings', rejected.stderr)
             self.assertEqual(torch.load(base / 'staged/last.pt', weights_only=True)['step'], 2)
+            stale = subprocess.run(command + ['--out', str(base / 'staged'),
+                '--resume', str(base / 'staged/last.pt'), '--expected-resume-step', '3'], capture_output=True, text=True)
+            self.assertNotEqual(stale.returncode, 0)
+            self.assertIn('Resume step mismatch', stale.stderr)
+
             subprocess.run(command + ['--out', str(base / 'staged'), '--resume', str(base / 'staged/last.pt')], check=True, capture_output=True)
             full = torch.load(base / 'full/last.pt', weights_only=True)
             staged = torch.load(base / 'staged/last.pt', weights_only=True)

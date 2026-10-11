@@ -77,6 +77,7 @@ def main():
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--resume", type=Path)
     source.add_argument("--init-from", type=Path, help="Continue our weights with a new data/window stage and fresh optimizer")
+    parser.add_argument("--expected-resume-step", type=int, help="Reject a stale checkpoint before restoring optimizer state")
     parser.add_argument("--sequence-length", type=int, help="Training window, bounded by model context; part of resume identity")
     parser.add_argument("--attention", choices=["sdpa", "flash", "math"], default="sdpa")
     parser.add_argument("--allow-attention-change", action="store_true", help="Explicitly permit a different or previously unrecorded resume backend")
@@ -129,6 +130,8 @@ def run_training(args, parser):
                   "parent_checkpoint": str(args.init_from), "parent_step": previous["step"]}
     if args.resume:
         checkpoint = torch.load(args.resume, map_location="cpu", weights_only=True)
+        if args.expected_resume_step is not None and checkpoint["step"] != args.expected_resume_step:
+            raise ValueError(f"Resume step mismatch: expected {args.expected_resume_step}, got {checkpoint['step']}")
         if asdict(ModelConfig(**checkpoint["model_config"])) != asdict(model_config) or checkpoint["data"] != metadata:
             raise ValueError("Resume requires identical model configuration and prepared data")
         if checkpoint["settings"].get("sequence_length", model_config.context) != sequence_length:
