@@ -26,3 +26,9 @@ with 75% GPU duty pacing. Restore the phase controller and waiting post-training
 queue deliberately; their current command-line interfaces do not provide a
 universal restart after this interruption. No training should restart until the
 user says maintenance is finished and requests resumption.
+
+Checkpoint metadata inspection via torch.load on the NAS stalled in filesystem
+I/O. Sent SIGTERM to that read-only inspector rather than delay maintenance.
+Full checkpoint integrity verification remains pending; successful trainer exit
+and completed atomic checkpoint write were observed, but are not a substitute
+for that verification.
