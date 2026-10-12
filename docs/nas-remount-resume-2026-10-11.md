@@ -35,3 +35,10 @@ checkpoint remains unchanged. Restore NAS write access for the client user
 UID/GID1026 before retrying; do not change files outside the authorized dataset
 path or move the full training pipeline onto local disk without considering space.
 Preserve the failed controller record when retrying the verified pause checkpoint.
+
+## NFS mapping correction
+
+The user changed the NFS mapping to "no mapping". A fresh exclusive-file write
+and removal in the checkpoint directory now succeeds. Retried from the same pause
+record; the controller permits a failed pre-update restart to be retried, while
+still requiring an unchanged checkpoint checksum and exact expected saved step.

@@ -77,7 +77,8 @@ def main():
         state = previous
     if resume_maintenance:
         previous = json.loads((root / 'status.json').read_text())
-        if previous['status'] != 'interrupted' or previous['phase'] != 'foundation-10b' or len(previous['milestones']) != 2:
+        allowed_statuses = ('interrupted', 'failed') if args.resume_pause_record else ('interrupted',)
+        if previous['status'] not in allowed_statuses or previous['phase'] != 'foundation-10b' or len(previous['milestones']) != 2:
             raise ValueError('Recovery requires interrupted post-5B training')
         for key in ('config_sha256', 'plan_sha256', 'tasks_sha256'):
             if previous[key] != state[key]: raise ValueError(f'Changed experiment: {key}')
