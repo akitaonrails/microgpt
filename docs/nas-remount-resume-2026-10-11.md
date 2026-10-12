@@ -19,3 +19,19 @@ Six pacing and exact-resume tests passed. Both controllers compile, and diff
 whitespace checks pass. Final runtime proof is the trainer's restored step and
 validation log. Recurring GPU policy is unchanged: America/Sao_Paulo 03:00–09:00
 full duty, 75% otherwise. This is soft pacing, not fixed hardware utilization.
+
+## Verification outcome and write-access blocker
+
+Checkpoint checksum and step207508 verified. All 14 data/manifests matched, all
+five tokenizer fingerprints matched, and earlier adapter checkpoints are present.
+The first restart failed before any optimizer update: saving tokenizer.json
+returned Permission denied. Exclusive temporary-file creation also failed at
+both /mnt/gigachad/microgpt/dataset and the current checkpoint directory. No test
+files were created. Client mount reports rw, and owner mode bits report writable,
+so these observations do not identify the server-side ACL/export cause.
+
+No trainer remains running; the queued controller was not restarted. The saved
+checkpoint remains unchanged. Restore NAS write access for the client user
+UID/GID1026 before retrying; do not change files outside the authorized dataset
+path or move the full training pipeline onto local disk without considering space.
+Preserve the failed controller record when retrying the verified pause checkpoint.
