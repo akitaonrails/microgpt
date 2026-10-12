@@ -27,8 +27,10 @@ def main():
     p.add_argument('--previous-run-pid', type=int, required=True)
     p.add_argument('--resume-after-2b', action='store_true')
     p.add_argument('--resume-after-5b', action='store_true')
+    p.add_argument('--resume-pause-record', type=Path, help='Resume a verified maintenance checkpoint without rolling back')
     args = p.parse_args()
-    if args.resume_after_2b and args.resume_after_5b: p.error('Choose one recovery mode')
+    if sum(bool(v) for v in (args.resume_after_2b, args.resume_after_5b, args.resume_pause_record)) > 1: p.error('Choose one recovery mode')
+    resume_maintenance = args.resume_after_5b or args.resume_pause_record is not None
     root = Path('runs/pivot-v1')
     corpus = Path('data/foundation-bpe32k-v1')
     base = Path('data/experiments/foundation-pivot-v1')
@@ -38,9 +40,9 @@ def main():
     for path in (corpus, base, adapter_data):
         if not path.resolve().is_relative_to(Path('/mnt/gigachad/microgpt/dataset')):
             raise ValueError('Artifacts must stay within the authorized NAS path')
-    if not (args.resume_after_2b or args.resume_after_5b) and ((root / 'status.json').exists() or base.exists()):
+    if not (args.resume_after_2b or resume_maintenance) and ((root / 'status.json').exists() or base.exists()):
         raise ValueError('Existing experiment; use its recorded resume commands, never overwrite')
-    base.mkdir(parents=True, exist_ok=args.resume_after_2b or args.resume_after_5b)
+    base.mkdir(parents=True, exist_ok=args.resume_after_2b or resume_maintenance)
     state = {'status': 'running', 'phase': 'waiting_for_corpus', 'pid': os.getpid(),
              'started': datetime.now(timezone.utc).isoformat(), 'initialization': 'random',
              'config_sha256': sha(config), 'plan_sha256': sha('docs/foundation-pivot.md'),
@@ -73,7 +75,7 @@ def main():
         previous.update(status='running', pid=os.getpid(), recovery_commit=state['git_commit'])
         previous.pop('error', None)
         state = previous
-    if args.resume_after_5b:
+    if resume_maintenance:
         previous = json.loads((root / 'status.json').read_text())
         if previous['status'] != 'interrupted' or previous['phase'] != 'foundation-10b' or len(previous['milestones']) != 2:
             raise ValueError('Recovery requires interrupted post-5B training')
@@ -84,19 +86,35 @@ def main():
         milestone = previous['milestones'][-1]
         if milestone['best_direct'] < max(25, previous['milestones'][0]['best_direct'] + 3):
             raise ValueError('5B spending gate failed')
-        if sha(milestone['checkpoint']) != milestone['checkpoint_sha256']:
-            raise ValueError('Frozen 5B checkpoint checksum mismatch')
-        checkpoint_audit = json.loads((root / 'maintenance-checkpoint-check.json').read_text())
-        if checkpoint_audit['step'] != 152588 or checkpoint_audit['sha256'] != milestone['checkpoint_sha256']:
-            raise ValueError('Verified checkpoint metadata does not match milestone')
-        audit = json.loads((root / 'maintenance-data-check.json').read_text())
-        if len(audit['files']) != 14 or not all(r['matches'] for r in audit['files']):
-            raise ValueError('Complete corpus and SFT integrity checks first')
-        if (base / 'foundation-resumed-5b').exists(): raise ValueError('Recovery output already exists')
-        with (root / 'status-before-maintenance-recovery.json').open('x') as f:
-            json.dump(previous, f, indent=2)
+        if args.resume_pause_record:
+            pause = json.loads(args.resume_pause_record.read_text())
+            output = Path(previous['foundation_output'])
+            checkpoint = Path(pause['checkpoint'])
+            if checkpoint.resolve() != (output / 'last.pt').resolve():
+                raise ValueError('Pause checkpoint does not belong to the current foundation output')
+            if not milestone['metric']['step'] <= pause['step'] < 305176:
+                raise ValueError('Paused step outside the unfinished 10B stage')
+            if sha(checkpoint) != pause['sha256']: raise ValueError('Pause checkpoint checksum mismatch')
+            audit = json.loads((root / 'nas-remount-check.json').read_text())
+            if audit['checkpoint'] != pause or len(audit['verified_files']) != 14:
+                raise ValueError('Complete the current remount integrity audit first')
+            resume_checkpoint, resume_step = str(checkpoint), pause['step']
+        else:
+            if sha(milestone['checkpoint']) != milestone['checkpoint_sha256']:
+                raise ValueError('Frozen 5B checkpoint checksum mismatch')
+            checkpoint_audit = json.loads((root / 'maintenance-checkpoint-check.json').read_text())
+            if checkpoint_audit['step'] != 152588 or checkpoint_audit['sha256'] != milestone['checkpoint_sha256']:
+                raise ValueError('Verified checkpoint metadata does not match milestone')
+            audit = json.loads((root / 'maintenance-data-check.json').read_text())
+            if len(audit['files']) != 14 or not all(r['matches'] for r in audit['files']):
+                raise ValueError('Complete corpus and SFT integrity checks first')
+            output = base / 'foundation-resumed-5b'
+            if output.exists(): raise ValueError('Recovery output already exists')
+            resume_checkpoint, resume_step = milestone['checkpoint'], 152588
+        archive = root / f'status-before-maintenance-{time.time_ns()}.json'
+        with archive.open('x') as f: json.dump(previous, f, indent=2)
         previous.update(status='running', pid=os.getpid(), maintenance_recovery_commit=state['git_commit'],
-                        foundation_output=str(base / 'foundation-resumed-5b'))
+                        foundation_output=str(output), resumed_from_step=resume_step)
         previous.pop('error', None)
         state = previous
     state['gpu_schedule'] = {'window': os.environ.get('MICROGPT_FULL_GPU_WINDOW'),
@@ -136,7 +154,7 @@ def main():
     py = sys.executable
     save()
     try:
-        if not (args.resume_after_2b or args.resume_after_5b):
+        if not (args.resume_after_2b or resume_maintenance):
             deadline = time.monotonic() + 6 * 3600
             while not (corpus / 'meta.json').exists():
                 if stopping: raise InterruptedError('Interrupted')
@@ -174,16 +192,16 @@ def main():
         else:
             env['MICROGPT_GPU_DUTY_CYCLE'] = '0.75'
             env.pop('MICROGPT_FULL_GPU_UNTIL', None)
-            journal('Resuming after verified 5B checkpoint following maintenance.' if args.resume_after_5b else 'Recovered 2B evaluation; spending gate passed.')
-        foundation = base / ('foundation-resumed-5b' if args.resume_after_5b else 'foundation')
-        for tokens in ((10_000_000_000,) if args.resume_after_5b else (5_000_000_000, 10_000_000_000) if args.resume_after_2b else (2_000_000_000, 5_000_000_000, 10_000_000_000)):
+            journal(f'Resuming verified maintenance checkpoint at step {resume_step}.' if resume_maintenance else 'Recovered 2B evaluation; spending gate passed.')
+        foundation = Path(state['foundation_output']) if resume_maintenance else base / 'foundation'
+        for tokens in ((10_000_000_000,) if resume_maintenance else (5_000_000_000, 10_000_000_000) if args.resume_after_2b else (2_000_000_000, 5_000_000_000, 10_000_000_000)):
             target = math.ceil(tokens / 32768)
             name = f'{tokens // 1_000_000_000}b'
             command = [py, '-m', 'microgpt.train', '--config', str(config), '--data', str(corpus),
                 '--out', str(foundation), '--device', 'cuda', '--attention', 'flash',
                 '--sequence-length', '2048', '--stop-at-step', str(target)]
-            if args.resume_after_5b:
-                command += ['--resume', state['milestones'][-1]['checkpoint'], '--expected-resume-step', '152588']
+            if resume_maintenance:
+                command += ['--resume', resume_checkpoint, '--expected-resume-step', str(resume_step)]
             elif (foundation / 'last.pt').exists():
                 command += ['--resume', str(foundation / 'last.pt'), '--expected-resume-step', str(state['milestones'][-1]['metric']['step'])]
             run(f'foundation-{name}', command)

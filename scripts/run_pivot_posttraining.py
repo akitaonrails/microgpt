@@ -29,7 +29,7 @@ def main():
         if previous['status'] != 'interrupted' or previous['commands']:
             raise ValueError('Only an interrupted waiting queue can resume here')
         if previous['holdout_sha256'] != state['holdout_sha256']: raise ValueError('Holdout changed')
-        with (root / 'status-before-maintenance.json').open('x') as f: json.dump(previous, f, indent=2)
+        with (root / f'status-before-maintenance-{time.time_ns()}.json').open('x') as f: json.dump(previous, f, indent=2)
     child = None
     stopping = False
     def save():
