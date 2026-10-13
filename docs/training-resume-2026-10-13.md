@@ -36,3 +36,13 @@ must restore step 284725, with the original optimizer and 10B learning-rate
 schedule. Checkpoints continue in `foundation-resumed-5b`. The queue waits for
 foundation training and its milestone evaluations before longer coding SFT and
 the reserved holdout evaluation. No new capability result follows from resuming.
+
+## Observed result
+
+All 14 data-file checksum checks passed. Controller PID 3211636 launched trainer
+PID 3212146, which restored step 284725 and reproduced validation loss 1.0834.
+Queue PID 3213339 reports `waiting_for_foundation` with no commands started.
+The startup log confirms 75% pacing. Logs are
+`runs/pivot-v1/controller-resume-2026-10-13.log`,
+`runs/pivot-v1/foundation-10b.log`, and
+`runs/pivot-posttraining-resume-2026-10-13.log`.
