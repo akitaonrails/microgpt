@@ -14,6 +14,17 @@ def sha(path):
     with Path(path).open('rb') as f: return hashlib.file_digest(f, 'sha256').hexdigest()
 
 
+def validate_waiting_resume(previous, holdout_sha256):
+    upstream_interrupted = (
+        previous['status'] == 'failed'
+        and previous.get('error') == 'Foundation pipeline requires recovery before further GPU work'
+    )
+    if previous['commands'] or not (previous['status'] == 'interrupted' or upstream_interrupted):
+        raise ValueError('Only an interrupted waiting queue can resume here')
+    if previous['holdout_sha256'] != holdout_sha256:
+        raise ValueError('Holdout changed')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--resume-waiting', action='store_true')
@@ -26,9 +37,7 @@ def main():
              'automatic_promotion': False, 'commands': []}
     if args.resume_waiting:
         previous = json.loads((root / 'status.json').read_text())
-        if previous['status'] != 'interrupted' or previous['commands']:
-            raise ValueError('Only an interrupted waiting queue can resume here')
-        if previous['holdout_sha256'] != state['holdout_sha256']: raise ValueError('Holdout changed')
+        validate_waiting_resume(previous, state['holdout_sha256'])
         with (root / f'status-before-maintenance-{time.time_ns()}.json').open('x') as f: json.dump(previous, f, indent=2)
     child = None
     stopping = False
