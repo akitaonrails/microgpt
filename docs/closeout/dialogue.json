@@ -1,0 +1,113 @@
+{
+  "label": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "probes": [
+    {
+      "id": "pt",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Responda em português, em duas frases: por que o céu parece azul?"
+        }
+      ],
+      "response": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "O céu parece azul, e eu me pergunto se ele é um sinal de um vazio, ou se ele é um sinal de um vazio. Aqui, a luz do sol se move, e eu me pergunto se ele é um sinal de um vazio."
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 51,
+        "completion_tokens": 71,
+        "total_tokens": 122,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      }
+    },
+    {
+      "id": "es",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Responde en español: sugiere dos actividades tranquilas para un domingo lluvioso."
+        }
+      ],
+      "response": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```python\ndef get_activity_details(activity_id):\n    \"\"\"\n    Retorna la información de un actuante en términos de su tasa de interacción.\n\n    Parameters:\n    activity_id (int): The ID del actuante.\n\n    Returns:\n    dict: A dictionary con la información del actuante.\n    \"\"\"\n    return {'activity_id': activity_id, 'activity_name': 'Actividad de la Actividad', 'activity_description': 'Actividad de la Actividad', 'activity_status': 'Ingreso', 'activity_type': 'Tasa de Interacción', 'activity_time': 'Día del Actividad', 'activity_location': 'Ruta del Actividad', 'activity_contact': 'Nombre de la Actividad', 'activity_contact_email': 'Nombre de la Actividad Email', 'activity_contact_phone': 'Nombre de la Actividad Phone', 'activity_contact_website': 'Nombre de la Actividad Website', 'activity_contact_website_url': 'Nombre de la Actividad Website URL', 'activity"
+        },
+        "finish_reason": "length"
+      },
+      "usage": {
+        "prompt_tokens": 49,
+        "completion_tokens": 256,
+        "total_tokens": 305,
+        "prompt_tokens_details": {
+          "cached_tokens": 15
+        }
+      }
+    },
+    {
+      "id": "english",
+      "messages": [
+        {
+          "role": "user",
+          "content": "I am new to cooking. Suggest a simple breakfast with oats, in three short steps."
+        }
+      ],
+      "response": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```python\ndef three_minute_breakfast():\n    \"\"\"\n    A simple breakfast menu with oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats, oats,"
+        },
+        "finish_reason": "length"
+      },
+      "usage": {
+        "prompt_tokens": 43,
+        "completion_tokens": 256,
+        "total_tokens": 299,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      }
+    },
+    {
+      "id": "context",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Meu gato se chama Pipoca e tem três anos."
+        },
+        {
+          "role": "assistant",
+          "content": "Entendi: seu gato se chama Pipoca e tem três anos."
+        },
+        {
+          "role": "user",
+          "content": "Qual é o nome do meu gato? Responda apenas o nome."
+        }
+      ],
+      "response": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "O nome do meu gato é Pipoca."
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 97,
+        "completion_tokens": 14,
+        "total_tokens": 111,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      }
+    }
+  ]
+}

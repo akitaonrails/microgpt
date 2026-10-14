@@ -1,5 +1,7 @@
 # Reasoning curriculum
 
+> Historical recipes and measurements. See the [October 14 closeout report](experiment-closeout.md) for the final model, data inventory, timing and capability results.
+
 This is supervised reasoning training of our own **90,969,600-parameter model**,
 initialized from scratch. No Qwen or other pretrained weights are loaded. Public
 teacher-generated text is supervision, so this is also trace distillation. It is

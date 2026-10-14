@@ -1,0 +1,1371 @@
+{
+  "recorded_at": "2026-10-14T18:21:21.566103+00:00",
+  "scope": "Final 337M pivot; historical evidence remains in docs/*.json",
+  "foundation": {
+    "status": "foundation_comparison_complete",
+    "phase": "coding-10b",
+    "pid": 3211636,
+    "started": "2026-10-07T17:54:38.625762+00:00",
+    "initialization": "random",
+    "config_sha256": "7ed31a416f0a02af4e8a863875f04d435c1c2316f694d85b8dbbfc645c8a3c1a",
+    "plan_sha256": "203da800e21dfe92f5d6a253bf3095b28053ec74576e202974959455b5676298",
+    "tasks_sha256": "54d4a93508f0d24f96136e86056d24c2d476552be80c9795fa3093f9e49d5ac2",
+    "automatic_promotion": false,
+    "acceptance_used": false,
+    "commands": [
+      {
+        "phase": "prepare_adapter",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.trajectories",
+          "--input",
+          "data/public-code-multiseed-v1/code.jsonl",
+          "--out",
+          "data/pivot-code-sft-v1",
+          "--tokenizer",
+          "data/foundation-bpe32k-v1",
+          "--max-length",
+          "8192",
+          "--limit",
+          "100000",
+          "--pack-episodes"
+        ]
+      },
+      {
+        "phase": "profile",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/profile_pivot.py",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--out",
+          "runs/pivot-v1/profile.json"
+        ]
+      },
+      {
+        "phase": "foundation-2b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "61036"
+        ]
+      },
+      {
+        "phase": "raw-2b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/eval_raw_programming.py",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation/checkpoint-2b.pt",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--out",
+          "runs/pivot-v1/raw-2b"
+        ]
+      },
+      {
+        "phase": "adapter-2b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.finetune",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation/checkpoint-2b.pt",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/adapter-2b",
+          "--steps",
+          "500",
+          "--lr",
+          "0.00001",
+          "--microbatch",
+          "1",
+          "--accumulation",
+          "16",
+          "--eval-every",
+          "500",
+          "--eval-examples",
+          "256",
+          "--validation-seed",
+          "20261007",
+          "--seed",
+          "20261007",
+          "--max-length",
+          "8192",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash"
+        ]
+      },
+      {
+        "phase": "coding-2b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/continue_programming.py",
+          "--run",
+          "data/experiments/foundation-pivot-v1/adapter-2b",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "runs/pivot-v1/coding-2b",
+          "--milestones",
+          "500",
+          "1000",
+          "--evaluate-current",
+          "--hours",
+          "6",
+          "--port",
+          "8035",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--direct-only",
+          "--patience",
+          "0"
+        ]
+      },
+      {
+        "phase": "foundation-5b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "152588",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation/last.pt"
+        ]
+      },
+      {
+        "phase": "raw-5b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/eval_raw_programming.py",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--out",
+          "runs/pivot-v1/raw-5b"
+        ]
+      },
+      {
+        "phase": "adapter-5b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.finetune",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/adapter-5b",
+          "--steps",
+          "500",
+          "--lr",
+          "0.00001",
+          "--microbatch",
+          "1",
+          "--accumulation",
+          "16",
+          "--eval-every",
+          "500",
+          "--eval-examples",
+          "256",
+          "--validation-seed",
+          "20261007",
+          "--seed",
+          "20261007",
+          "--max-length",
+          "8192",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash"
+        ]
+      },
+      {
+        "phase": "coding-5b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/continue_programming.py",
+          "--run",
+          "data/experiments/foundation-pivot-v1/adapter-5b",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "runs/pivot-v1/coding-5b",
+          "--milestones",
+          "500",
+          "1000",
+          "--evaluate-current",
+          "--hours",
+          "6",
+          "--port",
+          "8035",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--direct-only",
+          "--patience",
+          "0"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation/last.pt"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+          "--expected-resume-step",
+          "152588"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+          "--expected-resume-step",
+          "207508"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+          "--expected-resume-step",
+          "207508"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+          "--expected-resume-step",
+          "263850"
+        ]
+      },
+      {
+        "phase": "foundation-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.train",
+          "--config",
+          "configs/pivot-337m.toml",
+          "--data",
+          "data/foundation-bpe32k-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash",
+          "--sequence-length",
+          "2048",
+          "--stop-at-step",
+          "305176",
+          "--resume",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+          "--expected-resume-step",
+          "284725"
+        ]
+      },
+      {
+        "phase": "raw-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/eval_raw_programming.py",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--out",
+          "runs/pivot-v1/raw-10b"
+        ]
+      },
+      {
+        "phase": "adapter-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "-m",
+          "microgpt.finetune",
+          "--checkpoint",
+          "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "data/experiments/foundation-pivot-v1/adapter-10b",
+          "--steps",
+          "500",
+          "--lr",
+          "0.00001",
+          "--microbatch",
+          "1",
+          "--accumulation",
+          "16",
+          "--eval-every",
+          "500",
+          "--eval-examples",
+          "256",
+          "--validation-seed",
+          "20261007",
+          "--seed",
+          "20261007",
+          "--max-length",
+          "8192",
+          "--device",
+          "cuda",
+          "--attention",
+          "flash"
+        ]
+      },
+      {
+        "phase": "coding-10b",
+        "command": [
+          "/mnt/data/Projects/microgpt/.venv/bin/python",
+          "scripts/continue_programming.py",
+          "--run",
+          "data/experiments/foundation-pivot-v1/adapter-10b",
+          "--data",
+          "data/pivot-code-sft-v1",
+          "--out",
+          "runs/pivot-v1/coding-10b",
+          "--milestones",
+          "500",
+          "1000",
+          "--evaluate-current",
+          "--hours",
+          "6",
+          "--port",
+          "8035",
+          "--tasks-file",
+          "evaluation/programming-v1/development.jsonl",
+          "--direct-only",
+          "--patience",
+          "0"
+        ]
+      }
+    ],
+    "milestones": [
+      {
+        "tokens": 2000027648,
+        "metric": {
+          "step": 61036,
+          "train_loss": 1.491600662469864,
+          "val_loss": 1.3260713033378124,
+          "tokens_per_second": 19303.786723761943,
+          "peak_vram_gb": 13.856892416,
+          "tokens_seen_this_stage": 2000027648,
+          "budget_reached": true,
+          "gpu_duty_cycle": 0.75
+        },
+        "checkpoint": "data/experiments/foundation-pivot-v1/foundation/checkpoint-2b.pt",
+        "checkpoint_sha256": "f613446cbfd5141498191590829c51d306fc30d5626a6181b805ff7d0ceb6e2b",
+        "direct_scores": [
+          24,
+          39
+        ],
+        "best_direct": 39,
+        "raw_passed": 0,
+        "recovery_evidence": "runs/pivot-v1/coding-2b-recovery/status.json"
+      },
+      {
+        "tokens": 5000003584,
+        "metric": {
+          "step": 152588,
+          "train_loss": 1.3195311203598976,
+          "val_loss": 1.210834313184023,
+          "tokens_per_second": 17618.80281969362,
+          "peak_vram_gb": 13.875635712,
+          "tokens_seen_this_stage": 5000003584,
+          "budget_reached": true,
+          "gpu_duty_cycle": 0.75
+        },
+        "checkpoint": "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+        "checkpoint_sha256": "9434ae6027fb1f64f4229c8f954ce307f1c0d67c4878941989ff31d67954de95",
+        "direct_scores": [
+          49,
+          52
+        ],
+        "best_direct": 52,
+        "raw_passed": 0
+      },
+      {
+        "tokens": 10000007168,
+        "metric": {
+          "step": 305176,
+          "train_loss": 1.0093909837305546,
+          "val_loss": 1.0853809341788292,
+          "tokens_per_second": 23061.329509386553,
+          "peak_vram_gb": 13.875635712,
+          "tokens_seen_this_stage": 10000007168,
+          "budget_reached": true,
+          "gpu_duty_cycle": 0.75
+        },
+        "checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+        "checkpoint_sha256": "60afbcbab54aa111587821c4c0d071a134e2e0ad583ff14d670a336b529e854f",
+        "direct_scores": [
+          56,
+          65
+        ],
+        "best_direct": 65,
+        "raw_passed": 8
+      }
+    ],
+    "full_gpu_seconds": 28800,
+    "git_commit": "075bea7a4f37c81cfcad844211254dd38d529401",
+    "updated": "2026-10-14T05:35:37.410343+00:00",
+    "corpus_sha256": "04f5d814de68861569596bb37899bf0f8c35c27c3797165707d85ca73d7d3211",
+    "previous_run": {
+      "status": "interrupted",
+      "pid": 1500740,
+      "started": "2026-10-07T16:44:39.947868+00:00",
+      "parent": "runs/verified-code-learning-v1/checkpoint-500.pt",
+      "parent_sha256": "eb9e29177cdec107be385a24bf1d6687e85afcbf490cb00cc81df756674d416d",
+      "diagnostic_sha256": "ca1bde00e7b389610a75b6892586ada370540b809ef9512272da952f28d15213",
+      "plan_sha256": "b108722467e5b7d46d68781e5f5e51cb5daad1004d8e98cd3a0cac30b86f46fd",
+      "git_commit": "70e980c83b6c232fac744fb61d117d86fe834454",
+      "phases": [
+        {
+          "name": "corrections",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "scripts/prepare_rollout_corrections.py",
+            "--captures",
+            "data/repair-training-rollouts-v1/requests.jsonl",
+            "--tasks-file",
+            "data/repair-diagnostic-v1/training-rollouts.jsonl",
+            "--out",
+            "data/rollout-corrections-v1"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "assemble",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "scripts/assemble_refined_mix.py",
+            "--out",
+            "data/refined-repairs-v1.jsonl"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "tokenize",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "-m",
+            "microgpt.trajectories",
+            "--input",
+            "data/public-code-multiseed-v1/code.jsonl",
+            "data/refined-repairs-v1.jsonl",
+            "data/smoltalk-large.jsonl",
+            "data/multilingual-large.jsonl",
+            "--out",
+            "data/refined-agent-sft-v1",
+            "--tokenizer",
+            "data/verified-opencodeinstruct-sft-v1/tokenizer",
+            "--max-length",
+            "8192",
+            "--limit",
+            "150000",
+            "--pack-episodes",
+            "--canonical-tool-ids"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "control-1000",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "scripts/evaluate_repair_checkpoint.py",
+            "--checkpoint",
+            "data/experiments/agent-mix-v1/checkpoint-1000.pt",
+            "--tasks-file",
+            "data/repair-diagnostic-v1/evaluation.jsonl",
+            "--out",
+            "runs/refined-agent-v1/control-1000",
+            "--port",
+            "8034"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "control-3000",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "scripts/evaluate_repair_checkpoint.py",
+            "--checkpoint",
+            "data/experiments/agent-mix-v1/checkpoint-3000.pt",
+            "--tasks-file",
+            "data/repair-diagnostic-v1/evaluation.jsonl",
+            "--out",
+            "runs/refined-agent-v1/control-3000",
+            "--port",
+            "8034"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "bootstrap",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "-m",
+            "microgpt.finetune",
+            "--checkpoint",
+            "runs/verified-code-learning-v1/checkpoint-500.pt",
+            "--data",
+            "data/refined-agent-sft-v1",
+            "--out",
+            "data/experiments/refined-agent-v1",
+            "--steps",
+            "250",
+            "--lr",
+            "0.00001",
+            "--seed",
+            "20261008",
+            "--microbatch",
+            "1",
+            "--accumulation",
+            "16",
+            "--eval-every",
+            "250",
+            "--eval-examples",
+            "256",
+            "--validation-seed",
+            "20261007",
+            "--max-length",
+            "8192",
+            "--device",
+            "cuda",
+            "--attention",
+            "math",
+            "--source-weight",
+            "verified-opencodeinstruct:0.5",
+            "--source-weight",
+            "executed-public-repair:0.4",
+            "--source-weight",
+            "smoltalk:0.08",
+            "--source-weight",
+            "multilingual:0.02"
+          ],
+          "status": "complete"
+        },
+        {
+          "name": "pilot",
+          "command": [
+            "/mnt/data/Projects/microgpt/.venv/bin/python",
+            "scripts/continue_programming.py",
+            "--run",
+            "data/experiments/refined-agent-v1",
+            "--data",
+            "data/refined-agent-sft-v1",
+            "--out",
+            "runs/refined-agent-v1/pilot",
+            "--milestones",
+            "1000",
+            "3000",
+            "--hours",
+            "5.872733599124735",
+            "--port",
+            "8034",
+            "--tasks-file",
+            "evaluation/programming-v1/development.jsonl",
+            "--direct-only",
+            "--repair-eval",
+            "--repair-tasks-file",
+            "data/repair-diagnostic-v1/evaluation.jsonl",
+            "--patience",
+            "0"
+          ],
+          "status": "running"
+        }
+      ],
+      "automatic_promotion": false,
+      "acceptance_used": false,
+      "updated": "2026-10-07T17:51:56.756251+00:00",
+      "data": {
+        "manifest_sha256": "e7b7d77a1d9231e7f5ec8b3ecd50951084160a429730a444f55a020b855dc079",
+        "counts": {
+          "scanned": 130208,
+          "train_episodes": 123932,
+          "val_episodes": 6208,
+          "overlength_or_empty": 66,
+          "duplicates": 2
+        },
+        "verified_model_corrections_retained": 64
+      },
+      "error": "Interrupted"
+    },
+    "adapter_manifest_sha256": "0413b3a897ec3e32897aafe83dbf4d75b6e7b23250b8d56a915c83a4c57bdf29",
+    "full_gpu_until": 1791428450.01965,
+    "profile": {
+      "parameters": 337167360,
+      "transformer_parameters": 303612928,
+      "tokens_per_second": 29987.716976910964,
+      "peak_allocated_gb": 13.860169728,
+      "seconds": 32.781421832041815,
+      "losses": [
+        9.161343216896057,
+        8.921508312225342,
+        8.61668711900711,
+        8.283672749996185,
+        8.116132259368896,
+        8.314115464687347,
+        7.893946349620819,
+        8.634319484233856,
+        7.836146235466003,
+        7.642062962055206,
+        7.989930093288422,
+        7.923650026321411,
+        7.807630836963654,
+        7.4695799350738525,
+        8.064400315284729,
+        7.703194260597229,
+        7.626861333847046,
+        7.607445657253265,
+        7.522934675216675,
+        7.572214961051941,
+        7.801231503486633,
+        7.5267616510391235,
+        7.715947329998016,
+        7.6328986287117,
+        7.582516729831696,
+        7.293159782886505,
+        7.49489426612854,
+        7.671750724315643,
+        7.564805805683136,
+        7.461255609989166
+      ],
+      "attention": "flash",
+      "note": "30 real-data updates; excludes warmup, saving and evaluation; not a sustained-run guarantee."
+    },
+    "recovery_commit": "bddec384726d60e72fd6a9a932fdc69c20d1216c",
+    "maintenance_recovery_commit": "be895cb54081d5537d3b751a9210a70e616a0b06",
+    "foundation_output": "data/experiments/foundation-pivot-v1/foundation-resumed-5b",
+    "gpu_schedule": {
+      "window": "03:00-09:00",
+      "timezone": "America/Sao_Paulo",
+      "outside_fraction": 0.75
+    },
+    "resumed_from_step": 284725,
+    "next_stage": "Verified agent curriculum and fresh repository evaluations; no readiness claim. If a gate failed, inspect learning curves and errors before spending more compute."
+  },
+  "posttraining": {
+    "status": "complete_no_agent_readiness_claim",
+    "pid": 3213339,
+    "holdout_sha256": "3e96fd481c5bc258574b6c8acab3f5f07536c421de2eca66bf0c4a09301ec41d",
+    "selection": "Development correctness only; holdout evaluated once after selection",
+    "automatic_promotion": false,
+    "commands": [
+      [
+        "/mnt/data/Projects/microgpt/.venv/bin/python",
+        "scripts/continue_programming.py",
+        "--run",
+        "data/experiments/foundation-pivot-v1/adapter-10b",
+        "--data",
+        "data/pivot-code-sft-v1",
+        "--out",
+        "runs/pivot-posttraining-v1/longer-sft",
+        "--milestones",
+        "2000",
+        "4000",
+        "8000",
+        "--hours",
+        "8",
+        "--port",
+        "8036",
+        "--tasks-file",
+        "evaluation/programming-v1/development.jsonl",
+        "--direct-only",
+        "--patience",
+        "2"
+      ],
+      [
+        "/mnt/data/Projects/microgpt/.venv/bin/python",
+        "scripts/evaluate_repair_checkpoint.py",
+        "--programming",
+        "--checkpoint",
+        "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+        "--tasks-file",
+        "evaluation/programming-v1/acceptance.jsonl",
+        "--out",
+        "runs/pivot-posttraining-v1/holdout",
+        "--port",
+        "8036"
+      ]
+    ],
+    "foundation_choice": {
+      "score": 65,
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-1000.pt",
+      "name": "10b"
+    },
+    "selected": {
+      "score": 68,
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt"
+    },
+    "selected_sha256": "0a8768e96cb766cb41587c704a263498a0f9438f0eb5c1249825d59d7795f081",
+    "holdout": {
+      "passed": 58,
+      "total": 100
+    }
+  },
+  "corpus": {
+    "sources": [
+      {
+        "name": "codeparrot",
+        "weight": 0.6,
+        "splits": {
+          "train": {
+            "tokens": 3057457819,
+            "documents": 1767534,
+            "utf8_bytes": 11292748458,
+            "sha256": "210a61ab01f83c32cf61f4f30c4e0967c7767c6e052de921980cb33926b37bbc"
+          },
+          "val": {
+            "tokens": 169577626,
+            "documents": 95373,
+            "utf8_bytes": 622174363,
+            "sha256": "2e388b3e026c91971a34f50196f1f6833341be313999fc0bea236b2622878a70"
+          }
+        },
+        "dataset": "codeparrot/codeparrot-clean",
+        "revision": "35a59fb025bc0a102f7d96eac09d145b896d487b",
+        "download_bytes": 7744421769,
+        "download_files": 32,
+        "selection_counts": {
+          "scanned": 3200000,
+          "license_not_selected": 1222180,
+          "length": 114913
+        }
+      },
+      {
+        "name": "opencoder",
+        "weight": 0.16,
+        "splits": {
+          "train": {
+            "tokens": 155161279,
+            "documents": 250663,
+            "utf8_bytes": 651544345,
+            "sha256": "5b77ddd196abb83f122599ddbf7e41259b74ac0e8b6f26464822439a7c6744a9"
+          },
+          "val": {
+            "tokens": 8285139,
+            "documents": 13274,
+            "utf8_bytes": 34834256,
+            "sha256": "dbae772c6c4a33d73a7c49fddbf35329db484ea5f5f2bf90c359d493ba4651cf"
+          }
+        },
+        "dataset": "OpenCoder-LLM/opc-sft-stage1",
+        "revision": "1bcab575f5e2d1c1fd6652720418524c27b3d58b",
+        "download_bytes": 531812843,
+        "download_files": 2,
+        "selection_counts": {
+          "scanned": 264448,
+          "duplicates": 511
+        }
+      },
+      {
+        "name": "cosmopedia-v2",
+        "weight": 0.12,
+        "splits": {
+          "train": {
+            "tokens": 128895319,
+            "documents": 165764,
+            "utf8_bytes": 621865988,
+            "sha256": "db183ea84cbe482a781f20d7155a87ce3e38eb2f5d69148b71b77ab12fd1966d"
+          },
+          "val": {
+            "tokens": 6748940,
+            "documents": 8735,
+            "utf8_bytes": 32568047,
+            "sha256": "636cb84ad3b69163393477f7e17c3d0c844ee5f977ff87218d7f020e94253fce"
+          }
+        },
+        "dataset": "HuggingFaceTB/smollm-corpus",
+        "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+        "download_bytes": 1174424341,
+        "download_files": 1,
+        "selection_counts": {
+          "scanned": 174673,
+          "length": 81,
+          "duplicates": 93
+        }
+      },
+      {
+        "name": "smoltalk",
+        "weight": 0.08,
+        "splits": {
+          "train": {
+            "tokens": 83112546,
+            "documents": 89693,
+            "utf8_bytes": 354523272,
+            "sha256": "6d334782eb1f8099859d99629547458141ca2621b9962fc67d88c7900b9dd80f"
+          },
+          "val": {
+            "tokens": 4269487,
+            "documents": 4501,
+            "utf8_bytes": 18158661,
+            "sha256": "2a0ef8f7fbcc7328010590f570da0cab7e1e706546c3fc690272ebb9f1ae48f9"
+          }
+        },
+        "dataset": "HuggingFaceTB/smol-smoltalk",
+        "revision": "f73fe857d519ff6ac5af2ea67c4d3834da7b8bcc",
+        "download_bytes": 922475727,
+        "download_files": 4,
+        "selection_counts": {
+          "scanned": 94254,
+          "unfinished_conversation": 46,
+          "duplicates": 14
+        }
+      },
+      {
+        "name": "multilingual",
+        "weight": 0.04,
+        "splits": {
+          "train": {
+            "tokens": 51024432,
+            "documents": 75856,
+            "utf8_bytes": 165821668,
+            "sha256": "484d4beb3020e0e73518d1fdb49a2d86bcdd9f100127d063307bd3cd2221ee4a"
+          },
+          "val": {
+            "tokens": 2713491,
+            "documents": 4009,
+            "utf8_bytes": 8813670,
+            "sha256": "6896c1b98124341ab12756bd140ddf4feac2b6af27312201d8a7e1a5897801a6"
+          }
+        },
+        "dataset": "HuggingFaceTB/smoltalk2",
+        "revision": "fc6cc2103c066455aade5d7fbb346039ae36ca5e",
+        "download_bytes": 316940770,
+        "download_files": 2,
+        "selection_counts": {
+          "scanned": 79872,
+          "duplicates": 7
+        }
+      }
+    ],
+    "totals": {
+      "train": {
+        "tokens": 3475651395,
+        "documents": 2349510,
+        "utf8_bytes": 13086503731
+      },
+      "val": {
+        "tokens": 191594683,
+        "documents": 125892,
+        "utf8_bytes": 716548997
+      }
+    },
+    "tokenizer_fingerprint": "09c11b442be4ba8ce7a70839ded42805953a99ccc6133bca50c044ac7865682a",
+    "tokenizer_sample_bytes": 92047594
+  },
+  "sft_manifest": {
+    "protocol": "microgpt-chat-v1",
+    "max_length": 8192,
+    "packed_episodes": true,
+    "canonical_tool_ids": false,
+    "tokenizer_fingerprint": "09c11b442be4ba8ce7a70839ded42805953a99ccc6133bca50c044ac7865682a",
+    "sources": [
+      {
+        "file": "data/public-code-multiseed-v1/code.jsonl",
+        "sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297"
+      }
+    ],
+    "counts": {
+      "scanned": 97074,
+      "train_episodes": 92214,
+      "val_episodes": 4860
+    },
+    "splits": {
+      "train": {
+        "examples": 92214,
+        "assistant_tokens": 14912011,
+        "groups": 90213,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 92214
+        },
+        "sha256": "a02df8c977e03cace2af283e95d1c2bf71a5ce0dde6760302485633d0389bd5c"
+      },
+      "val": {
+        "examples": 4860,
+        "assistant_tokens": 790849,
+        "groups": 4786,
+        "examples_by_source": {
+          "verified-opencodeinstruct": 4860
+        },
+        "sha256": "c50608bc61f3ebf8223c17aaf61d4e191f89b573e014836619300b78bc3c16ef"
+      }
+    }
+  },
+  "sft_multiseed_controls": {
+    "source": "data/verified-opencodeinstruct-v1.jsonl",
+    "source_sha256": "6615626eab49ddb057ce8c68c1bb0b775ac2e613970af97fd816cfc1752f4038",
+    "checked": 98694,
+    "references_retained": 97074,
+    "repairs_retained": 14770,
+    "hash_seeds": [
+      1,
+      2,
+      3
+    ],
+    "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+    "checks_sha256": "51f235dda5e625094b5a33f04b2b7f9989737ec36bc018f137220f3cb35b1ac6",
+    "code_sha256": "b93446894b2e73fcd484b6843e6c361f9aa9b494847dffb99b99dad4edfa0297",
+    "note": "All references must finish their checks (exit 73) and empty controls fail (exit 1) at every seed. Original text/groups retained. Multiple runs still do not prove complete specifications or determinism.",
+    "repairs_sha256": "b4d391802830ff84d309561f48b6a3cbf60824e7a94b0419043cfc4ce4f6e4e3"
+  },
+  "timing": {
+    "foundation_intervals": [
+      {
+        "phase": "foundation-2b",
+        "start": "2026-10-07T19:01:29.201975+00:00",
+        "end": "2026-10-08T23:49:37.693736+00:00",
+        "hours": 28.8023588225
+      },
+      {
+        "phase": "foundation-5b",
+        "start": "2026-10-09T03:25:18.554792+00:00",
+        "end": "2026-10-11T02:43:28.014907+00:00",
+        "hours": 47.30262780972222
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-11T03:28:49.632855+00:00",
+        "end": "2026-10-11T04:43:00.551768+00:00",
+        "hours": 1.2363663647222223
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-11T05:20:00.615880+00:00",
+        "end": "2026-10-11T22:55:47.524788+00:00",
+        "hours": 17.596363585555554
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-12T00:44:33.827776+00:00",
+        "end": "2026-10-12T00:44:40.091853+00:00",
+        "hours": 0.001740021388888889
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-12T01:41:23.760445+00:00",
+        "end": "2026-10-12T20:20:46.884190+00:00",
+        "hours": 18.656423262500002
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-13T00:56:06.857193+00:00",
+        "end": "2026-10-13T15:55:52.086534+00:00",
+        "hours": 14.995897039166666
+      },
+      {
+        "phase": "foundation-10b",
+        "start": "2026-10-13T20:55:22.491447+00:00",
+        "end": "2026-10-14T05:00:27.761042+00:00",
+        "hours": 8.084797109722222
+      }
+    ],
+    "foundation_process_hours": 136.67657401527777,
+    "foundation_calendar_hours": 153.98293307416668,
+    "note": "Controller-observed intervals include I/O and pacing, approximate graceful shutdown boundary. Not GPU compute hours.",
+    "sft_logged_segment_hours": 3.398972222222222
+  },
+  "sft_stages": [
+    {
+      "source": "runs/pivot-v1/coding-2b-recovery/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-500.pt",
+      "step": 500,
+      "segment_seconds": 687.4,
+      "assistant_tokens_seen": 1289570,
+      "score": 24,
+      "diagnostics": {
+        "passed": 24,
+        "syntax_valid": 99,
+        "requested_function_present": 88,
+        "parameter_names_match": 88,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-v1/coding-2b-recovery/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-1000.pt",
+      "step": 1000,
+      "segment_seconds": 802.3,
+      "assistant_tokens_seen": 2580426,
+      "score": 39,
+      "diagnostics": {
+        "passed": 39,
+        "syntax_valid": 98,
+        "requested_function_present": 86,
+        "parameter_names_match": 86,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-v1/coding-5b/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-500.pt",
+      "step": 500,
+      "segment_seconds": 932.9,
+      "assistant_tokens_seen": 1289570,
+      "score": 49,
+      "diagnostics": {
+        "passed": 49,
+        "syntax_valid": 100,
+        "requested_function_present": 100,
+        "parameter_names_match": 100,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-v1/coding-5b/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-1000.pt",
+      "step": 1000,
+      "segment_seconds": 809.5,
+      "assistant_tokens_seen": 2580426,
+      "score": 52,
+      "diagnostics": {
+        "passed": 52,
+        "syntax_valid": 100,
+        "requested_function_present": 99,
+        "parameter_names_match": 99,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-v1/coding-10b/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-500.pt",
+      "step": 500,
+      "segment_seconds": 724.2,
+      "assistant_tokens_seen": 1289570,
+      "score": 56,
+      "diagnostics": {
+        "passed": 56,
+        "syntax_valid": 100,
+        "requested_function_present": 97,
+        "parameter_names_match": 97,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-v1/coding-10b/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-1000.pt",
+      "step": 1000,
+      "segment_seconds": 796.9,
+      "assistant_tokens_seen": 2580426,
+      "score": 65,
+      "diagnostics": {
+        "passed": 65,
+        "syntax_valid": 100,
+        "requested_function_present": 98,
+        "parameter_names_match": 98,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-posttraining-v1/longer-sft/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-2000.pt",
+      "step": 2000,
+      "segment_seconds": 1380.2,
+      "assistant_tokens_seen": 5167227,
+      "score": 61,
+      "diagnostics": {
+        "passed": 61,
+        "syntax_valid": 99,
+        "requested_function_present": 96,
+        "parameter_names_match": 96,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-posttraining-v1/longer-sft/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+      "step": 4000,
+      "segment_seconds": 1993.9,
+      "assistant_tokens_seen": 10341997,
+      "score": 68,
+      "diagnostics": {
+        "passed": 68,
+        "syntax_valid": 99,
+        "requested_function_present": 98,
+        "parameter_names_match": 98,
+        "total": 100
+      }
+    },
+    {
+      "source": "runs/pivot-posttraining-v1/longer-sft/status.json",
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-8000.pt",
+      "step": 8000,
+      "segment_seconds": 4109.0,
+      "assistant_tokens_seen": 20711969,
+      "score": 62,
+      "diagnostics": {
+        "passed": 62,
+        "syntax_valid": 100,
+        "requested_function_present": 99,
+        "parameter_names_match": 99,
+        "total": 100
+      }
+    }
+  ],
+  "checkpoints": {
+    "paths": [
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/best.pt",
+        "bytes": 4046192795,
+        "device": 115,
+        "inode": 174549
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-1000.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 174367
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-2000.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 174368
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 174543
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-500.pt",
+        "bytes": 4046192795,
+        "device": 115,
+        "inode": 174365
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-8000.pt",
+        "bytes": 4046192795,
+        "device": 115,
+        "inode": 174549
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-10b/last.pt",
+        "bytes": 4046192795,
+        "device": 115,
+        "inode": 174549
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-2b/best.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13538
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-1000.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13555
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-500.pt",
+        "bytes": 4046192731,
+        "device": 115,
+        "inode": 13565
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-2b/last.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13594
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-5b/best.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13629
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-1000.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13688
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-500.pt",
+        "bytes": 4046192731,
+        "device": 115,
+        "inode": 13711
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/adapter-5b/last.pt",
+        "bytes": 4046192859,
+        "device": 115,
+        "inode": 13713
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/foundation/checkpoint-2b.pt",
+        "bytes": 4046203862,
+        "device": 115,
+        "inode": 13721
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+        "bytes": 4046203862,
+        "device": 115,
+        "inode": 13743
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/foundation/last.pt",
+        "bytes": 4046203862,
+        "device": 115,
+        "inode": 13771
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+        "bytes": 4046203862,
+        "device": 115,
+        "inode": 174359
+      },
+      {
+        "path": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+        "bytes": 4046203862,
+        "device": 115,
+        "inode": 174359
+      }
+    ],
+    "path_count": 20,
+    "unique_inodes": 17,
+    "logical_bytes": 80923911683,
+    "unique_inode_bytes": 68785322231,
+    "note": "Inode deduplication detects hardlinks only; best/last may duplicate content. Bytes are file lengths, not NAS physical allocation."
+  },
+  "evidence_hashes": {
+    "holdout-results.json": "88718cb2004c9d0ed82ad3c11ff54840a0773dbb1fbdaea815bfd6a0d974c858",
+    "holdout-analysis.json": "b30dbaad0f89456b74eea1ca6b8c6e1f31be7097121e4a805f7634292d239c93",
+    "development-results.json": "40d8b95cc211ea8f19e23fe7ae30182e3da5f59ff6f47f1c8cdc7b9592c27857"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-14",
+  "purpose": "Closeout-only diagnostic inference; no training or model selection",
+  "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "checkpoint_sha256": "0a8768e96cb766cb41587c704a263498a0f9438f0eb5c1249825d59d7795f081",
+  "scripts": {
+    "scripts/evaluate_repair_checkpoint.py": "c5da97632889b7f69b5205e4e5efb113420ba6e464c0bed896f676278082d8f3",
+    "scripts/eval_opencode.py": "53b84ba29c77810f0b7b04560c134fd95e2628ec1aafabafdb9ac238055206c1",
+    "scripts/eval_programming.py": "81983b3aecac06ebdb1b91b1f835643cc58864cc1be04aaa59676db5e77ef94c",
+    "scripts/analyze_programming.py": "bb4f94895ae33a3707b25cc4f681bab73021f19180d50d3ff5f43d255684219f",
+    "scripts/eval_reasoning.py": "c9b2715483b48369874b81560fe3507adbeec89f9159b2e21f808d9f4aa08e73",
+    "scripts/eval_dialogue.py": "9907f64b83cc103da48347a8a634f8d203487f8de5cc3449036fc74c65febd86",
+    "scripts/eval_context.py": "2f49bc5bc5d9aa35f6760d82eb8b4606d00b749945ccde5558ca7273634fc912"
+  },
+  "commands": [
+    ".venv/bin/python scripts/evaluate_repair_checkpoint.py --checkpoint data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt --tasks-file runs/closeout-2026-10-14/repair-tasks.jsonl --out runs/closeout-2026-10-14/opencode --port 8037",
+    ".venv/bin/python scripts/eval_reasoning.py --out runs/closeout-2026-10-14/reasoning.json --label data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt --tasks 12 --budgets 256 --url http://127.0.0.1:8037/v1",
+    ".venv/bin/python scripts/eval_dialogue.py --out runs/closeout-2026-10-14/dialogue.json --label data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt --url http://127.0.0.1:8037/v1",
+    ".venv/bin/python scripts/eval_context.py --checkpoint data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt --out runs/closeout-2026-10-14/context.json --url http://127.0.0.1:8037/v1"
+  ],
+  "note": "Private server used CUDA Flash, constrained tools, default prefix caching; stopped at completion. Repair tasks copied unchanged from eval_opencode.TASKS."
+}

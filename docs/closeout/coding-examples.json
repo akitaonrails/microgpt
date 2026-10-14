@@ -1,0 +1,65 @@
+[
+  {
+    "id": "median_0",
+    "prompt": "Implement median_0(values). Return the median of nonempty numbers without modifying input; average the two middle values for even length.",
+    "passed": true,
+    "generated": "def median_0(values):\n    \"\"\"\n    Returns the median of a list of numbers.\n    \n    :param values: List of integers or floats.\n    :return: The median of the numbers as a float.\n    \"\"\"\n    sorted_values = sorted(values)\n    n = len(sorted_values)\n    mid = n // 2\n    if n % 2 == 1:\n        return sorted_values[mid]\n    else:\n        return (sorted_values[mid - 1] + sorted_values[mid]) / 2\n",
+    "grade": "PASS\n"
+  },
+  {
+    "id": "factorial_0",
+    "prompt": "Implement factorial_0(n). Return factorial of a nonnegative integer, with zero factorial equal to one.",
+    "passed": true,
+    "generated": "def factorial_0(n):\n    \"\"\"\n    Calculate the factorial of a nonnegative integer n.\n    \n    Parameters:\n    n (int): A nonnegative integer whose factorial is to be computed.\n    \n    Returns:\n    int: The factorial of the integer n.\n    \"\"\"\n    if n == 0:\n        return 1\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n",
+    "grade": "PASS\n"
+  },
+  {
+    "id": "deduplicate_0",
+    "prompt": "Implement deduplicate_0(values). Remove repeated equal items while preserving first appearance, including unhashable items.",
+    "passed": false,
+    "generated": "def deduplicate_0(values):\n    \"\"\"\n    Removes duplicates from a list of values while preserving the order of first appearance.\n    \n    :param values: List of values to process.\n    :return: A new list with duplicates removed.\n    \"\"\"\n    seen = set()\n    result = []\n    for value in values:\n        if value not in seen:\n            seen.add(value)\n            result.append(value)\n    return result\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.deduplicate_0([[1],[2],[1]]) == [[1],[2]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 11, in deduplicate_0\n    if value not in seen:\n       ^^^^^^^^^^^^^^^^^\nTypeError: unhashable type: 'list'\n"
+  },
+  {
+    "id": "group_length_0",
+    "prompt": "Implement group_length_0(words). Group strings by their length in a dictionary, preserving order inside each group.",
+    "passed": false,
+    "generated": "def group_length_0(words):\n    \"\"\"\n    Groups words by their length in a dictionary, preserving order.\n\n    :param words: List of words to be grouped.\n    :return: Dictionary with words as keys and lists of their lengths as values.\n    \"\"\"\n    length_dict = {}\n    for word in words:\n        if word in length_dict:\n            length_dict[word] += 1\n        else:\n            length_dict[word] = 1\n    return dict(length_dict)\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.group_length_0(['a','bc','d']) == {1:['a','d'],2:['bc']}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  },
+  {
+    "id": "pad_0",
+    "prompt": "Implement pad_0(values, length, fill=None). Return a copy padded on the right to at least length. Never truncate longer input.",
+    "passed": false,
+    "generated": "def pad_0(values, length, fill=None):\n    \"\"\"\n    Pads the given values with zeros to reach the specified length.\n    If fill is provided, it is used to fill the padded values.\n    \n    :param values: List of integers to be padded.\n    :param length: Integer representing the desired length of the padded values.\n    :param fill: Optional parameter to determine the fill value.\n    :return: List of padded integers.\n    \"\"\"\n    if fill is None:\n        fill = 0\n    padded_values = []\n    for value in values:\n        padded_value = value + fill\n        if len(padded_value) >= length:\n            padded_values.append(padded_value)\n        else:\n            padded_values.append(fill)\n    return padded_values\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.pad_0([1],3,0) == [1,0,0]\n           ^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 16, in pad_0\n    if len(padded_value) >= length:\n       ^^^^^^^^^^^^^^^^^\nTypeError: object of type 'int' has no len()\n"
+  },
+  {
+    "id": "split_once_0",
+    "prompt": "Implement split_once_0(text, separator). Split on the first occurrence of nonempty separator and return a two-item tuple; absent separator yields (text, empty string).",
+    "passed": false,
+    "generated": "def split_once_0(text, separator):\n    \"\"\"\n    Splits the given text by the first occurrence of the separator.\n    Returns a tuple containing the text and an empty string if the separator is found.\n    \n    :param text: The string to be split.\n    :param separator: The separator to split the text by.\n    :return: A tuple containing the text and an empty string if the separator is found.\n    \"\"\"\n    i = 0\n    while i < len(text) and text[i] == separator:\n        i += 1\n    return (text, '') if i == len(text) else (text, '')\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.split_once_0('a:b:c',':') == ('a','b:c')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  },
+  {
+    "id": "basename_0",
+    "prompt": "Implement basename_0(path). Return the last component using POSIX path semantics.",
+    "passed": false,
+    "generated": "import os\nimport re\n\ndef basename_0(path):\n    \"\"\"\n    Returns the last component of the given path using POSIX path semantics.\n    \n    Parameters:\n    path (str): The path to the last component.\n    \n    Returns:\n    str: The last component of the path.\n    \"\"\"\n    return os.path.basename(path)[:-1]\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.basename_0('/a/b.txt') == 'b.txt'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  },
+  {
+    "id": "strip_comments_0",
+    "prompt": "Implement strip_comments_0(lines). For each string remove everything from the first # onward, then strip surrounding whitespace. Preserve empty results.",
+    "passed": false,
+    "generated": "def strip_comments_0(lines):\n    \"\"\"\n    Remove all comments from the lines before stripping them from the beginning of the lines.\n    \n    :param lines: List of strings representing lines of code.\n    :return: List of strings with comments removed from the beginning.\n    \"\"\"\n    stripped_lines = []\n    for line in lines:\n        stripped_line = line.lstrip('#')\n        stripped_lines.append(stripped_line)\n    return stripped_lines\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.strip_comments_0([' a # x','# hi','b']) == ['a','','b']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  },
+  {
+    "id": "transpose_0",
+    "prompt": "Implement transpose_0(rows). Transpose a rectangular list of lists; empty input returns an empty list.",
+    "passed": false,
+    "generated": "def transpose_0(rows):\n    \"\"\"\n    Transpose a rectangular list of lists.\n    \n    Parameters:\n    rows (list of list of int): The input list where each sublist represents a row of the list.\n    \n    Returns:\n    list of list of int: The transposed list of lists.\n    \"\"\"\n    if not rows:\n        return []\n    transposed = [row[:] for row in rows]\n    return transposed\n",
+    "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.transpose_0([[1,2],[3,4]]) == [[1,3],[2,4]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  }
+]

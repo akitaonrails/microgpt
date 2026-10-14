@@ -1,0 +1,794 @@
+{
+  "counts": {
+    "passed": 58,
+    "syntax_valid": 100,
+    "requested_function_present": 97,
+    "parameter_names_match": 97,
+    "total": 100
+  },
+  "families": {
+    "deduplicate": {
+      "passed": 0,
+      "total": 5
+    },
+    "running_total": {
+      "passed": 4,
+      "total": 5
+    },
+    "transpose": {
+      "passed": 2,
+      "total": 5
+    },
+    "intersection": {
+      "passed": 1,
+      "total": 5
+    },
+    "median": {
+      "passed": 5,
+      "total": 5
+    },
+    "group_length": {
+      "passed": 0,
+      "total": 5
+    },
+    "invert": {
+      "passed": 5,
+      "total": 5
+    },
+    "pairwise": {
+      "passed": 3,
+      "total": 5
+    },
+    "pad": {
+      "passed": 0,
+      "total": 5
+    },
+    "split_once": {
+      "passed": 0,
+      "total": 5
+    },
+    "anagram": {
+      "passed": 3,
+      "total": 5
+    },
+    "factorial": {
+      "passed": 5,
+      "total": 5
+    },
+    "gcd": {
+      "passed": 5,
+      "total": 5
+    },
+    "binary": {
+      "passed": 5,
+      "total": 5
+    },
+    "line_count": {
+      "passed": 5,
+      "total": 5
+    },
+    "json_keys": {
+      "passed": 5,
+      "total": 5
+    },
+    "basename": {
+      "passed": 0,
+      "total": 5
+    },
+    "leap": {
+      "passed": 5,
+      "total": 5
+    },
+    "seconds": {
+      "passed": 5,
+      "total": 5
+    },
+    "strip_comments": {
+      "passed": 0,
+      "total": 5
+    }
+  },
+  "tasks": [
+    {
+      "id": "deduplicate_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "deduplicate_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "deduplicate_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "deduplicate_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "deduplicate_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "running_total_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "running_total_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "running_total_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": false,
+      "parameter_names_match": false
+    },
+    {
+      "id": "running_total_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "running_total_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "transpose_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "transpose_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "transpose_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "transpose_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "transpose_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "intersection_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "intersection_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "intersection_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "intersection_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "intersection_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "median_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "median_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "median_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "median_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "median_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "group_length_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "group_length_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "group_length_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "group_length_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "group_length_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "invert_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "invert_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "invert_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "invert_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "invert_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pairwise_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pairwise_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pairwise_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pairwise_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pairwise_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pad_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pad_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pad_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pad_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "pad_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "split_once_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "split_once_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "split_once_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "split_once_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "split_once_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "anagram_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "anagram_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "anagram_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": false,
+      "parameter_names_match": false
+    },
+    {
+      "id": "anagram_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": false,
+      "parameter_names_match": false
+    },
+    {
+      "id": "anagram_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "factorial_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "factorial_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "factorial_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "factorial_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "factorial_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "gcd_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "gcd_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "gcd_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "gcd_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "gcd_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "binary_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "binary_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "binary_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "binary_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "binary_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "line_count_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "line_count_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "line_count_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "line_count_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "line_count_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "json_keys_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "json_keys_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "json_keys_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "json_keys_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "json_keys_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "basename_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "basename_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "basename_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "basename_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "basename_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "leap_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "leap_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "leap_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "leap_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "leap_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "seconds_0",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "seconds_1",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "seconds_2",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "seconds_3",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "seconds_4",
+      "passed": true,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "strip_comments_0",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "strip_comments_1",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "strip_comments_2",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "strip_comments_3",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    },
+    {
+      "id": "strip_comments_4",
+      "passed": false,
+      "syntax_valid": true,
+      "requested_function_present": true,
+      "parameter_names_match": true
+    }
+  ],
+  "note": "AST diagnostics do not execute code or alter original pass/fail. Parameter-name matches do not prove matching defaults or behavior."
+}

@@ -1,0 +1,126 @@
+{
+  "label": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "steps": 8,
+  "suite": "basic",
+  "effort": "none",
+  "tasks_file": "runs/closeout-2026-10-14/repair-tasks.jsonl",
+  "agent_prompt": "general",
+  "harness_sha256": "53b84ba29c77810f0b7b04560c134fd95e2628ec1aafabafdb9ac238055206c1",
+  "tasks_sha256": "2cf738029f23edd1ebb758a63d53a98c875e7840cf0adacdf9f279895c63b878",
+  "opencode": "mise ~/.config/mise/config.toml tools: opencode@1.19.0\n1.19.0",
+  "tasks": [
+    {
+      "id": "mean",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.mean([1, 2]) == 1.5\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "basic",
+      "transient_check": false,
+      "returncode": 0,
+      "seconds": 3.2,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 1679,
+          "input": 1574,
+          "output": 105,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        }
+      ],
+      "final_text": "```python\ndef fix_mean(values):\n    \"\"\"\n    Calculate the arithmetic mean of a list of numbers.\n    \n    Parameters:\n    values (list): A list of numbers (integers or floats).\n    \n    Returns:\n    float: The arithmetic mean of the numbers in the list.\n    \n    Raises:\n    ValueError: If the list is empty.\n    \"\"\"\n    if not values:\n        raise ValueError('The list of numbers is empty.')\n    mean = sum(values) / len(values)\n    return mean\n```",
+      "unsupported_pass_claim_flag": false
+    },
+    {
+      "id": "chunks",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks([1,2,3,4,5], 2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "basic",
+      "transient_check": false,
+      "returncode": 0,
+      "seconds": 3.9,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 1771,
+          "input": 132,
+          "output": 193,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1446
+          }
+        }
+      ],
+      "final_text": "```python\ndef fix_chunks(values, size):\n    \"\"\"\n    Fixes chunks of values in the input list to a list of consecutive chunks.\n    \n    Parameters:\n    values (list): The list of values to be fixed.\n    size (int): The size of each chunk.\n    \n    Returns:\n    list: A list of consecutive chunks.\n    \"\"\"\n    if size <= 0:\n        raise ValueError('Size must be greater than zero.')\n    if size == 1:\n        return [values]\n    result = []\n    current_chunk = []\n    for value in values:\n        if current_chunk:\n            if len(current_chunk) < size:\n                current_chunk.append(value)\n            else:\n                result.append(current_chunk)\n                current_chunk = []\n        else:\n            current_chunk.append(value)\n    if current_chunk:\n        result.append(current_chunk)\n    return result\n```",
+      "unsupported_pass_claim_flag": false
+    },
+    {
+      "id": "unique",
+      "code_correct": false,
+      "checked": false,
+      "completed": true,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.unique([3,1,3,2,1]) == [3,1,2]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "basic",
+      "transient_check": false,
+      "returncode": 0,
+      "seconds": 3.4,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 1727,
+          "input": 136,
+          "output": 145,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1446
+          }
+        }
+      ],
+      "final_text": "```python\ndef fix_unique(solution):\n    \"\"\"\n    Replaces unique values in the solution with distinct items in the first occurrence order.\n    \n    Parameters:\n    solution (dict): A dictionary representing the solution to be modified.\n    \n    Returns:\n    dict: A new dictionary with unique values replaced by distinct items in the first occurrence order.\n    \"\"\"\n    unique_values = set()\n    for key, value in solution.items():\n        if isinstance(value, (list, tuple)):\n            unique_values.update(value)\n        else:\n            unique_values.add(value)\n    return {key: value for key, value in solution.items() if value not in unique_values}\n```",
+      "unsupported_pass_claim_flag": false
+    },
+    {
+      "id": "counts",
+      "code_correct": false,
+      "checked": false,
+      "completed": false,
+      "passed": false,
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.count_words('One one TWO') == {'one':2,'two':1}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "basic",
+      "transient_check": false,
+      "returncode": 0,
+      "seconds": 42.0,
+      "errors": [],
+      "tools": [],
+      "tokens": [
+        {
+          "total": 5689,
+          "input": 147,
+          "output": 4096,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 1446
+          }
+        }
+      ],
+      "final_text": "```python\nimport re\n\ndef fix_count_words(text):\n    \"\"\"\n    Replaces all whitespace and punctuation in the input text with Unicode casefold.\n    \n    Parameters:\n    text (str): The input string containing words to be counted.\n    \n    Returns:\n    dict: A dictionary with words as keys and their Unicode casefold equivalents as values.\n    \"\"\"\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('[^\\\\w\\\\s]', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub('\\\\s+', '', text)\n    text = re.sub(re.subn.subst.py3, \"replace\"\n\n\n\n\n\n\n# The following is required.\n#{1, or, the following lines are noted in the file name, or the name of the file name, or the name of the file name, or the name of the file name is a space-only.\n# the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the file name, or the name of the file name, or the name of the file, or the name of the file name, or the name of the file, or the name of the file name, or the name of the file, or the name of the file name, or the name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file name, or the name of the file, or the file, or the name, or the name, or the name, or the name, or the name, or the name of the file, or the name, or the file, or the name, or the name of the file, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the file name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the file, or the file, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the file, or the name, or the name, or the name, or the name, or the name, or the name, the name, or the name, the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, or the name, the name, the name, the name, or the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the name, the command, the command, the command, the command, the command to stop. \"command. Can open, the name, the command, the command, the command, the command, the command, the command, the command. Now, the command, the command, the name, the first, the name, the name, the command, the name, the name, the name, the command. What, the command. Can open the command. What, the command. What, the command. What, the command, the command, the command only failure, the command. What, the command, the first edit, the command, the command, the command, the first, the command, the command, the command, the command, the first, the command, the command, the command. Format, \"and the command, \"once, \"once, the first colon, the first newline. Can open the command, the command, the command. Can open, the first in the command, the command, the command, the command, the command, the command, the command, the first, the command. What, the command. What, the command to the command, the command, the command, the command, the command, the first editing the first space/re space/null/G. Can end space/valid space, only\", \"replace space, only.\", \"replace, only\", only, only.\", only\", only the first space only \"only.\", \"once\", \"error, only\", \"failure, in, only\", start, only, only, only, only, only, only, only\", and the space, only in space, only, only, only\", only, only, only, only, only, only\", only\", only space, space, space, only, only space replace the space, only\", only\", only \"replace only \"replace space, only\", one space, only, only, only, only, only, only\", only\", space, only, only, only\", space, only, only, only\", space, only\", only, only, only \", with space, only \", only \", null/new in, not only \", only\", \"replace space, only \", only \", only \", only \", only \", in space, only\", replace the mode only in only \", with space\", \"replace (replace \", \"replace space, \"replace null, \"no space\", \"replace space, \"replace space\", \"replace space\", \"replace space\", \"replace\", \"once\", space\", space\", space, not, \", space, space, only, space, only, only\", \"replace space\", \"replace space\", \"replace space, and \"replace space\", space\", space\", space\", replace space\", \"replace space\", \"replace space\", \"replace space, in space\", space\", and char space, \"python space, \"python space, \"once\", char space, tab, space\", \"replace space\", \"python space\", \"replace space\", \"python\", \"python\", \"python space\", \"null\", \"replace space\", space\", space, space\", space\", \"python\", \"python\", \"python space\", \"python space\", \"python\", \"python\", \"python\", \"space\", \"fixed \", \"fixed \", \"space\", \"space\", space\", space\", space\", space\", space\", space\", space\", space\", space\", space\", space\", space\", \"\"}, space\", \"replace space\", \"replace\", \"\"}, \"\", \"\"}, \" + \", \"replace \", \"\"}, \" + \"\", \"\", \"\"}, \", \"replace\", \"\"}, \"\", \"\"}, \"\", \"replace \", \"\", \"\", \"in space\", \"replace \" + \", \"\", \"min \", \"replace \", \"replace space \", \"min \", \"replace \", \"replace \", \" + \", \"min \", \"py \", \"py \", \"py \", \"special \", \"py \", \"error \", \"special\", \"replace with p \", char space, \", space, \",  char space, \" + char space, first space, \", space\", char space char space, char, space, char space, \", char space, \", space, \", \"replace space, char space, char space, \" + \", \" + \" space, \", \"}, \", \" + \" \", \" + \" \", \" + \" in  null/md \", \" + \",  null, \", \" + \", \", \", \", \" + \" + \" ,\", \"replace space, \" + \", \", \"text \", \"replace \", \"}, \" + \", \"\", \"\", \"},\", \"replace space\", \"replace space\", \"replace \", \"replace \", \"replace \"start \", \"replace \" + \"\", \" + \" + \", \", \"replace space, \" + \", \" + \"},\", \"replace \"}, \"\", \"replace space, \"},\", \"replace space, \" + \" \", \"\", \"replace space\", \"replace space\", char space, \"replace char,/check \", first)\", char,\nop char product \", \" + \" \", \" + \" \", \"check \", char space\", \" + \", char\", \",\", \", char \", char \", char,/null\", \" + \" \", \", \" + \" \", char \", \" +/md \", char\", \"replace char \", char,/md space, \", char,/md space re. \", re. \", first, \", re. \", char,\", re, \"replace w, o + re. \", first \", first re. \", re. \" + \", first check, first \", first check first re. \", first char, char, char, a re. \" + \", components (check \"min(check \" + \" char, char space, char, char, char space, \"replace space, \" + \", char, char,/min(check \" + \" + char,-min re. \", re. check, re. \", re. char, char, re. char, char, char(check re. re. re. re.check(re. re.min(re.min(re.min re.min re.min re.min re.min re. check(check re. re. re. re. char, re. char, re. check, re. re. char, re, re, check, re. check, re. re, check, check, check, re. re. re. check, check, check, check, check, check, check, check, check, check, re. check re. check check check check check check null of re.check base + re.check base re.check re.check base re. re. re. re. re. re. re. re. check, check, check \"check error base re. lines, check check check check \"min(min re. check \" + re. re. check (check base re. \"check \" + \" check \" + re, check check check \"local base re, check, check check check check check check check check \"check \" + re. check check check check check check check\n    check\n    check check check check check a check re\n    check\n    check\n    check\n    check\n    check check check\n    check\n    check\n    check\n    check\n    check\n    check a check\n    check sub check a base\n    check\n    check\n    check\n    check a base (check sub check sub check\n    check\n    check\n    check (check check a check\n    check\n    check\n    check a bit a check (check base (check base check (\n    check\n    check\n    check a re\n    sub check a bit a base (re check re. limit base (re base\n    sub check (min re\n    sub(min lines\n    sub check (min re. sub (re\n    sub\n    check\n    sub (check sub(min\n    sub (\n    sub(min (re base(min re.\n    sub (re a re. return re.\n    sub. re. return (s sub (re (re a re\n    return check(min(re a re(re a re\n    check (re a re\n    return (re base (re a bit (re (re a re\n    sub (re (re a re(re (re re(re (re (re (re(re(re(re base(re bit (re (re(re (re (re (re (re(re(re a re (re (re a re(s\n    a bit (s\n    sub (re (re a re(min re. (re a bit (re a (re a re(re a re (re a re(min(s check(s(l (re a check(min(re a check (min(min (re a check (re check(min (re (re (re (re a (re (min (re base (re a part base (re match i (re match(min(min (re (re (re a re(min re- (re (re base (s(min(re match(min(min(re (re a min (re (min re (re a min (re a (re a (re a re-min re- a (s match (min (re a match the (re a (re a (s match the (re a bit match a limit (min a match a match a match a match a match a match a match a (re a re(min re (re a match a match (re a match a (re a match a (in a (re a (min(min(min (min a (min a (min (min(min(min (min(min",
+      "unsupported_pass_claim_flag": false
+    }
+  ]
+}

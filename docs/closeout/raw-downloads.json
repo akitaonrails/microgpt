@@ -1,0 +1,100 @@
+[
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/code-feedback/manifest.json",
+    "dataset": "m-a-p/Code-Feedback",
+    "revision": "f411b16a97c910ac9acf8b0d0948e340aa77cc34",
+    "bytes": 413476947,
+    "files": 1
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/codeparrot/manifest.json",
+    "dataset": "codeparrot/codeparrot-clean",
+    "revision": "35a59fb025bc0a102f7d96eac09d145b896d487b",
+    "bytes": 7744421769,
+    "files": 32
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/commitpack/manifest.json",
+    "dataset": "bigcode/commitpackft",
+    "revision": "fc56fe33c030c6daa414c2b112c932b8eed085e6",
+    "bytes": 350450684,
+    "files": 3
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/conversation/manifest.json",
+    "dataset": "HuggingFaceTB/smoltalk2",
+    "revision": "fc6cc2103c066455aade5d7fbb346039ae36ca5e",
+    "bytes": 899491,
+    "files": 1
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/cosmopedia/manifest.json",
+    "dataset": "HuggingFaceTB/smollm-corpus",
+    "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+    "bytes": 1174424341,
+    "files": 1
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/magicoder/manifest.json",
+    "dataset": "ise-uiuc/Magicoder-OSS-Instruct-75K",
+    "revision": "5f839b1f368a76b161028bb9edff055db34022b2",
+    "bytes": 203201169,
+    "files": 1
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/multilingual/manifest.json",
+    "dataset": "HuggingFaceTB/smoltalk2",
+    "revision": "fc6cc2103c066455aade5d7fbb346039ae36ca5e",
+    "bytes": 316940770,
+    "files": 2
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/opencodeinstruct/manifest.json",
+    "dataset": "nvidia/OpenCodeInstruct",
+    "revision": "8f3ba5bafe4d6e8db46082cf7ae6741bc370604d",
+    "bytes": 6861113102,
+    "files": 50
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/opencoder/manifest.json",
+    "dataset": "OpenCoder-LLM/opc-sft-stage1",
+    "revision": "1bcab575f5e2d1c1fd6652720418524c27b3d58b",
+    "bytes": 531812843,
+    "files": 2
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/opencoder-educational/manifest.json",
+    "dataset": "OpenCoder-LLM/opc-sft-stage2",
+    "revision": "7d28f40d579edd7c24402d17d0c7639f991e6f8d",
+    "bytes": 53572508,
+    "files": 1
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/reasoning-code/manifest.json",
+    "dataset": "open-r1/Mixture-of-Thoughts",
+    "revision": "e55fa28006c0d0ec60fb3547520f775dd42d02cd",
+    "bytes": 402209271,
+    "files": 2
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/reasoning-math/manifest.json",
+    "dataset": "open-r1/Mixture-of-Thoughts",
+    "revision": "e55fa28006c0d0ec60fb3547520f775dd42d02cd",
+    "bytes": 352173335,
+    "files": 2
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/smoltalk/manifest.json",
+    "dataset": "HuggingFaceTB/smol-smoltalk",
+    "revision": "f73fe857d519ff6ac5af2ea67c4d3834da7b8bcc",
+    "bytes": 922475727,
+    "files": 4
+  },
+  {
+    "manifest": "/mnt/gigachad/microgpt/dataset/raw/swesmith/manifest.json",
+    "dataset": "SWE-bench/SWE-smith-trajectories",
+    "revision": "08e109b4a59eaeebf80e4675cd125d42e7ac99a4",
+    "bytes": 1077271863,
+    "files": 8
+  }
+]

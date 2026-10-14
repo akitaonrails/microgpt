@@ -1,0 +1,1017 @@
+{
+  "scope": "All .pt paths beneath runs/ and data/experiments/ at closeout; excludes files elsewhere and is not a count of independent trained models",
+  "path_count": 168,
+  "unique_inodes": 134,
+  "logical_bytes": 347487826975,
+  "unique_inode_bytes": 274938108963,
+  "files": [
+    {
+      "path": "runs/agent-32k-smoke/last.pt",
+      "bytes": 1095043238,
+      "device": 65,
+      "inode": 1725114
+    },
+    {
+      "path": "runs/agent-8k-smoke/last.pt",
+      "bytes": 1095043238,
+      "device": 65,
+      "inode": 1725118
+    },
+    {
+      "path": "runs/agent-direct-v1/best.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1725466
+    },
+    {
+      "path": "runs/agent-direct-v1/candidate-mid.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1725467
+    },
+    {
+      "path": "runs/agent-direct-v1/last.pt",
+      "bytes": 1091706395,
+      "device": 65,
+      "inode": 1725470
+    },
+    {
+      "path": "runs/agent-lines-v2/best.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729484
+    },
+    {
+      "path": "runs/agent-lines-v2/candidate-early.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729484
+    },
+    {
+      "path": "runs/agent-lines-v2/candidate-last.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1729486
+    },
+    {
+      "path": "runs/agent-lines-v2/last.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1729486
+    },
+    {
+      "path": "runs/agent-minimal-v1/best.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729654
+    },
+    {
+      "path": "runs/agent-minimal-v1/candidate-1500.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729649
+    },
+    {
+      "path": "runs/agent-minimal-v1/candidate-5000.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729650
+    },
+    {
+      "path": "runs/agent-minimal-v1/candidate-early.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1729651
+    },
+    {
+      "path": "runs/agent-minimal-v1/candidate-final.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729654
+    },
+    {
+      "path": "runs/agent-minimal-v1/candidate-mid.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729652
+    },
+    {
+      "path": "runs/agent-minimal-v1/last.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1729654
+    },
+    {
+      "path": "runs/agent-plans-v1/best.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1731258
+    },
+    {
+      "path": "runs/agent-plans-v1/candidate-early.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1731256
+    },
+    {
+      "path": "runs/agent-plans-v1/candidate-final.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1731258
+    },
+    {
+      "path": "runs/agent-plans-v1/last.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1731258
+    },
+    {
+      "path": "runs/agent-ready-v1/model.pt",
+      "bytes": 363898165,
+      "device": 65,
+      "inode": 1731267
+    },
+    {
+      "path": "runs/agent-related-v1/best.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1731604
+    },
+    {
+      "path": "runs/agent-related-v1/candidate-early.pt",
+      "bytes": 1091706523,
+      "device": 65,
+      "inode": 1731605
+    },
+    {
+      "path": "runs/agent-related-v1/last.pt",
+      "bytes": 1091706459,
+      "device": 65,
+      "inode": 1731608
+    },
+    {
+      "path": "runs/batched-learning-v1/best.pt",
+      "bytes": 2862920683,
+      "device": 65,
+      "inode": 1731905
+    },
+    {
+      "path": "runs/batched-learning-v1/checkpoint-2000.pt",
+      "bytes": 2862920683,
+      "device": 65,
+      "inode": 1731905
+    },
+    {
+      "path": "runs/batched-learning-v1/last.pt",
+      "bytes": 2862920683,
+      "device": 65,
+      "inode": 1731905
+    },
+    {
+      "path": "runs/bpe-smoke/last.pt",
+      "bytes": 11852742,
+      "device": 65,
+      "inode": 1731908
+    },
+    {
+      "path": "runs/capacity-pilot-v1/candidate-adapter/best.pt",
+      "bytes": 2862921323,
+      "device": 65,
+      "inode": 1731927
+    },
+    {
+      "path": "runs/capacity-pilot-v1/candidate-adapter/last.pt",
+      "bytes": 2862921323,
+      "device": 65,
+      "inode": 1731927
+    },
+    {
+      "path": "runs/capacity-pilot-v1/control-adapter/best.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1732134
+    },
+    {
+      "path": "runs/capacity-pilot-v1/control-adapter/last.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1732134
+    },
+    {
+      "path": "runs/capacity-pilot-v1/foundation/checkpoint-122071.pt",
+      "bytes": 2862930022,
+      "device": 65,
+      "inode": 1732455
+    },
+    {
+      "path": "runs/capacity-pilot-v1/foundation/checkpoint-30518.pt",
+      "bytes": 2862930022,
+      "device": 65,
+      "inode": 1732452
+    },
+    {
+      "path": "runs/capacity-pilot-v1/foundation/checkpoint-61036.pt",
+      "bytes": 2862930022,
+      "device": 65,
+      "inode": 1732453
+    },
+    {
+      "path": "runs/capacity-pilot-v1/foundation/last.pt",
+      "bytes": 2862930022,
+      "device": 65,
+      "inode": 1732455
+    },
+    {
+      "path": "runs/clean-foundation-adapter-v1/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1733417
+    },
+    {
+      "path": "runs/clean-foundation-adapter-v1/checkpoint-1000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1733414
+    },
+    {
+      "path": "runs/clean-foundation-adapter-v1/checkpoint-2000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1733417
+    },
+    {
+      "path": "runs/clean-foundation-adapter-v1/checkpoint-500.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1733415
+    },
+    {
+      "path": "runs/clean-foundation-adapter-v1/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1733417
+    },
+    {
+      "path": "runs/coding-v1/foundation/last.pt",
+      "bytes": 1091715606,
+      "device": 65,
+      "inode": 1733453
+    },
+    {
+      "path": "runs/coding-v1/instruction/last.pt",
+      "bytes": 1091707867,
+      "device": 65,
+      "inode": 1733457
+    },
+    {
+      "path": "runs/coding-v1/long-horizon/last.pt",
+      "bytes": 1091707803,
+      "device": 65,
+      "inode": 1733461
+    },
+    {
+      "path": "runs/coding-v1/reasoning/last.pt",
+      "bytes": 1091707995,
+      "device": 65,
+      "inode": 1733465
+    },
+    {
+      "path": "runs/cpu-smoke/last.pt",
+      "bytes": 10673286,
+      "device": 65,
+      "inode": 1733468
+    },
+    {
+      "path": "runs/demo/last.pt",
+      "bytes": 10674630,
+      "device": 65,
+      "inode": 1733471
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/adapter/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734584
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/adapter/checkpoint-1000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734577
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/adapter/checkpoint-2000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734584
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/adapter/checkpoint-500.pt",
+      "bytes": 2862920683,
+      "device": 65,
+      "inode": 1734582
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/adapter/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734584
+    },
+    {
+      "path": "runs/expanded-foundation-pilot-v1/foundation/last.pt",
+      "bytes": 2862930214,
+      "device": 65,
+      "inode": 1734588
+    },
+    {
+      "path": "runs/expanded-foundation-profile-b2-v1/last.pt",
+      "bytes": 2862930214,
+      "device": 65,
+      "inode": 1734592
+    },
+    {
+      "path": "runs/format-comparison-v1/control/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734808
+    },
+    {
+      "path": "runs/format-comparison-v1/control/checkpoint-5000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734810
+    },
+    {
+      "path": "runs/format-comparison-v1/control/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1734810
+    },
+    {
+      "path": "runs/format-comparison-v1/varied/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1735021
+    },
+    {
+      "path": "runs/format-comparison-v1/varied/checkpoint-5000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1735023
+    },
+    {
+      "path": "runs/format-comparison-v1/varied/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1735023
+    },
+    {
+      "path": "runs/grounding-v1/best.pt",
+      "bytes": 1091707227,
+      "device": 65,
+      "inode": 1735075
+    },
+    {
+      "path": "runs/grounding-v1/candidate.pt",
+      "bytes": 1091707227,
+      "device": 65,
+      "inode": 1735075
+    },
+    {
+      "path": "runs/grounding-v1/last.pt",
+      "bytes": 1091707163,
+      "device": 65,
+      "inode": 1735077
+    },
+    {
+      "path": "runs/horizon-v2/best.pt",
+      "bytes": 1091706907,
+      "device": 65,
+      "inode": 1735121
+    },
+    {
+      "path": "runs/horizon-v2/candidate-final.pt",
+      "bytes": 1091706907,
+      "device": 65,
+      "inode": 1735121
+    },
+    {
+      "path": "runs/horizon-v2/candidate.pt",
+      "bytes": 1091706843,
+      "device": 65,
+      "inode": 1735122
+    },
+    {
+      "path": "runs/horizon-v2/last.pt",
+      "bytes": 1091706907,
+      "device": 65,
+      "inode": 1735124
+    },
+    {
+      "path": "runs/horizon-v3/best.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1735128
+    },
+    {
+      "path": "runs/horizon-v3/last.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1735128
+    },
+    {
+      "path": "runs/horizon-v4/best.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1735163
+    },
+    {
+      "path": "runs/horizon-v4/candidate.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1735165
+    },
+    {
+      "path": "runs/horizon-v4/last.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1735167
+    },
+    {
+      "path": "runs/horizon-wire-v1/best.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1735432
+    },
+    {
+      "path": "runs/horizon-wire-v1/candidate-final.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1735432
+    },
+    {
+      "path": "runs/horizon-wire-v1/candidate.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1735430
+    },
+    {
+      "path": "runs/horizon-wire-v1/last.pt",
+      "bytes": 1091706779,
+      "device": 65,
+      "inode": 1735432
+    },
+    {
+      "path": "runs/interface-diverse-v1/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1736148
+    },
+    {
+      "path": "runs/interface-diverse-v1/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1736151
+    },
+    {
+      "path": "runs/interface-diverse-v2/best.pt",
+      "bytes": 2862920555,
+      "device": 65,
+      "inode": 1736157
+    },
+    {
+      "path": "runs/interface-diverse-v2/checkpoint-10000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1736154
+    },
+    {
+      "path": "runs/interface-diverse-v2/checkpoint-20000.pt",
+      "bytes": 2862920555,
+      "device": 65,
+      "inode": 1736157
+    },
+    {
+      "path": "runs/interface-diverse-v2/checkpoint-5000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1736155
+    },
+    {
+      "path": "runs/interface-diverse-v2/last.pt",
+      "bytes": 2862920555,
+      "device": 65,
+      "inode": 1736157
+    },
+    {
+      "path": "runs/interface-v1/best.pt",
+      "bytes": 2862920875,
+      "device": 65,
+      "inode": 1737089
+    },
+    {
+      "path": "runs/interface-v1/checkpoint-10000.pt",
+      "bytes": 2862920811,
+      "device": 65,
+      "inode": 1737090
+    },
+    {
+      "path": "runs/interface-v1/checkpoint-20000.pt",
+      "bytes": 2862920747,
+      "device": 65,
+      "inode": 1737093
+    },
+    {
+      "path": "runs/interface-v1/checkpoint-5000.pt",
+      "bytes": 2862920811,
+      "device": 65,
+      "inode": 1737091
+    },
+    {
+      "path": "runs/interface-v1/last.pt",
+      "bytes": 2862920747,
+      "device": 65,
+      "inode": 1737093
+    },
+    {
+      "path": "runs/large-long-check/last.pt",
+      "bytes": 1091707099,
+      "device": 65,
+      "inode": 1737097
+    },
+    {
+      "path": "runs/large-sft-check/last.pt",
+      "bytes": 1091706907,
+      "device": 65,
+      "inode": 1737101
+    },
+    {
+      "path": "runs/large-throughput-check/last.pt",
+      "bytes": 1091706646,
+      "device": 65,
+      "inode": 1737105
+    },
+    {
+      "path": "runs/native-budget-check/last.pt",
+      "bytes": 1091707163,
+      "device": 65,
+      "inode": 1737449
+    },
+    {
+      "path": "runs/native-length-check/last.pt",
+      "bytes": 1091707163,
+      "device": 65,
+      "inode": 1737453
+    },
+    {
+      "path": "runs/native-long-check/last.pt",
+      "bytes": 1091707099,
+      "device": 65,
+      "inode": 1737457
+    },
+    {
+      "path": "runs/o200k-smoke/last.pt",
+      "bytes": 317509126,
+      "device": 65,
+      "inode": 1737461
+    },
+    {
+      "path": "runs/programming-v1/best.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743722
+    },
+    {
+      "path": "runs/programming-v1/candidate-early.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743719
+    },
+    {
+      "path": "runs/programming-v1/candidate-mid.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743720
+    },
+    {
+      "path": "runs/programming-v1/last.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743722
+    },
+    {
+      "path": "runs/programming-v2/best.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743893
+    },
+    {
+      "path": "runs/programming-v2/candidate-6k.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743898
+    },
+    {
+      "path": "runs/programming-v2/candidate-early.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743899
+    },
+    {
+      "path": "runs/programming-v2/candidate-late.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743900
+    },
+    {
+      "path": "runs/programming-v2/candidate-mid.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743901
+    },
+    {
+      "path": "runs/programming-v2/checkpoint-120000.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743902
+    },
+    {
+      "path": "runs/programming-v2/checkpoint-160000.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743907
+    },
+    {
+      "path": "runs/programming-v2/checkpoint-24000.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743903
+    },
+    {
+      "path": "runs/programming-v2/checkpoint-48000.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743904
+    },
+    {
+      "path": "runs/programming-v2/checkpoint-80000.pt",
+      "bytes": 1091707035,
+      "device": 65,
+      "inode": 1743905
+    },
+    {
+      "path": "runs/programming-v2/last.pt",
+      "bytes": 1091706971,
+      "device": 65,
+      "inode": 1743907
+    },
+    {
+      "path": "runs/programming-v3/best.pt",
+      "bytes": 1091707291,
+      "device": 65,
+      "inode": 1743911
+    },
+    {
+      "path": "runs/programming-v3/checkpoint-10000.pt",
+      "bytes": 1091707355,
+      "device": 65,
+      "inode": 1743910
+    },
+    {
+      "path": "runs/programming-v3/checkpoint-20000.pt",
+      "bytes": 1091707291,
+      "device": 65,
+      "inode": 1743911
+    },
+    {
+      "path": "runs/programming-v3/checkpoint-40000.pt",
+      "bytes": 1091707355,
+      "device": 65,
+      "inode": 1743914
+    },
+    {
+      "path": "runs/programming-v3/checkpoint-5000.pt",
+      "bytes": 1091707355,
+      "device": 65,
+      "inode": 1743912
+    },
+    {
+      "path": "runs/programming-v3/last.pt",
+      "bytes": 1091707355,
+      "device": 65,
+      "inode": 1743914
+    },
+    {
+      "path": "runs/reasoning-smoke/last.pt",
+      "bytes": 1091707931,
+      "device": 65,
+      "inode": 1743988
+    },
+    {
+      "path": "runs/recovery-v1/recovery/best.pt",
+      "bytes": 1091707099,
+      "device": 65,
+      "inode": 1744059
+    },
+    {
+      "path": "runs/recovery-v1/recovery/last.pt",
+      "bytes": 1091707163,
+      "device": 65,
+      "inode": 1744065
+    },
+    {
+      "path": "runs/resume-smoke/last.pt",
+      "bytes": 10674630,
+      "device": 65,
+      "inode": 1744662
+    },
+    {
+      "path": "runs/rtx-smoke/last.pt",
+      "bytes": 314748310,
+      "device": 65,
+      "inode": 1744665
+    },
+    {
+      "path": "runs/scratch-32k-check/last.pt",
+      "bytes": 1091706646,
+      "device": 65,
+      "inode": 1744670
+    },
+    {
+      "path": "runs/scratch-pretrain/last.pt",
+      "bytes": 1091706518,
+      "device": 65,
+      "inode": 1744687
+    },
+    {
+      "path": "runs/scratch-sft/last.pt",
+      "bytes": 1091706203,
+      "device": 65,
+      "inode": 1744694
+    },
+    {
+      "path": "runs/verified-code-learning-v1/best.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1745729
+    },
+    {
+      "path": "runs/verified-code-learning-v1/checkpoint-1000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1745726
+    },
+    {
+      "path": "runs/verified-code-learning-v1/checkpoint-2000.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1745729
+    },
+    {
+      "path": "runs/verified-code-learning-v1/checkpoint-500.pt",
+      "bytes": 2862920683,
+      "device": 65,
+      "inode": 1745727
+    },
+    {
+      "path": "runs/verified-code-learning-v1/last.pt",
+      "bytes": 2862920619,
+      "device": 65,
+      "inode": 1745729
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/best.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13456
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/checkpoint-1000.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13464
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/checkpoint-11718.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13473
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/checkpoint-250.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13502
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/checkpoint-3000.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13515
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/checkpoint-6000.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13525
+    },
+    {
+      "path": "data/experiments/agent-mix-v1/last.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 13531
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/best.pt",
+      "bytes": 4046192795,
+      "device": 115,
+      "inode": 174549
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-1000.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 174367
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-2000.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 174368
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 174543
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-500.pt",
+      "bytes": 4046192795,
+      "device": 115,
+      "inode": 174365
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-8000.pt",
+      "bytes": 4046192795,
+      "device": 115,
+      "inode": 174549
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-10b/last.pt",
+      "bytes": 4046192795,
+      "device": 115,
+      "inode": 174549
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-2b/best.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13538
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-1000.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13555
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-2b/checkpoint-500.pt",
+      "bytes": 4046192731,
+      "device": 115,
+      "inode": 13565
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-2b/last.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13594
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-5b/best.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13629
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-1000.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13688
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-5b/checkpoint-500.pt",
+      "bytes": 4046192731,
+      "device": 115,
+      "inode": 13711
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/adapter-5b/last.pt",
+      "bytes": 4046192859,
+      "device": 115,
+      "inode": 13713
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/foundation/checkpoint-2b.pt",
+      "bytes": 4046203862,
+      "device": 115,
+      "inode": 13721
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/foundation/checkpoint-5b.pt",
+      "bytes": 4046203862,
+      "device": 115,
+      "inode": 13743
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/foundation/last.pt",
+      "bytes": 4046203862,
+      "device": 115,
+      "inode": 13771
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+      "bytes": 4046203862,
+      "device": 115,
+      "inode": 174359
+    },
+    {
+      "path": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/last.pt",
+      "bytes": 4046203862,
+      "device": 115,
+      "inode": 174359
+    },
+    {
+      "path": "data/experiments/learnability-v1/best.pt",
+      "bytes": 2862920555,
+      "device": 115,
+      "inode": 13883
+    },
+    {
+      "path": "data/experiments/learnability-v1/checkpoint-100.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 13898
+    },
+    {
+      "path": "data/experiments/learnability-v1/checkpoint-300.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 13920
+    },
+    {
+      "path": "data/experiments/learnability-v1/checkpoint-600.pt",
+      "bytes": 2862920683,
+      "device": 115,
+      "inode": 13962
+    },
+    {
+      "path": "data/experiments/learnability-v1/last.pt",
+      "bytes": 2862920683,
+      "device": 115,
+      "inode": 13992
+    },
+    {
+      "path": "data/experiments/optimization-lr1e4-v1/best.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 14058
+    },
+    {
+      "path": "data/experiments/optimization-lr1e4-v1/checkpoint-1000.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 14071
+    },
+    {
+      "path": "data/experiments/optimization-lr1e4-v1/checkpoint-2000.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 14086
+    },
+    {
+      "path": "data/experiments/optimization-lr1e4-v1/checkpoint-500.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 14100
+    },
+    {
+      "path": "data/experiments/optimization-lr1e4-v1/last.pt",
+      "bytes": 2862920619,
+      "device": 115,
+      "inode": 14115
+    },
+    {
+      "path": "data/experiments/refined-agent-v1/best.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 14138
+    },
+    {
+      "path": "data/experiments/refined-agent-v1/last.pt",
+      "bytes": 2862921387,
+      "device": 115,
+      "inode": 14170
+    }
+  ]
+}

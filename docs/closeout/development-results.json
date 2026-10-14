@@ -1,0 +1,1214 @@
+{
+  "server": {
+    "status": "ok",
+    "model": "microgpt",
+    "context": 32768,
+    "source": {
+      "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+      "context": 32768,
+      "attention": "flash",
+      "parameters": 337167360,
+      "stage": "sft",
+      "step": 4000,
+      "origin": {
+        "initialization": "random",
+        "parent_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+        "parent_step": 305176,
+        "parent_stage": "pretraining",
+        "pretraining_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+        "pretraining_step": 305176
+      },
+      "canonical_tool_ids": false,
+      "constrained_tools": true
+    }
+  },
+  "harness_sha256": "81983b3aecac06ebdb1b91b1f835643cc58864cc1be04aaa59676db5e77ef94c",
+  "mode": "direct",
+  "exact_prompt": false,
+  "image": "python@sha256:dddfd7e07f9d15aeeca61529320492139d21cac7f0070c00609243e51e4e0016",
+  "tasks_sha256": "a2ea13914870c6b5d3d913c2de1de2ca8bc70ccdae24376fa2c4dcf016723952",
+  "tasks": [
+    {
+      "id": "suffix_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 6, in <module>\n    assert s.suffix_0('abc','x') == 'abc'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "suffix"
+    },
+    {
+      "id": "suffix_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "suffix"
+    },
+    {
+      "id": "suffix_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.suffix_2('ababa','ba') == 'aba'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "suffix"
+    },
+    {
+      "id": "suffix_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "suffix"
+    },
+    {
+      "id": "suffix_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "suffix"
+    },
+    {
+      "id": "negatives_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "negatives"
+    },
+    {
+      "id": "negatives_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "negatives"
+    },
+    {
+      "id": "negatives_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "negatives"
+    },
+    {
+      "id": "negatives_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "negatives"
+    },
+    {
+      "id": "negatives_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "negatives"
+    },
+    {
+      "id": "rotate_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_0([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "rotate"
+    },
+    {
+      "id": "rotate_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_1([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "rotate"
+    },
+    {
+      "id": "rotate_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_2([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "rotate"
+    },
+    {
+      "id": "rotate_3",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_3([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 14, in rotate_3\n    return [values[-amount]] + values[:-amount]\n            ~~~~~~^^^^^^^^^\nIndexError: list index out of range\n",
+      "family": "rotate"
+    },
+    {
+      "id": "rotate_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.rotate_4([1,2,3],4) == [2,3,1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "rotate"
+    },
+    {
+      "id": "prefix_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.prefix_0(['ab','ba','ac'],'a') == ['ab','ac']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "prefix"
+    },
+    {
+      "id": "prefix_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.prefix_1(['ab','ba','ac'],'a') == ['ab','ac']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "prefix"
+    },
+    {
+      "id": "prefix_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.prefix_2(['ab','ba','ac'],'a') == ['ab','ac']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "prefix"
+    },
+    {
+      "id": "prefix_3",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 3, in <module>\n    import solution as s\n  File \"/work/solution.py\", line 9\n    return [f'{prefix}{word}{' * (len(word) - len(prefix) + 1)}' for word in words]\n                                                                 ^^^\nSyntaxError: f-string: expecting '=', or '!', or ':', or '}'\n",
+      "family": "prefix"
+    },
+    {
+      "id": "prefix_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.prefix_4(['ab','ba','ac'],'a') == ['ab','ac']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "prefix"
+    },
+    {
+      "id": "product_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "product"
+    },
+    {
+      "id": "product_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "product"
+    },
+    {
+      "id": "product_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "product"
+    },
+    {
+      "id": "product_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "product"
+    },
+    {
+      "id": "product_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "product"
+    },
+    {
+      "id": "flatten_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "flatten"
+    },
+    {
+      "id": "flatten_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "flatten"
+    },
+    {
+      "id": "flatten_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.flatten_2([[1,2],[],[3]]) == [1,2,3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "flatten"
+    },
+    {
+      "id": "flatten_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "flatten"
+    },
+    {
+      "id": "flatten_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "flatten"
+    },
+    {
+      "id": "frequencies_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "frequencies"
+    },
+    {
+      "id": "frequencies_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "frequencies"
+    },
+    {
+      "id": "frequencies_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "frequencies"
+    },
+    {
+      "id": "frequencies_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "frequencies"
+    },
+    {
+      "id": "frequencies_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "frequencies"
+    },
+    {
+      "id": "between_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "between"
+    },
+    {
+      "id": "between_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "between"
+    },
+    {
+      "id": "between_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "between"
+    },
+    {
+      "id": "between_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "between"
+    },
+    {
+      "id": "between_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "between"
+    },
+    {
+      "id": "alternating_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_0([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "alternating"
+    },
+    {
+      "id": "alternating_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_1([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "alternating"
+    },
+    {
+      "id": "alternating_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_2([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "alternating"
+    },
+    {
+      "id": "alternating_3",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_3([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "alternating"
+    },
+    {
+      "id": "alternating_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.alternating_4([0,1,2,3,4]) == [0,2,4]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "alternating"
+    },
+    {
+      "id": "chunks_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "chunks"
+    },
+    {
+      "id": "chunks_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "chunks"
+    },
+    {
+      "id": "chunks_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.chunks_2([1,2,3,4,5],2) == [[1,2],[3,4],[5]]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 15, in chunks_2\n    chunks.append(''.join(current_chunk))\n                  ^^^^^^^^^^^^^^^^^^^^^^\nTypeError: sequence item 0: expected str instance, int found\n",
+      "family": "chunks"
+    },
+    {
+      "id": "chunks_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "chunks"
+    },
+    {
+      "id": "chunks_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "chunks"
+    },
+    {
+      "id": "safe_divide_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "safe_divide"
+    },
+    {
+      "id": "safe_divide_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "safe_divide"
+    },
+    {
+      "id": "safe_divide_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "safe_divide"
+    },
+    {
+      "id": "safe_divide_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "safe_divide"
+    },
+    {
+      "id": "safe_divide_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "safe_divide"
+    },
+    {
+      "id": "longest_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "longest"
+    },
+    {
+      "id": "longest_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "longest"
+    },
+    {
+      "id": "longest_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "longest"
+    },
+    {
+      "id": "longest_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "longest"
+    },
+    {
+      "id": "longest_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "longest"
+    },
+    {
+      "id": "merge_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "merge"
+    },
+    {
+      "id": "merge_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "merge"
+    },
+    {
+      "id": "merge_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "merge"
+    },
+    {
+      "id": "merge_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "merge"
+    },
+    {
+      "id": "merge_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 5, in <module>\n    assert s.merge_4(a,b) == b\n           ^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 15, in merge_4\n    if left[i] < right[j]:\n       ~~~~^^^\nKeyError: 0\n",
+      "family": "merge"
+    },
+    {
+      "id": "first_match_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "first_match"
+    },
+    {
+      "id": "first_match_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.first_match_1([[2],[1],[2]],[2]) == 0\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 7, in first_match_1\n    if isinstance(value, (int, float, str, tuple, frozenset, frozensetset)):\n                                                             ^^^^^^^^^^^^\nNameError: name 'frozensetset' is not defined. Did you mean: 'frozenset'?\n",
+      "family": "first_match"
+    },
+    {
+      "id": "first_match_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "first_match"
+    },
+    {
+      "id": "first_match_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "first_match"
+    },
+    {
+      "id": "first_match_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "first_match"
+    },
+    {
+      "id": "difference_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_0([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "difference"
+    },
+    {
+      "id": "difference_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_1([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "difference"
+    },
+    {
+      "id": "difference_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_2([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "difference"
+    },
+    {
+      "id": "difference_3",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_3([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "difference"
+    },
+    {
+      "id": "difference_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.difference_4([3,1,6]) == [-2,5]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "difference"
+    },
+    {
+      "id": "nonempty_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "nonempty"
+    },
+    {
+      "id": "nonempty_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "nonempty"
+    },
+    {
+      "id": "nonempty_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.nonempty_2([None,0,False,'',1]) == [0,False,'',1]\n           ^^^^^^^^^^^^\nAttributeError: module 'solution' has no attribute 'nonempty_2'\n",
+      "family": "nonempty"
+    },
+    {
+      "id": "nonempty_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "nonempty"
+    },
+    {
+      "id": "nonempty_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "nonempty"
+    },
+    {
+      "id": "extension_0",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_0('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "extension"
+    },
+    {
+      "id": "extension_1",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_1('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "extension"
+    },
+    {
+      "id": "extension_2",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_2('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "extension"
+    },
+    {
+      "id": "extension_3",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_3('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "family": "extension"
+    },
+    {
+      "id": "extension_4",
+      "current_task_correct": false,
+      "passed": false,
+      "code_correct": false,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/grader.py\", line 4, in <module>\n    assert s.extension_4('a/b.tar.gz') == 'gz'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/solution.py\", line 10, in extension_4\n    return path.stem.split('.')[-1] if path.stem else ''\n                                       ^^^^^^^^^\nAttributeError: 'str' object has no attribute 'stem'\n",
+      "family": "extension"
+    },
+    {
+      "id": "title_words_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "title_words"
+    },
+    {
+      "id": "title_words_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "title_words"
+    },
+    {
+      "id": "title_words_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "title_words"
+    },
+    {
+      "id": "title_words_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "title_words"
+    },
+    {
+      "id": "title_words_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "title_words"
+    },
+    {
+      "id": "distance_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "distance"
+    },
+    {
+      "id": "distance_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "distance"
+    },
+    {
+      "id": "distance_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "distance"
+    },
+    {
+      "id": "distance_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "distance"
+    },
+    {
+      "id": "distance_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "distance"
+    },
+    {
+      "id": "is_sorted_0",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "is_sorted"
+    },
+    {
+      "id": "is_sorted_1",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "is_sorted"
+    },
+    {
+      "id": "is_sorted_2",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "is_sorted"
+    },
+    {
+      "id": "is_sorted_3",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "is_sorted"
+    },
+    {
+      "id": "is_sorted_4",
+      "current_task_correct": true,
+      "passed": true,
+      "code_correct": true,
+      "completed": true,
+      "checked": false,
+      "errors": [],
+      "grade": "PASS\n",
+      "family": "is_sorted"
+    }
+  ],
+  "families": {
+    "suffix": {
+      "passed": 3,
+      "total": 5
+    },
+    "negatives": {
+      "passed": 5,
+      "total": 5
+    },
+    "rotate": {
+      "passed": 0,
+      "total": 5
+    },
+    "prefix": {
+      "passed": 0,
+      "total": 5
+    },
+    "product": {
+      "passed": 5,
+      "total": 5
+    },
+    "flatten": {
+      "passed": 4,
+      "total": 5
+    },
+    "frequencies": {
+      "passed": 5,
+      "total": 5
+    },
+    "between": {
+      "passed": 5,
+      "total": 5
+    },
+    "alternating": {
+      "passed": 0,
+      "total": 5
+    },
+    "chunks": {
+      "passed": 4,
+      "total": 5
+    },
+    "safe_divide": {
+      "passed": 5,
+      "total": 5
+    },
+    "longest": {
+      "passed": 5,
+      "total": 5
+    },
+    "merge": {
+      "passed": 4,
+      "total": 5
+    },
+    "first_match": {
+      "passed": 4,
+      "total": 5
+    },
+    "difference": {
+      "passed": 0,
+      "total": 5
+    },
+    "nonempty": {
+      "passed": 4,
+      "total": 5
+    },
+    "extension": {
+      "passed": 0,
+      "total": 5
+    },
+    "title_words": {
+      "passed": 5,
+      "total": 5
+    },
+    "distance": {
+      "passed": 5,
+      "total": 5
+    },
+    "is_sorted": {
+      "passed": 5,
+      "total": 5
+    }
+  }
+}

@@ -1,28 +1,25 @@
 # MicroGPT Lab — train our own model from scratch
 
-**Current capability:** the scratch 239M candidate passes **24/100** development
-variants after 500 updates on independently checked public programming answers.
-The same checkpoint passes **0/4 actual OpenCode repairs**, with no tool calls.
-The completed six-hour mixed curriculum learned tool use but still passed 0/4
-broader repairs. A [follow-up investigation](docs/repair-investigation.md) found
-7/8 successes on held-out repairs resembling its narrow training distribution;
-the revised plan targets broader defects, edit localization and failure recovery.
-The [refined experiment](docs/refined-agent-execution.md) now has checked structural
-and recovery data, 64 corrections from actual training-source model failures, and
-a frozen 96-case repair diagnostic. Its controller measures old checkpoints before
-training the comparison; no new capability result is claimed yet.
-This remains far below useful programming competence. The
-[controlled experiments](docs/capacity-pilot.md) separate code correctness,
-request-format sensitivity and training-data defects. The served 91M artifact
-below remains a narrow arithmetic lesson.
+**Experiment closed — October 14, 2026.** The final model was trained from scratch
+with **337,167,360 parameters**, 10B foundation-token exposures, and coding SFT.
+The selected checkpoint scored **68/100 development and 58/100 reserved holdout**
+on small standalone Python tasks. Closeout testing scored **0/4 actual OpenCode
+repairs with no tool calls**, **0/12 program-tracing answers** in each tested effort
+mode, and **0/9 long-context retrieval probes**. It is an educational coding model,
+not a reliable programming agent. No further training is queued.
 
+Read the **[complete experiment report](docs/experiment-closeout.md)** for model
+specifications, datasets, exact training exposure, **136.68 hours of foundation
+process wall time**, checkpoint inventory, benchmarks, failures, and estimated
+future experiments. [Committed evidence](docs/closeout/) preserves the results.
+The final selected checkpoint is
+`data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt`;
+`last.pt` is a later, worse-scoring checkpoint.
 
-**New direction (October 7):** the authorized [foundation-first pivot](docs/foundation-pivot.md)
-prepares a fresh 337M model with a 32K vocabulary and 304M transformer parameters.
-It measures coding at 2B/5B/10B token milestones with explicit spending gates.
-Preparation and training progress are in `runs/pivot-v1/status.json`; this is
-an experiment, not an improved capability claim.
-
+The recipes below also retain earlier lessons and model lineages. In particular,
+the 91M arithmetic agent's narrow long-session success is **not** a result for
+the final 337M model. See the closeout report before interpreting historical
+“agent-ready” names or old capability claims.
 
 An independently written PyTorch GPT inspired by
 [Karpathy's microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95).
@@ -33,7 +30,7 @@ The project has two scales: a 0.9M byte-tokenizer lesson and a larger student mo
 with multilingual tokenization, a 32K context allocation limit, Flash Attention,
 KV caching and an OpenCode-compatible server. A short pilot checks the engineering;
 useful coding and conversation require substantial training and behavioral evaluation.
-The selected **90,969,600-parameter scratch model** completed four 16-round
+The earlier **90,969,600-parameter scratch model** completed four 16-round
 OpenCode sessions and one **32-round session with 130 tool calls**, including
 checker-error recovery and a fresh-session handoff. It passes 8/8 narrow arithmetic
 repairs, but 0/4 broader repairs and 0/12 reasoning problems in either tested mode.
@@ -41,7 +38,7 @@ This teaches a complete agent workflow for a small trained task family.
 
 Start with the [minimal agent runbook](docs/agentic-minimum.md): one foundation
 pretraining stage, one focused assistant-training stage, a portable export, and a
-restricted OpenCode lesson. The selected export is `runs/agent-ready-v1/model.pt`.
+restricted OpenCode lesson. That earlier lesson's export is `runs/agent-ready-v1/model.pt`.
 The [committed evidence](docs/agentic-evidence.json) records hashes and measurements;
 [verification](docs/verification.md) preserves the earlier failed experiments.
 
@@ -79,7 +76,7 @@ The necessary stages are:
 5. Continue training at longer windows and measure retrieval and tool recovery.
 6. Serve that checkpoint through OpenCode and grade actual edits independently.
 
-The current student has **90,969,600 parameters** with `o200k_base`.
+The earlier student recipe has **90,969,600 parameters** with `o200k_base`.
 `configs/student.toml` uses eight layers, width 384, six attention heads and a
 32,768-token context ceiling. `o200k_base` is the default in the documented recipe;
 `o200k_harmony`, local BPE and bytes are also available. Tokenizer vocabulary reuse

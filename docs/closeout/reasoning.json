@@ -1,0 +1,516 @@
+{
+  "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "note": "Held-out inputs; family 3 is a held-out procedural template. No model code is executed.",
+  "results": [
+    {
+      "task": 0,
+      "family": 0,
+      "expected": "26",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a list, where each element is a number from 0 to 9.\n    \"\"\"\n    values = [14, 2, 0, -9]\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 108,
+        "completion_tokens": 59,
+        "total_tokens": 167,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "seconds": 0.718883135006763
+    },
+    {
+      "task": 0,
+      "family": 0,
+      "expected": "26",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a list, where each element is a number from 0 to 9.\n    \"\"\"\n    values = [14, 2, 0, -9]\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 147,
+        "completion_tokens": 59,
+        "total_tokens": 206,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.5321684100199491
+    },
+    {
+      "task": 1,
+      "family": 1,
+      "expected": "-3",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of the integers in the list (-1, 11, 6, -6, 11, -5, 4, 9, 5).\n    \"\"\"\n    values = [-1, 11, 6, -6, 11, -5, 4, 9, 5]\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 136,
+        "completion_tokens": 82,
+        "total_tokens": 218,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.7528278509853408
+    },
+    {
+      "task": 1,
+      "family": 1,
+      "expected": "-3",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of the integers in the list (-1, 11, 6, -6, 11, -5, 4, 9, 5).\n    \"\"\"\n    values = [-1, 11, 6, -6, 11, -5, 4, 9, 5]\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 175,
+        "completion_tokens": 82,
+        "total_tokens": 257,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.7530240099877119
+    },
+    {
+      "task": 2,
+      "family": 2,
+      "expected": "14",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef selected_sum(values):\n    \"\"\"\n    Prints the sum of the first 4 elements of the list.\n\n    Parameters:\n    values (list): A list of integers.\n    \"\"\"\n    print(sum(values[:4]))\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 115,
+        "completion_tokens": 53,
+        "total_tokens": 168,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.4812652280088514
+    },
+    {
+      "task": 2,
+      "family": 2,
+      "expected": "14",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of the list `values` in ascending order.\n    \"\"\"\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 154,
+        "completion_tokens": 41,
+        "total_tokens": 195,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.3690480260120239
+    },
+    {
+      "task": 3,
+      "family": 3,
+      "expected": "9",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_values():\n    \"\"\"\n    Prints the count of numbers from 1 to 10, inclusive.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 124,
+        "completion_tokens": 44,
+        "total_tokens": 168,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.40170971100451425
+    },
+    {
+      "task": 3,
+      "family": 3,
+      "expected": "9",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_values():\n    \"\"\"\n    Prints the count of numbers from 1 to 10, inclusive.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 163,
+        "completion_tokens": 44,
+        "total_tokens": 207,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.396606227994198
+    },
+    {
+      "task": 4,
+      "family": 0,
+      "expected": "4",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a variable.\n    \"\"\"\n    total = 0\n    for i in range(len(values)):\n        print(values[i])\n        total += values[i]\n    print(total)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 125,
+        "completion_tokens": 57,
+        "total_tokens": 182,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.5246647209860384
+    },
+    {
+      "task": 4,
+      "family": 0,
+      "expected": "4",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a variable, starting from 0.\n    \"\"\"\n    total = 0\n    for i in range(10):\n        print(i)\n        total += i\n    print(total)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 164,
+        "completion_tokens": 54,
+        "total_tokens": 218,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.496355281007709
+    },
+    {
+      "task": 5,
+      "family": 1,
+      "expected": "18",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a list, where each value is either 0 or 1, and the score is the sum of the values.\n    \"\"\"\n    values = [1, 8, -5, -4, 14, -4, -1, -6, -7, 6]\n    for value in values:\n        if value % 2 == 0:\n            print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 142,
+        "completion_tokens": 92,
+        "total_tokens": 234,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.8389198710210621
+    },
+    {
+      "task": 5,
+      "family": 1,
+      "expected": "18",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a list, where each value is either 0 or 1, and the score is the sum of the values.\n    \"\"\"\n    values = [1, 8, -5, -4, 14, -4, -1, -6, -7, 6]\n    for value in values:\n        if value % 2 == 0:\n            print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 181,
+        "completion_tokens": 92,
+        "total_tokens": 273,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.8426296289835591
+    },
+    {
+      "task": 6,
+      "family": 2,
+      "expected": "15",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef selected_sum(values):\n    \"\"\"\n    Prints the sum of the first 4 elements of the list.\n\n    Parameters:\n    values (list): A list of integers.\n    \"\"\"\n    print(sum(values[:4]))\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 111,
+        "completion_tokens": 53,
+        "total_tokens": 164,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.48168527500820346
+    },
+    {
+      "task": 6,
+      "family": 2,
+      "expected": "15",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a list, sorted in ascending order.\n    \"\"\"\n    values = [12, 2, 6, 1, 7]\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 150,
+        "completion_tokens": 54,
+        "total_tokens": 204,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.4868601930211298
+    },
+    {
+      "task": 7,
+      "family": 3,
+      "expected": "13",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_numbers():\n    \"\"\"\n    Prints the count of numbers from 1 to 10.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 134,
+        "completion_tokens": 42,
+        "total_tokens": 176,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.424460470007034
+    },
+    {
+      "task": 7,
+      "family": 3,
+      "expected": "13",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_numbers():\n    \"\"\"\n    Prints the count of numbers from 1 to 10.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 173,
+        "completion_tokens": 42,
+        "total_tokens": 215,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.46416851598769426
+    },
+    {
+      "task": 8,
+      "family": 0,
+      "expected": "120",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a variable, which can be any type, including integers, floats, strings, and booleans.\n    \"\"\"\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 108,
+        "completion_tokens": 54,
+        "total_tokens": 162,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.6092025979887694
+    },
+    {
+      "task": 8,
+      "family": 0,
+      "expected": "120",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of a variable, which can be any data type.\n    \"\"\"\n    values = [-3, 14, 11, 9]\n    total = -4\n    for value in values:\n        total += value * 4\n    print(total)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 147,
+        "completion_tokens": 65,
+        "total_tokens": 212,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.7705956230056472
+    },
+    {
+      "task": 9,
+      "family": 1,
+      "expected": "-4",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of the integers from the list.\n    \"\"\"\n    values = [8, -9, 1, 4, -5, -6, -8]\n    for value in values:\n        if value % 4 == 0:\n            print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 135,
+        "completion_tokens": 68,
+        "total_tokens": 203,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.8010750510147773
+    },
+    {
+      "task": 9,
+      "family": 1,
+      "expected": "-4",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef print_values():\n    \"\"\"\n    Prints the values of the integers from 1 to 4.\n    \"\"\"\n    for value in range(1, 5):\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 174,
+        "completion_tokens": 43,
+        "total_tokens": 217,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.5100601089943666
+    },
+    {
+      "task": 10,
+      "family": 2,
+      "expected": "0",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef selected_sum(values):\n    \"\"\"\n    Prints the sum of the first n elements of the given list.\n\n    Parameters:\n    values (list): A list of integers.\n    n (int): The number of elements to sum up.\n    \"\"\"\n    result = 0\n    for i in range(len(values)):\n        result += values[i]\n    print(result)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 112,
+        "completion_tokens": 84,
+        "total_tokens": 196,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.9660827109764796
+    },
+    {
+      "task": 10,
+      "family": 2,
+      "expected": "0",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef sum_of_numbers(values):\n    \"\"\"\n    Prints the sum of a list of integers.\n\n    Parameters:\n    values (list): A list of integers.\n    \"\"\"\n    for value in values:\n        print(value)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 151,
+        "completion_tokens": 54,
+        "total_tokens": 205,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.633952367992606
+    },
+    {
+      "task": 11,
+      "family": 3,
+      "expected": "10",
+      "effort": "none",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_numbers():\n    \"\"\"\n    Prints the count of numbers from 1 to 10.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 131,
+        "completion_tokens": 42,
+        "total_tokens": 173,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.47623810000368394
+    },
+    {
+      "task": 11,
+      "family": 3,
+      "expected": "10",
+      "effort": "high",
+      "budget": 256,
+      "correct": false,
+      "answer": "```python\ndef count_numbers():\n    \"\"\"\n    Prints the count of numbers from 1 to 10.\n    \"\"\"\n    for i in range(1, 11):\n        print(i)\n```",
+      "reasoning": null,
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 170,
+        "completion_tokens": 42,
+        "total_tokens": 212,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "seconds": 0.4772243080078624
+    }
+  ],
+  "scores": [
+    {
+      "budget": 256,
+      "effort": "none",
+      "held_out_template": false,
+      "correct": 0,
+      "total": 9
+    },
+    {
+      "budget": 256,
+      "effort": "none",
+      "held_out_template": true,
+      "correct": 0,
+      "total": 3
+    },
+    {
+      "budget": 256,
+      "effort": "high",
+      "held_out_template": false,
+      "correct": 0,
+      "total": 9
+    },
+    {
+      "budget": 256,
+      "effort": "high",
+      "held_out_template": true,
+      "correct": 0,
+      "total": 3
+    }
+  ]
+}

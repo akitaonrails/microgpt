@@ -1,0 +1,46 @@
+{
+  "path": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "sha256": "0a8768e96cb766cb41587c704a263498a0f9438f0eb5c1249825d59d7795f081",
+  "bytes": 4046192859,
+  "parameters": 337167360,
+  "model_config": {
+    "vocab_size": 32768,
+    "context": 32768,
+    "layers": 24,
+    "heads": 16,
+    "width": 1024,
+    "residual_scale": true
+  },
+  "settings": {
+    "stage": "sft",
+    "dataset": "7d6f2182e7d14f300b9f9c6b55082d326e60a870d5b87386cbe3fdc26c40c89b",
+    "lr": 1e-05,
+    "accumulation": 16,
+    "microbatch": 1,
+    "seed": 20261007,
+    "eval_examples": 256,
+    "validation_seed": 20261007,
+    "attention": "flash",
+    "device": "cuda",
+    "max_length": 8192,
+    "min_tool_calls": 0,
+    "balanced_sources": false,
+    "balanced_lengths": false,
+    "short_replay": 0.0,
+    "sources": null,
+    "source_weights": {}
+  },
+  "origin": {
+    "initialization": "random",
+    "parent_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+    "parent_step": 305176,
+    "parent_stage": "pretraining",
+    "pretraining_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+    "pretraining_step": 305176
+  },
+  "step": 4000,
+  "assistant_tokens_seen": 10341997,
+  "parameter_dtypes": [
+    "torch.float32"
+  ]
+}

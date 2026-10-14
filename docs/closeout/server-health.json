@@ -1,0 +1,23 @@
+{
+  "status": "ok",
+  "model": "microgpt",
+  "context": 32768,
+  "source": {
+    "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+    "context": 32768,
+    "attention": "flash",
+    "parameters": 337167360,
+    "stage": "sft",
+    "step": 4000,
+    "origin": {
+      "initialization": "random",
+      "parent_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+      "parent_step": 305176,
+      "parent_stage": "pretraining",
+      "pretraining_checkpoint": "data/experiments/foundation-pivot-v1/foundation-resumed-5b/checkpoint-10b.pt",
+      "pretraining_step": 305176
+    },
+    "canonical_tool_ids": false,
+    "constrained_tools": true
+  }
+}

@@ -1,5 +1,7 @@
 # Datasets and storage
 
+> Historical recipes and measurements. See the [October 14 closeout report](experiment-closeout.md) for the final model, data inventory, timing and capability results.
+
 ## Larger prepared selection
 
 The new selection contains 947,532,764 pretraining train tokens from CodeParrot,

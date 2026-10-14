@@ -1,0 +1,159 @@
+{
+  "checkpoint": "data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt",
+  "kind": "synthetic exact retrieval, not code comprehension",
+  "results": [
+    {
+      "window": 8192,
+      "prompt_tokens": 8125,
+      "position_fraction": 0.05,
+      "expected": "693999",
+      "answer": "\n\n\n\n\n\n\n\n\n\n\n\n\n\nfilew\n\n\n\n\nfileagefilew\nfiledfile afile afile afile afileagefile afile afile UTFn\u4f60\u6b63\u5728\u5f00\u53d1\u4e00\u4e2alwfile afile afile afile afile afiled-file afile-",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 8125,
+        "completion_tokens": 64,
+        "total_tokens": 8189,
+        "prompt_tokens_details": {
+          "cached_tokens": 13
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 8192,
+      "prompt_tokens": 8125,
+      "position_fraction": 0.5,
+      "expected": "202752",
+      "answer": "\n\n\n\n\n\n\n\n\n\n\n\n\nfile\nfiledfile afileagefile afileagefiledfile afile UTFn\u4f60\u6b63\u5728\u5f00\u53d1\u4e00\u4e2afile afile afilewfiledfile afile afile-file afile afileagefile afile afiledfiled-\n\n\n",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 8125,
+        "completion_tokens": 64,
+        "total_tokens": 8189,
+        "prompt_tokens_details": {
+          "cached_tokens": 403
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 8192,
+      "prompt_tokens": 8126,
+      "position_fraction": 0.95,
+      "expected": "173805",
+      "answer": "\n\n\n\n\n\n\n\n\n\n\n\n\nfile\nfiledfileagefileagefile afileagefiledfile afile afile afile afile afileagefile afile UTFn\u4f60\u6b63\u5728\u5f00\u53d1\u4e00\u4e2al\n\n\n\n\n\n\n\nfile afiledfiledfiled UTFn\u4f60\u6b63\u5728\u5f00\u53d1\u4e00\u4e2al",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 8126,
+        "completion_tokens": 64,
+        "total_tokens": 8190,
+        "prompt_tokens_details": {
+          "cached_tokens": 4048
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 16384,
+      "prompt_tokens": 16316,
+      "position_fraction": 0.05,
+      "expected": "702153",
+      "answer": "\n\n\n\n\\\n\\\n\\\n\n\n\n\n\n\n\n\n\\\n\\\n\\\n\n\n\n\n\n\n\n\n\n\\\n\\\n\\\n\n\n\n\n\n\n\n\n\n\\\n\\\n\\\n\n\n\n\n\n\n\n\n\n\\",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 16316,
+        "completion_tokens": 64,
+        "total_tokens": 16380,
+        "prompt_tokens_details": {
+          "cached_tokens": 823
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 16384,
+      "prompt_tokens": 16315,
+      "position_fraction": 0.5,
+      "expected": "887900",
+      "answer": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 16315,
+        "completion_tokens": 64,
+        "total_tokens": 16379,
+        "prompt_tokens_details": {
+          "cached_tokens": 823
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 16384,
+      "prompt_tokens": 16315,
+      "position_fraction": 0.95,
+      "expected": "456482",
+      "answer": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 16315,
+        "completion_tokens": 64,
+        "total_tokens": 16379,
+        "prompt_tokens_details": {
+          "cached_tokens": 8143
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 32768,
+      "prompt_tokens": 32695,
+      "position_fraction": 0.05,
+      "expected": "979680",
+      "answer": "cpus, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and,",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 32695,
+        "completion_tokens": 64,
+        "total_tokens": 32759,
+        "prompt_tokens_details": {
+          "cached_tokens": 1633
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 32768,
+      "prompt_tokens": 32695,
+      "position_fraction": 0.5,
+      "expected": "530188",
+      "answer": "cpus, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and,",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 32695,
+        "completion_tokens": 64,
+        "total_tokens": 32759,
+        "prompt_tokens_details": {
+          "cached_tokens": 1633
+        }
+      },
+      "error": null
+    },
+    {
+      "window": 32768,
+      "prompt_tokens": 32695,
+      "position_fraction": 0.95,
+      "expected": "753627",
+      "answer": "cpus, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and,",
+      "passed": false,
+      "usage": {
+        "prompt_tokens": 32695,
+        "completion_tokens": 64,
+        "total_tokens": 32759,
+        "prompt_tokens_details": {
+          "cached_tokens": 16333
+        }
+      },
+      "error": null
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Local GPU and Runpod
 
+> Historical recipes and measurements. See the [October 14 closeout report](experiment-closeout.md) for the final model, data inventory, timing and capability results.
+
 Start on the RTX 5090. This machine reported 32,607 MiB total VRAM, with roughly
 28,502 MiB free at inspection. That is ample for the teaching model and leaves
 room for substantially larger experiments. Renting an H100 is optional.
