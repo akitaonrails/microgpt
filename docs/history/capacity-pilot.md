@@ -48,7 +48,7 @@ The 3/8 and 5/8 runs predate this fix; the broader direct evaluation follows it.
 Direct no-tool grammar is unchanged. Existing deployment was not replaced.
 
 Artifacts live under `runs/diagnostic-v1`. Committed summary:
-`docs/diagnostic-evidence.json`. The 35 unit tests include causal behavior,
+`docs/evidence/diagnostic-evidence.json`. The 35 unit tests include causal behavior,
 full/cached attention, target shifting, packed/individual-turn loss equivalence,
 training/serving prefixes, and exact resume equivalence across schedule-preserving
 stops. One correction to the earlier audit: pretraining already used warmup plus
@@ -234,7 +234,7 @@ predeclared final 20K comparison subsequently finished at **0/100**, with 85/100
 valid Python outputs and 40/100 parameter-name matches after 3,164,356 assistant
 target exposures. This branch is finished. Its best checkpoint remains 5K;
 extending the same small curriculum did not improve programming. The frozen
-summary is [interface-outcome.json](interface-outcome.json).
+summary is [interface-outcome.json](../evidence/interface-outcome.json).
 
 Passing variants cover four of twenty families: negatives 1/5, product 2/5,
 longest 1/5, and is_sorted 4/5. None of the twenty families passes all five
@@ -390,7 +390,7 @@ parameter lists but only 16/100 correct programs (eight new passes, two lost pas
 eight passes shared with the original requests). Repeating an existing cue helps
 interface copying, while program semantics remain weak. These diagnostic scores
 do not replace the unmodified development score. Frozen results:
-[interface-diagnostics.json](interface-diagnostics.json).
+[interface-diagnostics.json](../evidence/interface-diagnostics.json).
 
 `vary_interface_prompts.py` prepares eight generic request layouts from the checked
 public curriculum. It reads no benchmark material. All 167,736 assistant answers,
@@ -426,7 +426,7 @@ separate optimization choice, not an automatic model-quality improvement.
 The broader comparison completed with 10/100, 17/100 and 14/100 at 5K, 10K and
 20K. The final checkpoint had 63/100 matching parameter lists despite validation
 loss falling to 0.1176. Its 10K checkpoint remains preferable on development
-execution. [interface-diversity-outcome.json](interface-diversity-outcome.json)
+execution. [interface-diversity-outcome.json](../evidence/interface-diversity-outcome.json)
 preserves the complete result; the capability goal remains unmet.
 
 Measured math-SDPA throughput on the 5090 (preloaded examples; short profiling runs):
@@ -446,7 +446,7 @@ uses microbatch two / accumulation one, preserving the effective batch of two.
 The real control bootstrap consumed the same 167,311 target tokens in 58.6 seconds,
 versus 99.5 seconds in the earlier unbatched bootstrap; model starting weights
 differ, so that timing is supporting operational evidence rather than the matched
-profile itself. Full measurements are in [sft-throughput.json](sft-throughput.json).
+profile itself. Full measurements are in [sft-throughput.json](../evidence/sft-throughput.json).
 
 ### Matched request-format continuation
 
@@ -468,7 +468,7 @@ The matched result was **7/100 for each arm**. Parameter-name matches improved
 from 58 to 66/100 with varied layouts, while syntactically valid outputs fell
 from 91 to 83/100. Thus the narrow format criterion passed, but programming did
 not improve. Both checkpoints were worse than their 17/100 parent, which remains
-selected. [request-format-outcome.json](request-format-outcome.json) records this
+selected. [request-format-outcome.json](../evidence/request-format-outcome.json) records this
 distinction explicitly. Each arm consumed exactly 840,346 assistant target tokens.
 
 Both short continuations reset the sampler to seed 42 on the same ordered answers,
@@ -502,7 +502,7 @@ recorded at every checkpoint; the estimate above is not substituted for them.
 The pilot finished at **15/100 direct passes**, with 93/100 syntactically valid
 outputs, 81/100 matching parameter names, and passes in six families. It failed
 the correctness gate, so the 5K/10K/20K continuation was **not launched**.
-The 17/100 parent remains selected. See [batched-learning-outcome.json](batched-learning-outcome.json).
+The 17/100 parent remains selected. See [batched-learning-outcome.json](../evidence/batched-learning-outcome.json).
 
 Actual exposure was 5,350,924 assistant tokens across 64,000 sampled episodes:
 52,741 distinct episode indices and 19,093 source-program IDs, out of 19,915
@@ -532,7 +532,7 @@ The batched candidate passed 11/20 seen-training and 11/20 validation execution
 probes from the existing frozen curriculum diagnostic. Together with 15/100 on
 the broader task set, this indicates both imperfect curriculum learning and weak
 transfer. The random-sample loss also differs substantially from the trainer's
-small fixed validation sample. [conditioning-diagnostics.json](conditioning-diagnostics.json)
+small fixed validation sample. [conditioning-diagnostics.json](../evidence/conditioning-diagnostics.json)
 preserves the comparison. No acceptance tasks were used.
 
 ### Broader independently checked public code
@@ -542,7 +542,7 @@ The next data intervention uses the already-downloaded, pinned
 source. Its upstream scores are insufficient: in a 1,000-reference pilot, eight
 answers failed our independent restricted-container run despite perfect upstream
 scores. The other 992 passed, and all corresponding empty implementations failed.
-[verified-code-pilot.json](verified-code-pilot.json) records the result.
+[verified-code-pilot.json](../evidence/verified-code-pilot.json) records the result.
 
 `scripts/prepare_verified_code.py` decodes the source's occasionally doubled JSON
 escaping exactly once, preserving Python string literals. It selects single-function
@@ -587,7 +587,7 @@ equivalence checks. Actual Flash kernels dispatched for 8,192-token and
 32,752-token prompts, each followed by 16 generated tokens. Peak allocated memory
 was 1.80 GB and 2.78 GB respectively. Instrumented elapsed times were 4.01 and 9.47
 seconds; these include profiler overhead and are not serving latency guarantees.
-[capacity-inference.json](capacity-inference.json) preserves the measurements.
+[capacity-inference.json](../evidence/capacity-inference.json) preserves the measurements.
 Synthetic filler established allocation and dispatch, not useful 32K recall,
 reasoning, or long-session programming. Those remain separate unmet gates.
 
@@ -627,7 +627,7 @@ The preparation pilot requested 20 public examples: 19 supported these mutations
 and 18 yielded a verified failing mutation followed by a passing repair. All 18
 passed protocol normalization and tokenization (2,401–3,263 tokens). Two authored
 unit checks cover a boundary mutation and preservation of function interfaces and
-docstrings. [executed-repair-pilot.json](executed-repair-pilot.json) records this
+docstrings. [executed-repair-pilot.json](../evidence/executed-repair-pilot.json) records this
 **data-preparation result only**. No tool SFT or agent-readiness gain is claimed;
 that training still follows the direct-programming gate.
 
@@ -643,7 +643,7 @@ assistant tokens**, and **4,952 validation episodes / 766,576 assistant tokens**
 Stored tokens are not completed training exposures. Unlike the earlier curriculum,
 there is one episode per source program, without eightfold name expansion.
 The actual checked-source lineage and prepared hashes are frozen in
-[verified-code-corpus.json](verified-code-corpus.json).
+[verified-code-corpus.json](../evidence/verified-code-corpus.json).
 
 Preparing repairs from the first 1,000 entries of this completed corpus found
 760 mutable programs and retained **737 executed failure→repair demonstrations**.
@@ -654,7 +654,7 @@ All 737 retained repair records matched their executed before/after file content
 and nonzero→zero check results, and preserved their source split groups.
 Preparation kept 699 training episodes (334,601 assistant tokens) and 38 validation
 episodes (18,796 assistant tokens), with no overlength drops at 8K. The full check
-artifact hash and prepared manifest are in [executed-repair-corpus.json](executed-repair-corpus.json).
+artifact hash and prepared manifest are in [executed-repair-corpus.json](../evidence/executed-repair-corpus.json).
 These data are prepared, not yet used for training.
 
 ### Broader long-session verification path
@@ -670,7 +670,7 @@ The 32-task programming reference composition passed its restricted-Docker check
 and the empty starting implementation failed. The old arithmetic self-test also
 passed. Unit checks ensure reference answers never enter user prompts or the state
 file, reject colliding task definitions, and preserve old arithmetic prompts.
-[programming-horizon-controls.json](programming-horizon-controls.json) is a **harness
+[programming-horizon-controls.json](../evidence/programming-horizon-controls.json) is a **harness
 control result**, not model performance. The harness writes user requirements into
 TASK_STATE.md; this does not establish model-written memory or summarization.
 
@@ -707,7 +707,7 @@ signature in the selected checkpoint's prompts raised interface matches from
 65 to 86/100, yet correctness stayed **24/100** and valid Python fell to 91/100.
 This failed the predeclared interface-augmentation criterion: copying improves,
 but the program-logic deficit remains. The results are frozen in
-[verified-code-learning-outcome.json](verified-code-learning-outcome.json).
+[verified-code-learning-outcome.json](../evidence/verified-code-learning-outcome.json).
 
 The next control adapts the same existing 1B-token scratch foundation directly on
 the checked public data, omitting the earlier SFT chain. It keeps this pilot's LR,
@@ -737,7 +737,7 @@ changed retention status and one selected a different failing mutation; all four
 references imported `random`. A single passing run had overstated the stability of
 those labels. The filtered scoped corpus retains **727 examples** whose before/after
 programs and fail/pass outcomes agreed in both executions, excluding another nine
-references importing random/secrets. [scoped-repair-data.json](scoped-repair-data.json)
+references importing random/secrets. [scoped-repair-data.json](../evidence/scoped-repair-data.json)
 records both evidence hashes. This is not a proof of determinism or complete test
 coverage. The generator's new `--exclude-random-imports` option conservatively checks
 ordinary random/secrets imports in both references and tests for future runs.
@@ -789,7 +789,7 @@ The clean foundation-to-public-SFT control finished at **7/100, 5/100 and 12/100
 for 500/1K/2K updates. Its final validation loss was 0.5203, below the chained
 parent's 0.5704, but executable correctness was worse. Removing the earlier SFT
 ancestry therefore did not improve this tested adapter recipe. The frozen result
-is [clean-foundation-adapter-outcome.json](clean-foundation-adapter-outcome.json).
+is [clean-foundation-adapter-outcome.json](../evidence/clean-foundation-adapter-outcome.json).
 It does not establish that every longer clean-SFT run would fail.
 
 A disposable batch-two profile completed 100 pretraining updates at 31,771 tokens/s
@@ -823,7 +823,7 @@ turn instead of truncating it. The fitted pilot retains **all 320 user turns** i
 110 episodes (99 train/11 validation), with zero overlength drops. Unit tests cover
 source split preservation, binding collisions, handoff requirements without answer
 leakage, and lossless context splitting. Evidence is in
-[public-horizon-pilot.json](public-horizon-pilot.json). A 200-session expansion is
+[public-horizon-pilot.json](../evidence/public-horizon-pilot.json). A 200-session expansion is
 being prepared; no model has trained on these lessons yet. Handoff training and
 external requirements state do not establish uninterrupted learned recall or
 model-written summaries. The real uninterrupted OpenCode evaluation remains required.
@@ -835,7 +835,7 @@ all of them: 14,061 train / 709 validation episodes, with 1,989,548 / 100,126 st
 assistant targets. Scoped edits substantially reduce copied answer tokens compared
 with the earlier whole-file lessons. The audit rechecked unique IDs, exact
 replacement reconstruction and every recorded failure/success code; see
-[expanded-repair-corpus.json](expanded-repair-corpus.json). These are prepared
+[expanded-repair-corpus.json](../evidence/expanded-repair-corpus.json). These are prepared
 lessons, not training exposures or evidence of learned repair skill.
 
 An additional CPU-only diagnostic reused the selected 24/100 model's saved code.
@@ -843,7 +843,7 @@ For 28 cases missing the requested function name, with exactly one generated
 function, it added an alias from that function to the requested name and reran the
 sandbox tests. **Seven** additional cases passed (assisted 31/100). It did not
 rewrite algorithm text or parameters, and none of these corrected outputs entered
-training or serving. [interface-alias-diagnostic.json](interface-alias-diagnostic.json)
+training or serving. [interface-alias-diagnostic.json](../evidence/interface-alias-diagnostic.json)
 records the interventions and code hashes. This supports fixing interface copying
 as part of the eventual agent, but does not explain most failures or change the
 ordinary-prompt score of 24/100.
@@ -878,7 +878,7 @@ cycle. It synchronizes queued CUDA work before sleeping between small batches,
 optimizer updates and validation examples. `MICROGPT_GPU_DUTY_CYCLE` overrides it;
 1 disables pacing for a dedicated GPU. This is not a hardware partition or a UI
 latency guarantee. Initial observations are in
-[gpu-pacing-observation.json](gpu-pacing-observation.json); perceived browser
+[gpu-pacing-observation.json](../evidence/gpu-pacing-observation.json); perceived browser
 responsiveness still requires user feedback. Sixty regression tests passed,
 including pacing order and unchanged interrupted/resumed training weights.
 The continuation runner now supports recovery of interrupted pretraining while
@@ -888,7 +888,7 @@ The 200-session cumulative pass retained **187 complete sessions / 5,984 user
 turns**, covering 4,000 distinct training source IDs and 150 validation source IDs.
 After complete-turn context splitting, all 1,974 train and 66 validation episodes
 fit 32K; no late turns were dropped. They store 1,454,529 and 48,203 assistant
-supervision tokens respectively. [public-horizon-corpus.json](public-horizon-corpus.json)
+supervision tokens respectively. [public-horizon-corpus.json](../evidence/public-horizon-corpus.json)
 records the exact-edit, cumulative-check and split audits. This remains append-only
 reference-policy data; follow-up revisions, learned memory and real model rollouts
 are separate capabilities.
@@ -905,7 +905,7 @@ The rechecker requires the program to reach a completion marker after its tests,
 rather than accepting every zero exit status. Authored Docker controls show that a
 correct function passes, premature `SystemExit(0)` is rejected, and a seed-sensitive
 example fails on its bad seed; see
-[hash-seed-checker-controls.json](hash-seed-checker-controls.json). Python `-I` ignores
+[hash-seed-checker-controls.json](../evidence/hash-seed-checker-controls.json). Python `-I` ignores
 `PYTHONHASHSEED`, so the sandboxed child uses `-s -P -B` with a minimal explicit
 environment. Docker restrictions remain in force. Multiple seeds still do not prove
 full correctness, complete test coverage, absence of hidden state or determinism.

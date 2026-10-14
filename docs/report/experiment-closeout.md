@@ -55,7 +55,7 @@ the local `../llm-coding-benchmark/lua-forensics` assets. The Genesys material
 provided questions about curriculum and reproducibility, not an independently
 verified architecture or reusable training recipe. Token accounting at an API
 does not establish internal tokenizer identity or weight ancestry. No Genesys
-corpus was used. See [the original research notes](research.md).
+corpus was used. See [the original research notes](../history/research.md).
 
 | Stage | What happened and what it taught us |
 |---|---|
@@ -70,10 +70,10 @@ corpus was used. See [the original research notes](research.md).
 | Refined repair preparation | Prepared structural defects and recovery examples, including 64 corrections of actual training-source model failures. The old 1K control scored 14/32 simple, 0/32 structural, 0/32 recovery cases. The new run was superseded at step 829 before a conclusive behavioral comparison. Interruption is not a negative result. |
 | Foundation-first pivot | Randomly initialized a 337M model with a smaller 32K tokenizer and much more transformer capacity, then trained through 2B, 5B and 10B tokens. Fixed coding probes rose from 39 to 52 to 65/100. Longer SFT selected 68/100, followed by 58/100 holdout. |
 
-Detailed earlier results remain in [capacity-pilot.md](capacity-pilot.md),
-[agentic-minimum.md](agentic-minimum.md),
-[repair-investigation.md](repair-investigation.md), and
-[refined-agent-execution.md](refined-agent-execution.md). These are different
+Detailed earlier results remain in [capacity-pilot.md](../history/capacity-pilot.md),
+[agentic-minimum.md](../guides/agentic-minimum.md),
+[repair-investigation.md](../history/repair-investigation.md), and
+[refined-agent-execution.md](../history/refined-agent-execution.md). These are different
 lineages: the 337M model did **not** inherit the 91M model's arithmetic tool skill
 or the 239M model's mixed-agent training.
 
@@ -198,8 +198,8 @@ refined repair mix containing 17,134 repair/recovery episodes including 64 actua
 failure corrections. These counts are **not additive unique training data**:
 many derive from the same public programs. They were not all used, and none of
 these agent curricula trained the final 337M checkpoint. See
-[reasoning.md](reasoning.md), [public-horizon-corpus.json](public-horizon-corpus.json),
-and [refined-agent-data.json](refined-agent-data.json).
+[reasoning.md](../guides/reasoning.md), [public-horizon-corpus.json](../evidence/public-horizon-corpus.json),
+and [refined-agent-data.json](../evidence/refined-agent-data.json).
 
 Manifests preserve revisions, source identities, selected licenses and hashes.
 Repository/problem grouping and exact deduplication reduce leakage; they do not
@@ -436,7 +436,7 @@ for these closeout tests.
    shadowed built-ins, `SystemExit(0)`, and copied no-op edits needed controls.
    Python `-I` ignores `PYTHONHASHSEED`; the multiseed checker uses an explicit
    environment with `-s -P -B`. A completion sentinel distinguishes finishing
-   tests from merely exiting zero. Full control evidence remains in `docs/*controls*.json`.
+   tests from merely exiting zero. Full control evidence remains in `docs/evidence/*controls*.json`.
 4. **Runtime and training formats must match.** Handoff announcements, tool-call
    IDs, edit anchors, sibling identifiers and OpenCode's request quoting affected
    old agents. Format changes sometimes improved names without improving code.
@@ -514,7 +514,7 @@ as a reference and adapt bounded, independently executable tasks to our harness.
 
 Stack-Edu and related code collections were investigated earlier, but identifier/
 metadata downloads do not automatically deliver source text. Access, provenance,
-retrieval and storage work remain; see [datasets.md](datasets.md). A larger download
+retrieval and storage work remain; see [datasets.md](../guides/datasets.md). A larger download
 is not the first remedy for a final checkpoint that has never received agent SFT.
 For an H100, no speedup or dollar estimate was measured. Run the same profile on
 the actual rental, then compute `tokens / sustained_tokens_per_second / 3600 ×
@@ -590,8 +590,8 @@ backup of those weights or corpora.
 | Concrete correct and incorrect code | [coding-examples.json](closeout/coding-examples.json) |
 | Actual final-model OpenCode behavior | [opencode-repairs.json](closeout/opencode-repairs.json) |
 | Reasoning, conversation, long prompts | [reasoning.json](closeout/reasoning.json), [dialogue.json](closeout/dialogue.json), [context.json](closeout/context.json) |
-| Frozen plan and implementation diary | [foundation-pivot.md](foundation-pivot.md), [foundation-pivot-start.md](foundation-pivot-start.md), `runs/pivot-v1/journal.md` |
-| Earlier failed/successful narrow experiments | [verification.md](verification.md), [capacity-pilot.md](capacity-pilot.md), [repair-investigation.md](repair-investigation.md) |
+| Frozen plan and implementation diary | [foundation-pivot.md](../history/foundation-pivot.md), [foundation-pivot-start.md](../history/foundation-pivot-start.md), `runs/pivot-v1/journal.md` |
+| Earlier failed/successful narrow experiments | [verification.md](../history/verification.md), [capacity-pilot.md](../history/capacity-pilot.md), [repair-investigation.md](../history/repair-investigation.md) |
 
 An educational article can honestly demonstrate the complete scratch-model
 lifecycle and the substantial gap between generating a plausible function and

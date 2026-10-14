@@ -8,10 +8,10 @@ repairs with no tool calls**, **0/12 program-tracing answers** in each tested ef
 mode, and **0/9 long-context retrieval probes**. It is an educational coding model,
 not a reliable programming agent. No further training is queued.
 
-Read the **[complete experiment report](docs/experiment-closeout.md)** for model
+Read the **[complete experiment report](docs/report/experiment-closeout.md)** for model
 specifications, datasets, exact training exposure, **136.68 hours of foundation
 process wall time**, checkpoint inventory, benchmarks, failures, and estimated
-future experiments. [Committed evidence](docs/closeout/) preserves the results.
+future experiments. [Committed evidence](docs/report/closeout/) preserves the results.
 The final selected checkpoint is
 `data/experiments/foundation-pivot-v1/adapter-10b/checkpoint-4000.pt`;
 `last.pt` is a later, worse-scoring checkpoint.
@@ -36,11 +36,11 @@ checker-error recovery and a fresh-session handoff. It passes 8/8 narrow arithme
 repairs, but 0/4 broader repairs and 0/12 reasoning problems in either tested mode.
 This teaches a complete agent workflow for a small trained task family.
 
-Start with the [minimal agent runbook](docs/agentic-minimum.md): one foundation
+Start with the [minimal agent runbook](docs/guides/agentic-minimum.md): one foundation
 pretraining stage, one focused assistant-training stage, a portable export, and a
 restricted OpenCode lesson. That earlier lesson's export is `runs/agent-ready-v1/model.pt`.
-The [committed evidence](docs/agentic-evidence.json) records hashes and measurements;
-[verification](docs/verification.md) preserves the earlier failed experiments.
+The [committed evidence](docs/evidence/agentic-evidence.json) records hashes and measurements;
+[verification](docs/history/verification.md) preserves the earlier failed experiments.
 
 ## Offline first lesson
 
@@ -59,7 +59,7 @@ assistant. Preparation refuses existing outputs: choose fresh paths for repeats.
 ## Scratch model to OpenCode
 
 For the RTX 5090/H100 use the tested CUDA wheel, then follow
-[the complete scratch training sequence](docs/finetuning.md):
+[the complete scratch training sequence](docs/guides/finetuning.md):
 
 ```sh
 uv pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128
@@ -88,7 +88,7 @@ Harmony message format; our small text protocol is explicit in `protocol.py`.
 ```
 
 The server requires a local checkpoint. It never falls back to an external model.
-OpenCode configuration and its limits are explained in [OpenCode setup](docs/opencode.md).
+OpenCode configuration and its limits are explained in [OpenCode setup](docs/guides/opencode.md).
 
 ## Read the implementation
 
@@ -110,8 +110,8 @@ training loops remain visible. CPU tests check the important invariants:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-[Datasets/NAS](docs/datasets.md) · [Training sequence](docs/finetuning.md) ·
-[Hardware/Runpod](docs/hardware.md) · [Architecture walkthrough](docs/walkthrough.md) ·
-[Research and Genesys inspiration](docs/research.md) · [Verification](docs/verification.md)
+[Datasets/NAS](docs/guides/datasets.md) · [Training sequence](docs/guides/finetuning.md) ·
+[Hardware/Runpod](docs/guides/hardware.md) · [Architecture walkthrough](docs/guides/walkthrough.md) ·
+[Research and Genesys inspiration](docs/history/research.md) · [Verification](docs/history/verification.md)
 
-Reasoning training is included in the bounded curriculum: complete worked solutions, checked Python traces, and thinking/tool episodes. The API separates `reasoning_content` from answers and actions; OpenCode has reasoning-effort variants. These are training and protocol features, not demonstrated deep reasoning. See [the reasoning recipe](docs/reasoning.md).
+Reasoning training is included in the bounded curriculum: complete worked solutions, checked Python traces, and thinking/tool episodes. The API separates `reasoning_content` from answers and actions; OpenCode has reasoning-effort variants. These are training and protocol features, not demonstrated deep reasoning. See [the reasoning recipe](docs/guides/reasoning.md).

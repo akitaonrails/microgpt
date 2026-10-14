@@ -1,6 +1,6 @@
 # The minimum agentic model: experiment notebook
 
-**Current broader work:** [the controlled experiment history](capacity-pilot.md)
+**Current broader work:** [the controlled experiment history](../history/capacity-pilot.md)
 records the latest scratch 239M programming results and unmet gates. The served
 91M artifact below remains a historical narrow arithmetic lesson.
 
@@ -44,7 +44,7 @@ retrieval from arbitrary long text. Conversation probes also remain poor.
 This is a working **narrow agent lesson**, not a general coding assistant or a
 deep-reasoning model. “Minimum” describes the working implementation and training
 sequence found here, not a proven lower bound on parameters or pretraining tokens.
-Hashes, seeds and measurements are recorded in [the evidence file](agentic-evidence.json).
+Hashes, seeds and measurements are recorded in [the evidence file](../evidence/agentic-evidence.json).
 
 ## Use the model here
 
@@ -306,7 +306,7 @@ successful one-stage SFT route documented above.
 
 The following historical commands reproduce that earlier experiment, not the
 recommended final recipe. They start after the foundation and source preparation in
-[the training runbook](training-plan.md). Run from the repository root, with the
+[the training runbook](../history/training-plan.md). Run from the repository root, with the
 existing `data` symlink pointing inside the authorized NAS dataset directory.
 All output paths below must be fresh:
 

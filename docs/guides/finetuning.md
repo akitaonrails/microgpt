@@ -7,7 +7,7 @@ This document also retains the larger experimental curriculum and its failed sta
 ## Larger training run
 
 For the current billion-token preparation, complete-episode curriculum and
-automatic OpenCode/long-horizon evaluation, use [the training runbook](training-plan.md).
+automatic OpenCode/long-horizon evaluation, use [the training runbook](../history/training-plan.md).
 The smaller commands below remain useful for learning each stage separately.
 
 All weights are ours, initialized randomly by `GPT` in `model.py`. “Fine-tuning”

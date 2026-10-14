@@ -45,7 +45,7 @@ def main():
     base.mkdir(parents=True, exist_ok=args.resume_after_2b or resume_maintenance)
     state = {'status': 'running', 'phase': 'waiting_for_corpus', 'pid': os.getpid(),
              'started': datetime.now(timezone.utc).isoformat(), 'initialization': 'random',
-             'config_sha256': sha(config), 'plan_sha256': sha('docs/foundation-pivot.md'),
+             'config_sha256': sha(config), 'plan_sha256': sha('docs/history/foundation-pivot.md'),
              'tasks_sha256': sha(tasks), 'automatic_promotion': False, 'acceptance_used': False,
              'commands': [], 'milestones': [], 'full_gpu_seconds': 8 * 3600,
              'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()}

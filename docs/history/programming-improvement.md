@@ -200,7 +200,7 @@ that a function implements the request. The existing service was not replaced.
 
 The frozen checkpoint is `runs/programming-v2/checkpoint-24000.pt`, SHA256
 `b164a2a5ade8550c1536a9b3b939245f6d7ed586fc8e3cbe2263c3bb1928b6c9`.
-Full evaluations and provenance are copied into `docs/programming-evidence.json`.
+Full evaluations and provenance are copied into `docs/evidence/programming-evidence.json`.
 The 31 unit tests pass; model behavior is assessed separately above.
 
 The corpus contains 96,768,432 assistant target tokens, so 16.5M sampled exposures

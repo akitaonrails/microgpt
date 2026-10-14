@@ -1,6 +1,6 @@
 # Larger scratch training and OpenCode capability gates
 
-For the shortest validated route, use the [minimal agent runbook](agentic-minimum.md).
+For the shortest validated route, use the [minimal agent runbook](../guides/agentic-minimum.md).
 This document also retains the larger experimental curriculum and its failed stages.
 
 
@@ -89,7 +89,7 @@ See the source manifests for exact revisions, byte counts and SHA-256 hashes.
 
 ## Run it
 
-Use the environment installation in [the scratch guide](finetuning.md), then:
+Use the environment installation in [the scratch guide](../guides/finetuning.md), then:
 
 ```sh
 # Roughly 12 GB of raw source shards; all dataset writes stay in the NAS root.
@@ -189,4 +189,4 @@ replaying the broader short curriculum to reduce coding/conversation forgetting.
 This deliberately oversamples long histories. Repeated exposure to
 the limited long examples is not additional distinct training data.
 
-The reasoning extension adds complete worked solutions, paired direct/thinking program traces, and thinking/tool episodes. See [reasoning.md](reasoning.md) for sources, filtering, controls and evaluation limits.
+The reasoning extension adds complete worked solutions, paired direct/thinking program traces, and thinking/tool episodes. See [reasoning.md](../guides/reasoning.md) for sources, filtering, controls and evaluation limits.

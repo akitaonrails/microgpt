@@ -1,6 +1,6 @@
 # Reasoning curriculum
 
-> Historical recipes and measurements. See the [October 14 closeout report](experiment-closeout.md) for the final model, data inventory, timing and capability results.
+> Historical recipes and measurements. See the [October 14 closeout report](../report/experiment-closeout.md) for the final model, data inventory, timing and capability results.
 
 This is supervised reasoning training of our own **90,969,600-parameter model**,
 initialized from scratch. No Qwen or other pretrained weights are loaded. Public
@@ -64,7 +64,7 @@ finish a stage early.
 ```
 
 Use `--resume` only for the existing run, and never start a second runner while one
-is active. See [training-plan.md](training-plan.md) for a fresh run.
+is active. See [training-plan.md](../history/training-plan.md) for a fresh run.
 
 ## Serving and OpenCode
 

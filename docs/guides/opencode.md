@@ -91,7 +91,7 @@ software engineering. The context evaluation separately checks exact retrieval
 near the beginning, middle and end of 8K/16K/32K inputs.
 
 `scripts/train_stages.py` automatically runs both evaluations and the original
-four repairs after training. See [the larger training runbook](training-plan.md).
+four repairs after training. See [the larger training runbook](../history/training-plan.md).
 
 ## Remote machine
 

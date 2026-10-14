@@ -83,4 +83,4 @@ for fixed logits. Sampling temperature is a generation control; tuning it is not
 the same experiment as fitting a confidence calibrator. Quantization calibration
 is a third meaning, concerned with approximation error, not reasoning training.
 
-See [the next-stage plan](reasoning.md) for an affordable coding/reasoning route.
+See [the next-stage plan](../guides/reasoning.md) for an affordable coding/reasoning route.

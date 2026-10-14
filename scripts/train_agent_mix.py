@@ -1,7 +1,7 @@
 """Longer verified code/repair/conversation SFT from our best scratch checkpoint.
 
 Checkpoints live on the authorized NAS path. Behavioral evaluations use a private
-server and never replace the user's service. See docs/agent-mix-plan.md.
+server and never replace the user's service. See docs/history/agent-mix-plan.md.
 """
 from datetime import datetime, timezone
 import hashlib
@@ -37,7 +37,7 @@ def main():
     state = {'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
              'parent': str(parent), 'parent_sha256': sha(parent),
              'data_manifest_sha256': sha(data / 'manifest.json'),
-             'plan_sha256': sha('docs/agent-mix-plan.md'),
+             'plan_sha256': sha('docs/history/agent-mix-plan.md'),
              'baseline': {'direct': 24, 'repair': sum(row['passed'] for row in baseline['tasks']),
                           'tasks_using_tools': sum(bool(row['tools']) for row in baseline['tasks'])},
              'source_weights': weights, 'lr': 1e-5, 'microbatch': 1, 'accumulation': 16,

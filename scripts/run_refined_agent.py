@@ -29,7 +29,7 @@ def main():
     if len(rollout['tasks']) != 64: raise ValueError('Finish the training-source rollouts first')
     state = {'status': 'running', 'pid': os.getpid(), 'started': datetime.now(timezone.utc).isoformat(),
         'parent': str(parent), 'parent_sha256': sha(parent), 'diagnostic_sha256': sha(diagnostic),
-        'plan_sha256': sha('docs/refined-agent-execution.md'),
+        'plan_sha256': sha('docs/history/refined-agent-execution.md'),
         'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
         'phases': [], 'automatic_promotion': False, 'acceptance_used': False}
     child = None; stopping = False

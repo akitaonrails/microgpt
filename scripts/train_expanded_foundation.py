@@ -41,7 +41,7 @@ def main():
     data = Path('data/foundation-expanded-v1')
     adapter_data = Path('data/verified-opencodeinstruct-sft-v1')
     tasks = Path('evaluation/programming-v1/development.jsonl')
-    audit = json.loads(Path('docs/expanded-foundation-corpus.json').read_text())
+    audit = json.loads(Path('docs/evidence/expanded-foundation-corpus.json').read_text())
     if sha(data / 'meta.json') != audit['manifest_sha256']:
         parser.error('Expanded data differs from the verified corpus')
     args.out.mkdir(parents=True, exist_ok=args.resume)

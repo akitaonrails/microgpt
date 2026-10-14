@@ -27,7 +27,7 @@ Both controllers inherit `MICROGPT_FULL_GPU_WINDOW=03:00-09:00`,
 `MICROGPT_GPU_TIMEZONE=America/Sao_Paulo`, and `MICROGPT_GPU_DUTY_CYCLE=.75`.
 
 ```sh
-.venv/bin/python scripts/run_foundation_pivot.py --preparation-pid 1809748 --previous-run-pid 1500740 --resume-pause-record docs/resume-checkpoint-2026-10-13.json
+.venv/bin/python scripts/run_foundation_pivot.py --preparation-pid 1809748 --previous-run-pid 1500740 --resume-pause-record docs/evidence/resume-checkpoint-2026-10-13.json
 .venv/bin/python scripts/run_pivot_posttraining.py --resume-waiting
 ```
 

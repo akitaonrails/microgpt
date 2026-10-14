@@ -46,7 +46,7 @@ def main():
         'tasks_sha256': sha('evaluation/programming-v1/development.jsonl'),
         'control_sha256': sha('runs/clean-foundation-adapter-pilot-v1/status.json'),
         'diagnostic_sha256': sha('runs/learnability-pilot-v1/status.json'),
-        'plan_sha256': sha('docs/learnability-plan.md'),
+        'plan_sha256': sha('docs/history/learnability-plan.md'),
         'lr': 1e-4, 'control_lr': 1e-5, 'control_best': baseline,
         'seed': 20261006, 'validation_seed': 20261007, 'microbatch': 4, 'accumulation': 8,
         'milestones': [500, 1000, 2000], 'extension_milestones': [4000, 6000],
@@ -54,7 +54,7 @@ def main():
         'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
         'acceptance_used': False, 'automatic_promotion': False, 'commands': [],
     }
-    frozen_control = json.loads(Path('docs/clean-foundation-adapter-outcome.json').read_text())['experiment']
+    frozen_control = json.loads(Path('docs/evidence/clean-foundation-adapter-outcome.json').read_text())['experiment']
     for key in ('parent_sha256', 'data_manifest_sha256', 'microbatch', 'accumulation', 'seed', 'validation_seed'):
         if experiment[key] != frozen_control[key]:
             raise RuntimeError(f'Unmatched control: {key}')

@@ -37,7 +37,7 @@ At the final checkpoint, three repairs attempted identical old/new strings. The
 fourth changed a constant incorrectly. Three final replies explicitly claimed
 checks passed despite failure. Strict grading rejected all four. Lower validation
 loss accompanied worse standalone coding, so loss is not a model selection rule.
-Full frozen outcome: [agent-mix-outcome.json](agent-mix-outcome.json).
+Full frozen outcome: [agent-mix-outcome.json](../evidence/agent-mix-outcome.json).
 
 ## What the investigation establishes
 
@@ -88,7 +88,7 @@ format, and training should cover reasonable variations rather than depend on
 one traceback layout.
 
 Evidence, hashes, sampled IDs, controls and tool traces are in
-[repair-investigation-evidence.json](repair-investigation-evidence.json).
+[repair-investigation-evidence.json](../evidence/repair-investigation-evidence.json).
 The original 160-turn packing/serving template check also remains valid. These
 results reduce suspicion of a universal tokenizer or loss-mask failure; they do
 not rule out every possible protocol mismatch.

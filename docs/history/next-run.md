@@ -4,7 +4,7 @@
 
 **Completed follow-up (2026-10-04):** a single focused SFT stage directly from our
 scratch foundation produced the selected 2250-step export. It passed four 16-round
-sessions and one 32-round session. Follow the [minimal agent runbook](agentic-minimum.md)
+sessions and one 32-round session. Follow the [minimal agent runbook](../guides/agentic-minimum.md)
 for the final recipe and limitations. The entries below preserve earlier experiments;
 they are not prerequisites and are not currently running.
 

@@ -18,7 +18,7 @@ coding, autonomous summarization, conversation, or deep reasoning capability.
 All 25 CPU tests pass. Exported weights equal the selected training checkpoint;
 the bundled tokenizer loads without the tiktoken registry/network. Exact-prefix
 cache checks and profiled Flash dispatch through a 32K allocation passed.
-See the [reproducible runbook](agentic-minimum.md) and [evidence](agentic-evidence.json).
+See the [reproducible runbook](../guides/agentic-minimum.md) and [evidence](../evidence/agentic-evidence.json).
 The dated progress entries below preserve the experimental history.
 
 The sole implementation target is our GPT initialized randomly. The earlier

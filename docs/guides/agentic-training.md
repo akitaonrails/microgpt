@@ -7,7 +7,7 @@ lesson, but it does not establish these abilities.
 
 The server/OpenCode integration and assistant-masked full-weight trainer are implemented.
 See [the runnable adaptation recipe](finetuning.md), [dataset storage](datasets.md),
-and [measured results](verification.md). The broader curriculum below remains a
+and [measured results](../history/verification.md). The broader curriculum below remains a
 roadmap; a small local adaptation run does not establish sustained agent ability.
 
 ## Data appropriate to each skill

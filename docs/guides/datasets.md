@@ -1,6 +1,6 @@
 # Datasets and storage
 
-> Historical recipes and measurements. See the [October 14 closeout report](experiment-closeout.md) for the final model, data inventory, timing and capability results.
+> Historical recipes and measurements. See the [October 14 closeout report](../report/experiment-closeout.md) for the final model, data inventory, timing and capability results.
 
 ## Larger prepared selection
 
@@ -9,7 +9,7 @@ OpenCoder, Cosmopedia, SmolTalk and multilingual SmolTalk2. As of October 6, 202
 the pinned raw-source manifests account for 20.40 GB (decimal), including 6.86 GB
 of OpenCodeInstruct and 7.74 GB of CodeParrot. These are downloaded source bytes,
 not all prepared or consumed training data.
-See [the source proportions and reproducible commands](training-plan.md).
+See [the source proportions and reproducible commands](../history/training-plan.md).
 These are selected subsets; downloaded bytes, prepared tokens and tokens actually
 consumed by training are different quantities. Manifests record each one.
 
@@ -79,7 +79,7 @@ retained 992; preparation of the larger selection is tracked in
 The dataset card uses CC-BY-4.0. Source revision, answer IDs, transformations,
 checksums, and execution-image identity accompany the selection. Supplied tests
 can be incomplete or share mistakes with the answer. See
-[the experiment history](capacity-pilot.md) for those limits and training results.
+[the experiment history](../history/capacity-pilot.md) for those limits and training results.
 
 ## Larger alternatives
 
