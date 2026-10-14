@@ -1,6 +1,43 @@
+# Python environments and caches
 .venv/
 __pycache__/
+*.py[cod]
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Datasets and experiment outputs live outside git. `data` is a symlink to the
+# dataset root (see docs/guides/datasets.md) and `runs/` holds local runs.
 /data
 runs/
-.pytest_cache/
+
+# Model weights, token arrays and other large binary artifacts, wherever they
+# end up. Commit small JSON/JSONL evidence instead; never weights or corpora.
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.gguf
+*.onnx
+*.npy
+*.npz
+*.u16
+*.u32
+*.arrow
+*.parquet
+*.tar
+*.tar.gz
+*.tgz
+*.zst
+*.zip
+*.jsonl.gz
+wandb/
+
+# Editors and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
